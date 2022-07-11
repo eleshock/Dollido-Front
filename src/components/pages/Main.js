@@ -58,6 +58,11 @@ const Main = () => {
                                     다음 페이지
                                 </Button>
                             </Link>
+                            <Link to="/play">
+                                <Button color="yellow" size="large" style={ { position: "absolute", top: "30%" } }>
+                                    In-Game Page
+                                </Button>
+                            </Link>
                         </div>
                     </div>
                 }

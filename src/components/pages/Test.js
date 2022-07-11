@@ -12,7 +12,7 @@ const Test = () => {
 
     return (
         <div>
-            <h1>Test</h1>
+            <h1>SalmonSushi</h1>
         </div>
     );
 };
