@@ -70,7 +70,7 @@ const Main = () => {
                     height="600"
                     element={
                         <div>
-                            TODO
+                            <h2 style={{margin: "30px"}}>안녕하세요</h2>
                         </div>
                     }
                 />
