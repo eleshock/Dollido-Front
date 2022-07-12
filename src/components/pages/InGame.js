@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { ThemeProvider } from 'styled-components';
 
+import LoadGIF from "./Giftest";
 import Button from "../common/Button.js";
 import { Background } from "../common/Background.tsx"
 
 import mainBackground from '../../images/main_background.png';
-import sana from '../../images/sana.gif';
 
 /** setInterval 안에서 setState 쓰려면 setInterval 대신에 이 함수 써야 함 */
 function useInterval(callback, delay) {
@@ -61,9 +61,10 @@ function ChattingWindow(props) {
 function GifWindow(props) {
     return  <div>
                 <h1>GIF Here</h1>
-                <img src={sana} style={{ width: 'inherit' }}></img>
+                <LoadGIF></LoadGIF>
             </div>
 }
+
 
 function Timer(props) {
     const gameMinutes = 1;
@@ -124,7 +125,7 @@ const InGame = () => {
         float: "left",
         height: 730,
         padding: 10,
-        backgroundColor: 'pink',
+        // backgroundColor: 'pink',
         textAlign: 'center'
     }
 
