@@ -53,7 +53,7 @@ const Main = () => {
                             <Button color="yellow" size="large" style={ { position: "absolute", top: "50%" } } onClick={() => { setModal(true); }}>
                                 게임시작
                             </Button>
-                            <Link to="/roomList">
+                            <Link to="/room">
                                 <Button color="yellow" size="large" style={ { position: "absolute", top: "70%" } }>
                                     다음 페이지
                                 </Button>

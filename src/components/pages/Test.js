@@ -1,20 +1,35 @@
-import io from "socket.io-client";
 import React, { useEffect, useState, useRef } from "react";
 import * as faceapi from 'face-api.js';
-const socket = io.connect("http://localhost:5000");
-
 
 function Test() {
-
     const [modelsLoaded, setModelsLoaded] = useState(false);
     const [captureVideo, setCaptureVideo] = useState(false);
-    const [myHP, setHP] = useState(100);
+    const [onVideo, setOnVideo] = useState(false);
 
     const videoRef = useRef();
     const videoHeight = 400;
     const videoWidth = 400;
     const canvasRef = useRef();
-    let peerDict = {}; // 자신과 연결된 상대의 socket.id에 대한 hp Element 저장
+
+    function useInterval(callback, delay) {
+        const savedCallback = useRef();
+
+        // Remember the latest callback.
+        useEffect(() => {
+            savedCallback.current = callback;
+        }, [callback]);
+
+        // Set up the interval.
+        useEffect(() => {
+            function tick() {
+                savedCallback.current();
+            }
+            if (delay !== null) {
+                let id = setInterval(tick, delay);
+                return () => clearInterval(id);
+            }
+        }, [delay]);
+    }
     
     useEffect(() => {
         const loadModels = async () => {
@@ -26,8 +41,8 @@ function Test() {
             ]).then(setModelsLoaded(true));
         }
         loadModels();
-        }, []);
-
+    }, []);
+    
     const startVideo = (deviceId) => {
         setCaptureVideo(true);
         navigator.mediaDevices.getUserMedia({
@@ -43,37 +58,34 @@ function Test() {
         });
     }
 
-    function handleHP(happiness) {
+    function handleHP(happiness, myHP) {
         if (myHP > 0) { // 아직 살아 있으면
             if (happiness > 0.2) { // 피를 깎아야 하는 경우
                 if (happiness > 0.6) {
-                    setHP(myHP - 1);
+                    return 1;
                 } else {
-                    setHP(myHP - 0.5);
+                    return 0.5;
                 }
             }
-            // socket.emit("smile", myHP, room, socket.id);
         } else { // 죽었으면
-            // socket.emit("gameOver", socket.id);
         }
+        return 0;
     }
-
     
     const handleVideoOnPlay = () => {
-        setInterval(async () => {
-            if (canvasRef && canvasRef.current) {
-                canvasRef.current.innerHTML = faceapi.createCanvasFromMedia(videoRef.current);
-                const displaySize = { width: videoWidth, height: videoHeight }
-                faceapi.matchDimensions(canvasRef.current, displaySize);
-                
-                const detections = faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-                console.log(videoRef.current)
-                console.log(detections[0]);
-                // if (detections) {
-                    //     handleHP(detections[0].expressions.happy);
-                    // }
+        setOnVideo(true);
+    }
+    
+    const ShowHP = () => {
+        const [myHP, setMyHP] = useState(100);
+        useInterval(async () => {
+            const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+            if (detections[0]) {
+                const decrease = handleHP(detections[0].expressions.happy, myHP);
+                setMyHP(myHP - decrease);
             }
-        }, 1000)
+        }, 1000);
+        return <div>{myHP}</div>
     }
 
     const closeWebcam = () => {
@@ -102,7 +114,7 @@ function Test() {
                     <div>
                         <div style = {{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
                             <video ref = { videoRef } height = { videoHeight } width = { videoWidth } onPlay = { handleVideoOnPlay } style = { { borderRadius: '10px' } } /> 
-                            <div>{myHP}</div>
+                            {!onVideo ? <div>model loading...</div>: <ShowHP></ShowHP>}
                             <canvas ref = { canvasRef } style = { { position: 'absolute' } }/> 
                         </div> 
                     </div>
