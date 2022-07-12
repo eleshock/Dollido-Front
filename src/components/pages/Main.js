@@ -38,7 +38,7 @@ const Main = () => {
                 palette: {
                     yellow: "#E5B941"
                 }
-            }} 
+            }}
         >
             <Background
                 background={mainBackground}
