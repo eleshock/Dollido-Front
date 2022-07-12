@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from "react-router-dom";
-import styled, { ThemeProvider } from 'styled-components';
-import axios from "axios";
+import { ThemeProvider } from 'styled-components';
 
 import Button from "../common/Button.js";
 import { Background } from "../common/Background.tsx"
@@ -11,27 +10,28 @@ import sana from '../../images/sana.gif';
 
 /** setInterval 안에서 setState 쓰려면 setInterval 대신에 이 함수 써야 함 */
 function useInterval(callback, delay) {
-  const savedCallback = useRef();
+    const savedCallback = useRef();
 
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
+    // Remember the latest callback.
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
 
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
+    // Set up the interval.
+    useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
 }
 
-function decreaseOneSec(minutes, seconds){
-    if (seconds === 0){
+/** 1초 줄어든 시간을 리턴 */
+function decreaseOneSec(minutes, seconds) {
+    if (seconds === 0) {
         seconds = 59;
         minutes -= 1;
     } else {
@@ -59,40 +59,47 @@ function ChattingWindow(props) {
 }
 
 function GifWindow(props) {
-    return <div>
-        <h1>GIF Here</h1>
-        <img src={sana} style={{width:'inherit'}}></img>
-    </div>
+    return  <div>
+                <h1>GIF Here</h1>
+                <img src={sana} style={{ width: 'inherit' }}></img>
+            </div>
 }
 
 function Timer(props) {
     const gameMinutes = 1;
     const gameSeconds = 30;
     const [remainTime, setTimer] = useState([gameMinutes, gameSeconds]);
+    const [minutes, seconds] = remainTime;
+
+    let delay = 1000;
+    let insertZero = '';
+    let content = '';
+    
+    if (minutes === 0 && seconds === 0) { // 종료 조건
+        content = <h1> Game Over! </h1>
+        delay = null; // clear useInterval
+    } else {
+        if (seconds < 10) insertZero = '0';
+        content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
+    }
     
     useInterval(() => {
         setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
-    }, 1000);
+    }, delay);
 
-    const [minutes, seconds] = remainTime;
-    let insertZero = '';
-
-    if (seconds < 10) {
-        insertZero = '0';
-    }
-
-    return <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
+    return content;
 }
 
 const InGame = () => {
-    
+
     const [gameStarted, setGameStart] = useState(false);
 
     const hColumnStyle = {
         width: "25%",
         float: "left",
         height: 80,
-        padding: 10
+        padding: 10,
+        textAlign: 'center'
     }
 
     const hMiddleStyle = {
@@ -100,14 +107,16 @@ const InGame = () => {
         float: "left",
         height: 80,
         padding: 10,
-        backgroundColor: 'coral'
+        backgroundColor: 'coral',
+        textAlign: 'center'
     }
 
     const columnStyle = {
         width: "25%",
         float: "left",
         height: 700,
-        padding: 10
+        padding: 10,
+        textAlign: 'center'
     }
 
     const middleStyle = {
@@ -115,10 +124,11 @@ const InGame = () => {
         float: "left",
         height: 730,
         padding: 10,
-        backgroundColor: 'pink'
+        backgroundColor: 'pink',
+        textAlign: 'center'
     }
 
-    function handleTemp(event) {
+    function handleStart(event) {
         setGameStart(!gameStarted);
         handleGameStart();
     }
@@ -130,39 +140,29 @@ const InGame = () => {
                     yellow: "#E5B941"
                 }
             }}>
-            <header style={{ backgroundColor: 'green', height: 80 }}>
-                <div>
-                    <div className="left" style={hColumnStyle}>
-                        <h1> Room Name </h1>
-                    </div>
-                    <div className="middle" style={hMiddleStyle}>
-                            {!gameStarted && (
-                                <h1>DOLLIDO</h1>
-                            )}
-                            {gameStarted && (
-                                <Timer></Timer>
-                            )}                    </div>
-                    <div className="right" style={hColumnStyle}>
-                        <h1> Mode </h1>
-                    </div>
-                </div>
-                <h1 style={{ color: "#E5B941" }}>This is In Game Page</h1>
-            </header>
             <Background
                 background={mainBackground}
                 element={
                     <div>
+                        <header style={{ backgroundColor: 'green', height: 80 }}>
+                            <div>
+                                <div className="left" style={hColumnStyle}>
+                                    <h1> Room Name </h1>
+                                </div>
+                                <div className="middle" style={hMiddleStyle}>
+                                    {!gameStarted ? <h1>DOLLIDO</h1> : <Timer></Timer>}
+                                </div>
+                                <div className="right" style={hColumnStyle}>
+                                    <h1> Mode </h1>
+                                </div>
+                            </div>
+                        </header>
                         <div className="left" style={columnStyle}>
                             <Player playerId={'SalmonSushi'}></Player>
                             <Player playerId={'DongDongBro'}></Player>
                         </div>
                         <div className="middle" style={middleStyle}>
-                            {!gameStarted && (
-                                <ChattingWindow></ChattingWindow>
-                            )}
-                            {gameStarted && (
-                                <GifWindow></GifWindow>
-                            )}
+                            {!gameStarted ? <ChattingWindow></ChattingWindow> : <GifWindow></GifWindow>}
                         </div>
                         <div className="right" style={columnStyle}>
                             <Player playerId={'EleShock'}></Player>
@@ -171,16 +171,15 @@ const InGame = () => {
                     </div>
                 }>
             </Background>
-                <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "33%" }} onClick={handleTemp}>
-                    START
-                </Button>
+            <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "33%" }} onClick={handleStart}>
+                START
+            </Button>
             <Link to="/roomList">
                 <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "55%" }}>
                     QUIT
                 </Button>
             </Link>
         </ThemeProvider>
-
     );
 };
 
