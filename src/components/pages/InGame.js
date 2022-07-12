@@ -75,7 +75,7 @@ function Timer(props) {
     let delay = 1000;
     let insertZero = '';
     let content = '';
-    
+
     if (minutes === 0 && seconds === 0) { // 종료 조건
         content = <h1> Game Over! </h1>
         delay = null; // clear useInterval
@@ -83,7 +83,7 @@ function Timer(props) {
         if (seconds < 10) insertZero = '0';
         content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
     }
-    
+
     useInterval(() => {
         setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
     }, delay);
