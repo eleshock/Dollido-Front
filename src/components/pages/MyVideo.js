@@ -1,15 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as faceapi from 'face-api.js';
 
-function Test() {
+function MyVideo(props) {
     const [modelsLoaded, setModelsLoaded] = useState(false);
-    const [captureVideo, setCaptureVideo] = useState(false);
+    const [videoStarted, setvideoStarted] = useState(true);
     const [onVideo, setOnVideo] = useState(false);
 
     const videoRef = useRef();
-    const videoHeight = 400;
+    const videoHeight = 300;
     const videoWidth = 400;
     const canvasRef = useRef();
+    const defaultPlayerId = "깨랑까랑";
+
 
     function useInterval(callback, delay) {
         const savedCallback = useRef();
@@ -31,22 +33,9 @@ function Test() {
         }, [delay]);
     }
     
-    useEffect(() => {
-        const loadModels = async () => {
-            const MODEL_URL = process.env.PUBLIC_URL + '/models';
-
-            Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-                faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
-            ]).then(setModelsLoaded(true));
-        }
-        loadModels();
-    }, []);
-    
     const startVideo = (deviceId) => {
-        setCaptureVideo(true);
         navigator.mediaDevices.getUserMedia({
-            audio: true,
+            audio: false,
             video: deviceId ? { deviceId } : true,
         }).then((stream) => {
             let video = videoRef.current;
@@ -58,13 +47,27 @@ function Test() {
         });
     }
 
+    useEffect(() => {
+        const videoNModelInit = async () => {
+            startVideo();
+            const MODEL_URL = process.env.PUBLIC_URL + '/models';
+            console.log("AI Model Loading...")
+            Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+                faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+            ]).then(setModelsLoaded(true));
+        }
+        videoNModelInit();
+    }, []);
+    
+    
     function handleHP(happiness, myHP) {
         if (myHP > 0) { // 아직 살아 있으면
             if (happiness > 0.2) { // 피를 깎아야 하는 경우
                 if (happiness > 0.6) {
-                    return 1;
+                    return 2;
                 } else {
-                    return 0.5;
+                    return 1;
                 }
             }
         } else { // 죽었으면
@@ -84,48 +87,40 @@ function Test() {
                 const decrease = handleHP(detections[0].expressions.happy, myHP);
                 setMyHP(myHP - decrease);
             }
-        }, 1000);
-        return <div>{myHP}</div>
+        }, 300);
+        return <h2>HP : {myHP}</h2>
     }
 
     const closeWebcam = () => {
         videoRef.current.pause();
         videoRef.current.srcObject.getTracks()[0].stop();
-        setCaptureVideo(false);
+        setvideoStarted(false);
     }
 
     return ( 
-        <div>
-            <div style = { { textAlign: 'center', padding: '10px' } } > 
+        <>
             { 
-                captureVideo && modelsLoaded ?
-                <button onClick = { closeWebcam } style = { { cursor: 'pointer', backgroundColor: 'green', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' } }>
-                    Close Webcam 
-                </button> 
-                :
-                <button onClick = { startVideo } style = { { cursor: 'pointer', backgroundColor: 'green', color: 'white', padding: '15px', fontSize: '25px', border: 'none', borderRadius: '10px' } }>
-                    Open Webcam 
-                </button>
-            } 
-        </div> 
-        { 
-            captureVideo ? 
                 modelsLoaded ?
-                    <div>
-                        <div style = {{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-                            <video ref = { videoRef } height = { videoHeight } width = { videoWidth } onPlay = { handleVideoOnPlay } style = { { borderRadius: '10px' } } /> 
-                            {!onVideo ? <div>model loading...</div>: <ShowHP></ShowHP>}
-                            <canvas ref = { canvasRef } style = { { position: 'absolute' } }/> 
-                        </div> 
-                    </div>
-                    :
-                    <div> loading... </div>
+                // <div style={{ backgroundColor: 'orange' }}>
+                //     <h2 style={{ color: 'gray' }}>{props.playerId}</h2>
+                //     <video autoPlay height={300} style={{ backgroundColor: 'white', width: 400 }}></video>
+                //     <h2>HP : 100</h2>
+                // </div>
+
+                // <div style = {{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
+                <div style={{ backgroundColor: 'orange' }}>
+                    <h2 style={{ color: 'gray' }}>{props.playerId ? props.playerId:defaultPlayerId}</h2>
+                    <video ref = { videoRef } height = { videoHeight } width = { videoWidth } onPlay = { handleVideoOnPlay } style = { { borderRadius: '10px' } } /> 
+                    {!onVideo ? <div>model loading...</div>: <ShowHP></ShowHP>}
+                </div> 
+                
                 :
-                <>
-                </>
+                <div>
+                    <h1> 입장 중 </h1> 
+                </div>
             } 
-        </div>
+        </>
     );
 }
 
-export default Test;
+export default MyVideo;

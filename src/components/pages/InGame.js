@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { ThemeProvider } from 'styled-components';
 
 import LoadGIF from "./Giftest";
+import MyVideo from "./MyVideo";
 import Button from "../common/Button.js";
 import { Background } from "../common/Background.tsx"
 
@@ -125,7 +126,7 @@ const InGame = () => {
         float: "left",
         height: 730,
         padding: 10,
-        // backgroundColor: 'pink',
+        backgroundColor: 'pink',
         textAlign: 'center'
     }
 
@@ -159,7 +160,7 @@ const InGame = () => {
                             </div>
                         </header>
                         <div className="left" style={columnStyle}>
-                            <Player playerId={'SalmonSushi'}></Player>
+                            <MyVideo playerId={'SalmonSushi'}></MyVideo>
                             <Player playerId={'DongDongBro'}></Player>
                         </div>
                         <div className="middle" style={middleStyle}>
