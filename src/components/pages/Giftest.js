@@ -1,5 +1,14 @@
 import axios from "axios"
 import { useEffect, useState, useRef } from 'react';
+import styled from "styled-components";
+
+const BackgroundSizeStyle = styled.img`
+    width: 700px;
+    height: 550px;
+    object-fit: contain;
+    border: 3px solid gold;
+    background-color: gray;
+`;
 
 const Giftest = () => {
     const [name, setName] = useState(['0.gif'])
@@ -53,9 +62,8 @@ const Giftest = () => {
 
 
     return (
-        <div>
-            <img src={`http://localhost:5000/${name[gifList[count]]}`}/>
-        </div>
+        <BackgroundSizeStyle src={`http://localhost:5000/${name[gifList[count]]}`}>
+        </BackgroundSizeStyle>
     );
 };
 
