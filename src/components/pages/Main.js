@@ -10,6 +10,7 @@ import mainBackground from '../../images/main_background.png';
 import mainTitle from '../../images/main_title.png';
 import mainLeft from '../../images/main_left.png';
 
+
 const LeftSector = styled.div`
     position: absolute;
     top: 50% ;
