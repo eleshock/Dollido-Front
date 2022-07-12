@@ -10,6 +10,7 @@ import mainBackground from '../../images/main_background.png';
 import mainTitle from '../../images/main_title.png';
 import mainLeft from '../../images/main_left.png';
 
+
 const LeftSector = styled.div`
     position: absolute;
     top: 50% ;
@@ -56,6 +57,11 @@ const Main = () => {
                             <Link to="/roomList">
                                 <Button color="yellow" size="large" style={ { position: "absolute", top: "70%" } }>
                                     다음 페이지
+                                </Button>
+                            </Link>
+                            <Link to="/play">
+                                <Button color="yellow" size="large" style={ { position: "absolute", top: "30%" } }>
+                                    In-Game Page
                                 </Button>
                             </Link>
                         </div>
