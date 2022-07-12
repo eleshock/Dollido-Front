@@ -37,7 +37,7 @@ const Main = () => {
                 palette: {
                     yellow: "#E5B941"
                 }
-            }} 
+            }}
         >
             <Background
                 background={mainBackground}
@@ -56,6 +56,11 @@ const Main = () => {
                             <Link to="/roomList">
                                 <Button color="yellow" size="large" style={ { position: "absolute", top: "70%" } }>
                                     다음 페이지
+                                </Button>
+                            </Link>
+                            <Link to="/gif_front">
+                                <Button color="yellow" size="large" style={ { position: "absolute", top: "30%" } }>
+                                    빵빵또로로롱
                                 </Button>
                             </Link>
                         </div>
