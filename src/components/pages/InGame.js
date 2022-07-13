@@ -46,9 +46,9 @@ function handleGameStart() {
 }
 
 function Player(props) {
-    return <div style={{ backgroundColor: 'orange' }}>
+    return <div style={{ backgroundColor: 'moccasin', margin:'0px 0 20px 0' }}>
         <h2 style={{ color: 'gray' }}>{props.playerId}</h2>
-        <video autoPlay height={300} style={{ backgroundColor: 'white', width: 400 }}></video>
+        <video autoPlay height={300} style={{ backgroundColor: 'white', width: "100%" }}></video>
         <h2>HP : 100</h2>
     </div>
 }
@@ -95,29 +95,34 @@ function Timer(props) {
 const InGame = () => {
 
     const [gameStarted, setGameStart] = useState(false);
+    const padding = 0;
 
     const hColumnStyle = {
         width: "25%",
         float: "left",
         height: 80,
-        padding: 10,
-        textAlign: 'center'
+        padding: padding,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 
     const hMiddleStyle = {
         width: "50%",
         float: "left",
         height: 80,
-        padding: 10,
-        backgroundColor: 'coral',
-        textAlign: 'center'
+        padding: padding,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#FFFFCC',
     }
 
     const columnStyle = {
         width: "25%",
         float: "left",
         height: 700,
-        padding: 10,
+        padding: padding,
         textAlign: 'center'
     }
 
@@ -125,8 +130,8 @@ const InGame = () => {
         width: "50%",
         float: "left",
         height: 730,
-        padding: 10,
-        backgroundColor: 'pink',
+        padding: padding,
+        backgroundColor: '#FFC19E   ',
         textAlign: 'center'
     }
 
@@ -146,9 +151,9 @@ const InGame = () => {
                 background={mainBackground}
                 element={
                     <div>
-                        <header style={{ backgroundColor: 'green', height: 80 }}>
+                        <header style={{ backgroundColor: 'white', height: 80 }}>
                             <div>
-                                <div className="left" style={hColumnStyle}>
+                            <div className="left" style={hColumnStyle}>
                                     <h1> Room Name </h1>
                                 </div>
                                 <div className="middle" style={hMiddleStyle}>
@@ -176,7 +181,7 @@ const InGame = () => {
             <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "33%" }} onClick={handleStart}>
                 START
             </Button>
-            <Link to="/roomList">
+            <Link to="/">
                 <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "55%" }}>
                     QUIT
                 </Button>

@@ -1,0 +1,33 @@
+.hColumnStyle {
+    width: 25%;
+    float: left;
+    height: 80;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hMiddleStyle {
+    width: 50%;
+    float: left;
+    height: 80;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFCC;
+}
+
+.columnStyle {
+    width: 25%;
+    float: left;
+    height: 700;
+    text-align: center;
+}
+
+.middleStyle {
+    width: 50%;
+    float: left;
+    height: 730;
+    text-align: center;
+    background-color: #FFC19E;
+}

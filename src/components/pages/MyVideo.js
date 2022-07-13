@@ -79,16 +79,41 @@ function MyVideo(props) {
         setOnVideo(true);
     }
     
-    const ShowHP = () => {
+    const ShowStatus = () => {
         const [myHP, setMyHP] = useState(100);
+        const [faceDetected, setFaceDetected]  = useState(false);
+        const [smiling, setSmiling]  = useState(false);
+        const [interval, setInterval] = useState(350);
+        let content = "";
+
         useInterval(async () => {
             const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
             if (detections[0]) {
                 const decrease = handleHP(detections[0].expressions.happy, myHP);
-                setMyHP(myHP - decrease);
+                if (decrease > 0) {
+                    const newHP = myHP - decrease
+                    if (newHP <= 0){ // game over
+                        setInterval(null);
+                    }
+                    setMyHP(newHP);
+                    setSmiling(true);
+                } else setSmiling(false);
+                setFaceDetected(true);
+            } else {
+                setFaceDetected(false)
+                setSmiling(false);
             }
-        }, 300);
-        return <h2>HP : {myHP}</h2>
+        }, interval);
+
+        let detecContent = faceDetected?"인식 중":"인식 불가";
+        // detecContent = detecContent.padEnd(15-detecContent.length, '\u00A0');
+        if (interval) {
+            content = <h2>{detecContent}  HP : {myHP} {smiling&&"^^"}</h2>
+        } else {
+            content = <h2> Game Over!!! </h2>
+        }
+        
+        return content
     }
 
     const closeWebcam = () => {
@@ -108,12 +133,11 @@ function MyVideo(props) {
                 // </div>
 
                 // <div style = {{ display: 'flex', justifyContent: 'center', padding: '10px' }}>
-                <div style={{ backgroundColor: 'orange' }}>
+                <div style={{ backgroundColor: 'moccasin' , margin:'0px 0 20px 0'}}>
                     <h2 style={{ color: 'gray' }}>{props.playerId ? props.playerId:defaultPlayerId}</h2>
-                    <video ref = { videoRef } height = { videoHeight } width = { videoWidth } onPlay = { handleVideoOnPlay } style = { { borderRadius: '10px' } } /> 
-                    {!onVideo ? <div>model loading...</div>: <ShowHP></ShowHP>}
+                    <video ref = { videoRef } onPlay = { handleVideoOnPlay } style = { { borderRadius: '10px', width:"100%", transform:'scaleX(-1)' } } /> 
+                    {!onVideo ? <div>model loading...</div>: <ShowStatus></ShowStatus>}
                 </div> 
-                
                 :
                 <div>
                     <h1> 입장 중 </h1> 
