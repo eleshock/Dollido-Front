@@ -29,7 +29,6 @@ const Giftest = () => {
 
     useEffect(() => {
         tempGIF.current()
-        nameFunction();
             // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -49,7 +48,7 @@ const Giftest = () => {
             const timer = setInterval(() => {
                 setCount(value => value+1);
                 console.log(count);
-            }, 3500);
+            }, 1100);
             return () => clearInterval(timer);
 
         } else{
