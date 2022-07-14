@@ -28,8 +28,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "aws s3 sync ./build s3://dollido --profile=dollido",
-    "invalidate": "aws cloudfront create-invalidation --profile=dollido --distribution-id ELHSYLVHBW8G7 --paths /*"
+    "deploy": "aws s3 sync ./build s3://dollido2 --profile=sample-deploy-s3",
+    "invalidate": "aws cloudfront create-invalidation --profile=sample-deploy-s3 --distribution-id EP0XGQF3DNFXF --paths /*"
   },
   "eslintConfig": {
     "extends": [

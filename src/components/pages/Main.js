@@ -9,7 +9,8 @@ import { Background } from "../common/Background.tsx"
 import mainBackground from '../../images/main_background.png';
 import mainTitle from '../../images/main_title.png';
 import mainLeft from '../../images/main_left.png';
-
+import io from 'socket.io-client'
+const socket = io.connect('https://dongbrew.click');
 
 const LeftSector = styled.div`
     position: absolute;
