@@ -22,13 +22,6 @@ function Videos({ match, socket }) {
       .then(getStream)
       .catch((err) => console.error(err));
     return () => {
-      // console.log(userVideo);
-      // console.log(userStream);
-      // console.log(partnerVideos);
-      // console.log(peerRef);
-      // console.log(otherUsers);
-      // console.log(peers);
-      // console.log(roomId);
       socket.emit("out room");
       socket.off();
       userStream.current &&
@@ -48,17 +41,16 @@ function Videos({ match, socket }) {
     (stream) => {
       userVideo.current.srcObject = stream;
       userStream.current = stream;
-      console.log(socket);
       socket.emit("join room", {
         roomID: roomID,
         streamID: stream.id,
-        userName: localStorage.username,
+        nickName: localStorage.nickname,
       });
 
       // 유저가 나갔을 때
-      socket.on("out user", ({ username, streamID }) => {
-        // alert(`${username} (이)가 나갔습니다!`);
-        console.log(username + " out!");
+      socket.on("out user", ({ nickname, streamID }) => {
+        alert(`${nickname} (이)가 나갔습니다!`);
+        console.log(nickname + " out!");
         dispatch(deleteVideo(streamID));
       });
 
@@ -232,7 +224,6 @@ function Videos({ match, socket }) {
         (otherUser) => otherUser.socketID === incoming.caller
       );
       const thePeer = peers.current[index];
-      console.log(candidate);
       thePeer
         .addIceCandidate(candidate)
         .catch((e) => console.log("ICE 에러" + e));
@@ -255,14 +246,14 @@ function Videos({ match, socket }) {
     <div>
       <div className="videos-grid">
         <div className="local-video">
-          <p>{localStorage.username}</p>
+          <p>{localStorage.nickname}</p>
           <video autoPlay width="700px" ref={userVideo} />
         </div>
         {partnerVideos.map((partnerVideo) => (
           <div key={partnerVideo.id} className="other-video">
             {otherUsers.current.map((otherUser) =>
               otherUser.streamID === partnerVideo.id ? (
-                <p key={otherUser.socketID}>{otherUser.userName}</p>
+                <p key={otherUser.socketID}>{otherUser.nickName}</p>
               ) : null
             )}
             <Video stream={partnerVideo} />

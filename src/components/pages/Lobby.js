@@ -50,7 +50,7 @@ const Lobby = () => {
     });
     socket.current.emit("get room list");
   }, []);
-  // console.log(socket);
+  console.log(socket);
   useEffect(() => {
     socket.current.on("give room list", (rooms) => {
       setRooms(rooms);

@@ -61,7 +61,7 @@ const Giftest = () => {
 
 
     return (
-        <BackgroundSizeStyle src={`https://dongbrew.click/${name[gifList[count]]}`}>
+        <BackgroundSizeStyle src={`https://localhost:5000/${name[gifList[count]]}`}>
         </BackgroundSizeStyle>
     );
 };
