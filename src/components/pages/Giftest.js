@@ -36,6 +36,7 @@ const Giftest = () => {
         axios.get("/api/roomGIF")
                 .then((response) => {
                     setGifList(response.data.sendGIF);
+                    console.log(gifList);
                 });
             }, []);
 
@@ -47,7 +48,6 @@ const Giftest = () => {
         if(count % 2 === 0) {
             const timer = setInterval(() => {
                 setCount(value => value+1);
-                console.log(count);
             }, 1100);
             return () => clearInterval(timer);
 
@@ -61,7 +61,7 @@ const Giftest = () => {
 
 
     return (
-        <BackgroundSizeStyle src={`http://localhost:5000/${name[gifList[count]]}`}>
+        <BackgroundSizeStyle src={`https://dongbrew.click/${name[gifList[count]]}`}>
         </BackgroundSizeStyle>
     );
 };
