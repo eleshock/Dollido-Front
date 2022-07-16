@@ -21,3 +21,10 @@ yarn-debug.log*
 yarn-error.log*
 
 package-lock.json
+
+#script
+/deploy.ps1
+/deploy.sh
+
+#ServerName
+/src/serverName.js

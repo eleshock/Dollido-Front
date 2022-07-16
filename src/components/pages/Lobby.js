@@ -4,10 +4,11 @@ import io from "socket.io-client";
 import { ThemeProvider } from "styled-components";
 import { v4 as uuid } from "uuid";
 
-
 import Button from "../common/Button.js";
 import mainBackground from "../../images/main_background.png";
 import { Background } from "../common/Background.tsx";
+
+import { ServerName } from "../../serverName";
 
 const Lobby = () => {
   /* 닉네임 생성 절차 */
@@ -34,7 +35,7 @@ const Lobby = () => {
   }, []);
 
   /* 방 만들기 */
-  const SERVER_ADDRESS = useRef("https://dongbrew.click");
+  const SERVER_ADDRESS = useRef(ServerName);
   const socket = useRef();
   const roomNameRef = useRef(null);
   const [rooms, setRooms] = useState({});

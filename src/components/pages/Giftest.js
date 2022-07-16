@@ -1,6 +1,7 @@
 import axios from "axios"
 import { useEffect, useState, useRef } from 'react';
 import styled from "styled-components";
+import {ServerName} from "../../serverName";
 
 const BackgroundSizeStyle = styled.img`
     width: 700px;
@@ -19,7 +20,7 @@ const Giftest = () => {
 
     // get gifs file subjects from server
     const nameFunction = () => {
-        axios.get("/api/gifs")
+        axios.get(`${ServerName}/api/gifs/gifs`)
             .then((response) => {
                 setName(response.data.file);
             });
@@ -33,15 +34,12 @@ const Giftest = () => {
     }, []);
 
     useEffect(() => {
-        axios.get("/api/roomGIF")
+        axios.get(`${ServerName}/api/gifs/roomGIF`)
                 .then((response) => {
                     setGifList(response.data.sendGIF);
                     console.log(gifList);
                 });
             }, []);
-
-
-
 
     useEffect(() => {
 
@@ -61,7 +59,7 @@ const Giftest = () => {
 
 
     return (
-        <BackgroundSizeStyle src={`https://localhost:5000/${name[gifList[count]]}`}>
+        <BackgroundSizeStyle src={`${ServerName}/${name[gifList[count]]}`}>
         </BackgroundSizeStyle>
     );
 };

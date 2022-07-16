@@ -1,7 +1,9 @@
 import React from "react";
 import Videos from "./Videos";
 import io from "socket.io-client";
-const SERVER_ADDRESS = "https://localhost:5000";
+import { ServerName } from "../../serverName";
+
+const SERVER_ADDRESS = ServerName;
 const socket = io(SERVER_ADDRESS, {
   withCredentials: false,
   extraHeaders: {

@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled, { ThemeProvider } from 'styled-components';
 
+// common import
 import Button from "../common/Button.js";
 import { Modal } from "../common/Modal.tsx";
 import { Background } from "../common/Background.tsx"
 
+// images import
 import mainBackground from '../../images/main_background.png';
 import mainTitle from '../../images/main_title.png';
 import mainLeft from '../../images/main_left.png';
@@ -62,6 +64,11 @@ const Main = () => {
                             <Link to="/play">
                                 <Button color="yellow" size="large" style={ { position: "absolute", top: "30%" } }>
                                     In-Game Page
+                                </Button>
+                            </Link>
+                            <Link to="/test">
+                                <Button color="yellow" size="large" style={ { position: "absolute", top: "10%" } }>
+                                    test
                                 </Button>
                             </Link>
                         </div>
