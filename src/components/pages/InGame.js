@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ThemeProvider } from 'styled-components';
 
 import LoadGIF from "./Giftest";
-import MyVideo from "./MyVideo";
+import MyVideo, {stopWebcam} from "./MyVideo";
 import Button from "../common/Button.js";
 import { Background } from "../common/Background.tsx"
 
@@ -182,7 +182,7 @@ const InGame = () => {
                 START
             </Button>
             <Link to="/">
-                <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "55%" }}>
+                <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "55%" }} onClick={stopWebcam}>
                     QUIT
                 </Button>
             </Link>

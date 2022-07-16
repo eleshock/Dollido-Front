@@ -1,15 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as faceapi from 'face-api.js';
+const recordedChunks = [];
+let startVideoPromise;
+
+const stopWebcam = () => {
+    startVideoPromise.then(stream => {
+        console.log('Video Stopped');
+        stream.getTracks().forEach(track => {
+            track.stop();
+        });
+    });
+}
 
 function MyVideo(props) {
     const [modelsLoaded, setModelsLoaded] = useState(false);
-    const [videoStarted, setvideoStarted] = useState(true);
     const [onVideo, setOnVideo] = useState(false);
 
     const videoRef = useRef();
-    const videoHeight = 300;
-    const videoWidth = 400;
-    const canvasRef = useRef();
     const defaultPlayerId = "깨랑까랑";
 
 
@@ -34,10 +41,12 @@ function MyVideo(props) {
     }
     
     const startVideo = (deviceId) => {
-        navigator.mediaDevices.getUserMedia({
+        startVideoPromise = navigator.mediaDevices.getUserMedia({
             audio: false,
             video: deviceId ? { deviceId } : true,
-        }).then((stream) => {
+        });
+        
+        startVideoPromise.then((stream) => {
             let video = videoRef.current;
             video.srcObject = stream;
             video.play();
@@ -79,11 +88,21 @@ function MyVideo(props) {
         setOnVideo(true);
     }
     
+    function recordVideo(stream) {
+        let recorder = new MediaRecorder(stream);
+        recorder.ondataavailable = (event) => { recordedChunks.push(event.data); }
+        recorder.start();
+        setTimeout(() => {
+            recorder.stop();
+            console.log(recordedChunks);
+        }, 2000);
+    }   
+
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(100);
         const [faceDetected, setFaceDetected]  = useState(false);
         const [smiling, setSmiling]  = useState(false);
-        const [interval, setInterval] = useState(350);
+        const [interval, setInterval] = useState(500);
         let content = "";
 
         useInterval(async () => {
@@ -105,6 +124,11 @@ function MyVideo(props) {
             }
         }, interval);
 
+        // useEffect()
+        if(recordedChunks.length === 0){ // 딱 한 번만 record
+            recordVideo(videoRef.current.srcObject);
+        }
+
         let detecContent = faceDetected?"인식 중":"인식 불가";
         // detecContent = detecContent.padEnd(15-detecContent.length, '\u00A0');
         if (interval) {
@@ -114,12 +138,6 @@ function MyVideo(props) {
         }
         
         return content
-    }
-
-    const closeWebcam = () => {
-        videoRef.current.pause();
-        videoRef.current.srcObject.getTracks()[0].stop();
-        setvideoStarted(false);
     }
 
     return ( 
@@ -148,3 +166,4 @@ function MyVideo(props) {
 }
 
 export default MyVideo;
+export {recordedChunks, stopWebcam};
