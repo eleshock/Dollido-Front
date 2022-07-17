@@ -1,34 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Link } from "react-router-dom";
 import { ThemeProvider } from 'styled-components';
 
 import LoadGIF from "./Giftest";
-import MyVideo, {stopWebcam} from "./MyVideo";
+import MyVideo, { stopWebcam } from "./MyVideo";
 import Button from "../common/Button.js";
 import { Background } from "../common/Background.tsx"
+import BestPerformer from './BestPerformer';
+import { useInterval } from '../common/usefulFuntions';
 
 import mainBackground from '../../images/main_background.png';
 
-/** setInterval 안에서 setState 쓰려면 setInterval 대신에 이 함수 써야 함 */
-function useInterval(callback, delay) {
-    const savedCallback = useRef();
-
-    // Remember the latest callback.
-    useEffect(() => {
-        savedCallback.current = callback;
-    }, [callback]);
-
-    // Set up the interval.
-    useEffect(() => {
-        function tick() {
-            savedCallback.current();
-        }
-        if (delay !== null) {
-            let id = setInterval(tick, delay);
-            return () => clearInterval(id);
-        }
-    }, [delay]);
-}
 
 /** 1초 줄어든 시간을 리턴 */
 function decreaseOneSec(minutes, seconds) {
@@ -61,9 +43,9 @@ function ChattingWindow(props) {
 
 function GifWindow(props) {
     return  <div>
-                <h1>GIF Here</h1>
-                <LoadGIF></LoadGIF>
-            </div>
+        <h1>GIF Here</h1>
+        <LoadGIF></LoadGIF>
+    </div>
 }
 
 
@@ -95,8 +77,12 @@ function Timer(props) {
 const InGame = () => {
 
     const [gameStarted, setGameStart] = useState(false);
+    const [gameFinished, setGameFinished] = useState(false);
     const padding = 0;
 
+    useEffect(()=>stopWebcam, []); // InGame 페이지 unmount 됐을 때 카메라 종료
+
+    /** CSS */
     const hColumnStyle = {
         width: "25%",
         float: "left",
@@ -140,6 +126,11 @@ const InGame = () => {
         handleGameStart();
     }
 
+    function handleFinish() {
+        console.log("Game Finished");
+        setGameFinished(true);
+    }
+
     return (
         <ThemeProvider
             theme={{
@@ -153,7 +144,7 @@ const InGame = () => {
                     <div>
                         <header style={{ backgroundColor: 'white', height: 80 }}>
                             <div>
-                            <div className="left" style={hColumnStyle}>
+                                <div className="left" style={hColumnStyle}>
                                     <h1> Room Name </h1>
                                 </div>
                                 <div className="middle" style={hMiddleStyle}>
@@ -169,7 +160,11 @@ const InGame = () => {
                             <Player playerId={'DongDongBro'}></Player>
                         </div>
                         <div className="middle" style={middleStyle}>
-                            {!gameStarted ? <ChattingWindow></ChattingWindow> : <GifWindow></GifWindow>}
+                            {gameStarted ?
+                                gameFinished ?
+                                    <BestPerformer></BestPerformer> :
+                                    <GifWindow></GifWindow> :
+                                <ChattingWindow></ChattingWindow>}
                         </div>
                         <div className="right" style={columnStyle}>
                             <Player playerId={'EleShock'}></Player>
@@ -182,10 +177,13 @@ const InGame = () => {
                 START
             </Button>
             <Link to="/">
-                <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "55%" }} onClick={stopWebcam}>
+                <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "55%" }}>
                     QUIT
                 </Button>
             </Link>
+            <Button color="yellow" size="large" style={{ position: "absolute", top: "88%", left: "70%" }} onClick={handleFinish}>
+                FINISH GAME
+            </Button>
         </ThemeProvider>
     );
 };

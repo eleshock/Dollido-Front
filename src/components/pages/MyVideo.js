@@ -1,7 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useInterval } from '../common/usefulFuntions';
 import * as faceapi from 'face-api.js';
-const recordedChunks = [];
+
+const recordTime = 3000; // 녹화 시간(ms)
+const modelInterval = 500; // 웃음 인식 간격(ms)
 let startVideoPromise;
+let recordedChunks = [];
+let videoRecorded = false; // 녹화 여부
 
 const stopWebcam = () => {
     startVideoPromise.then(stream => {
@@ -12,34 +17,20 @@ const stopWebcam = () => {
     });
 }
 
+/** 게임이 끝났을 때, 다음 판을 위해 변수 초기화*/
+function gameFinished() {
+    recordedChunks = [];
+    videoRecorded = false;
+}
+
 function MyVideo(props) {
     const [modelsLoaded, setModelsLoaded] = useState(false);
     const [onVideo, setOnVideo] = useState(false);
-
     const videoRef = useRef();
     const defaultPlayerId = "깨랑까랑";
-
-
-    function useInterval(callback, delay) {
-        const savedCallback = useRef();
-
-        // Remember the latest callback.
-        useEffect(() => {
-            savedCallback.current = callback;
-        }, [callback]);
-
-        // Set up the interval.
-        useEffect(() => {
-            function tick() {
-                savedCallback.current();
-            }
-            if (delay !== null) {
-                let id = setInterval(tick, delay);
-                return () => clearInterval(id);
-            }
-        }, [delay]);
-    }
     
+    useEffect(() => gameFinished, []); // MyVideo component가 unmount됐을 때 실행
+
     const startVideo = (deviceId) => {
         startVideoPromise = navigator.mediaDevices.getUserMedia({
             audio: false,
@@ -69,17 +60,28 @@ function MyVideo(props) {
         videoNModelInit();
     }, []);
     
-    
-    function handleHP(happiness, myHP) {
-        if (myHP > 0) { // 아직 살아 있으면
-            if (happiness > 0.2) { // 피를 깎아야 하는 경우
-                if (happiness > 0.6) {
-                    return 2;
-                } else {
-                    return 1;
+    function recordVideo(stream) {
+        console.log("Start Recording...")
+        let recorder = new MediaRecorder(stream);
+        recorder.ondataavailable = (event) => { recordedChunks.push(event.data); }
+        recorder.start();
+        setTimeout(() => {
+            recorder.stop();
+            console.log("Recording Finished!");
+        }, recordTime);
+    }   
+
+    function handleHP(happiness) {
+        if (happiness > 0.2) { // 피를 깎아야 하는 경우
+            if (happiness > 0.6) {
+                if(!videoRecorded){ // 딱 한 번만 record
+                    videoRecorded = true;
+                    recordVideo(videoRef.current.srcObject);
                 }
+                return 2;
+            } else {
+                return 1;
             }
-        } else { // 죽었으면
         }
         return 0;
     }
@@ -87,30 +89,21 @@ function MyVideo(props) {
     const handleVideoOnPlay = () => {
         setOnVideo(true);
     }
-    
-    function recordVideo(stream) {
-        let recorder = new MediaRecorder(stream);
-        recorder.ondataavailable = (event) => { recordedChunks.push(event.data); }
-        recorder.start();
-        setTimeout(() => {
-            recorder.stop();
-            console.log(recordedChunks);
-        }, 2000);
-    }   
 
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(100);
         const [faceDetected, setFaceDetected]  = useState(false);
         const [smiling, setSmiling]  = useState(false);
-        const [interval, setInterval] = useState(500);
+        const [interval, setInterval] = useState(modelInterval);
         let content = "";
 
+        /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
             const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
             if (detections[0]) {
-                const decrease = handleHP(detections[0].expressions.happy, myHP);
+                const decrease = handleHP(detections[0].expressions.happy);
                 if (decrease > 0) {
-                    const newHP = myHP - decrease
+                    const newHP = myHP - decrease;
                     if (newHP <= 0){ // game over
                         setInterval(null);
                     }
@@ -119,18 +112,13 @@ function MyVideo(props) {
                 } else setSmiling(false);
                 setFaceDetected(true);
             } else {
-                setFaceDetected(false)
+                setFaceDetected(false);
                 setSmiling(false);
             }
         }, interval);
 
-        // useEffect()
-        if(recordedChunks.length === 0){ // 딱 한 번만 record
-            recordVideo(videoRef.current.srcObject);
-        }
-
         let detecContent = faceDetected?"인식 중":"인식 불가";
-        // detecContent = detecContent.padEnd(15-detecContent.length, '\u00A0');
+        
         if (interval) {
             content = <h2>{detecContent}  HP : {myHP} {smiling&&"^^"}</h2>
         } else {
@@ -142,7 +130,7 @@ function MyVideo(props) {
 
     return ( 
         <>
-            { 
+            {
                 modelsLoaded ?
                 // <div style={{ backgroundColor: 'orange' }}>
                 //     <h2 style={{ color: 'gray' }}>{props.playerId}</h2>
