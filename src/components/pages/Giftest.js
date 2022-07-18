@@ -13,10 +13,6 @@ const BackgroundSizeStyle = styled.img`
 `;
 
 
-function onScreenGif(props) {
-    console.log(props.seconds);
-}
-
 const Giftest = (props) => {
     const [name, setName] = useState(['0.gif'])
     const [count, setCount] = useState(0);
