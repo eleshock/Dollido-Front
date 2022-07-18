@@ -7,6 +7,7 @@ interface Props {
     element: JSX.Element;
     modal: boolean;
     setModal: Dispatch <SetStateAction<boolean>> ;
+    video: void;
 };
 
 const View = styled.div<{ width: string; height: string }>`

@@ -17,3 +17,8 @@ code {
   margin: 0;
   box-sizing: border-box;
 }
+
+@font-face {
+  font-family: "koverwatch";
+  src: url("./fonts/koverwatch.ttf");
+}
