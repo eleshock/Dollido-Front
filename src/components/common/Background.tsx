@@ -8,7 +8,7 @@ interface Props {
 const Content = styled.div`
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: 100%;
 `;
 
 const MainBackgroundDiv = styled.div<{ background: string }>`
@@ -16,13 +16,15 @@ const MainBackgroundDiv = styled.div<{ background: string }>`
     width: 100%;
     height: 100vh;
     background-image: url(${(props) => props.background});
+    background-repeat: no-repeat;
     background-size: cover;
+    background-position: center;
 `;
 
 export const Background = ({ background, element }: Props) => {
     return (
         <Content>
-            <MainBackgroundDiv background={background}>
+            <MainBackgroundDiv background ={background}>
                 {element}
             </MainBackgroundDiv>
         </Content>
