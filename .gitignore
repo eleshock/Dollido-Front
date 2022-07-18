@@ -26,5 +26,6 @@ package-lock.json
 /deploy.ps1
 /deploy.sh
 
-#ServerName
+#Personal information
 /src/serverName.js
+/src/s3Domain.js

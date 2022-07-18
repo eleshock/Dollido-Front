@@ -6,17 +6,17 @@ import './Images.css'
 
 async function postImage({image, description}) {
   const formData = new FormData();
-  formData.append("image", image)
+  formData.append("image", image, encodeURI(image));
   formData.append("description", description)
 
-  const result = await axios.post(`${ServerName}/images`, formData, { headers: {'Content-Type': 'multipart/form-data'}})
-  return result.data
+
+  const result = await axios.post(`${ServerName}/api/gifs/images`, formData, { headers: {'Content-Type': 'multipart/form-data'}}).then((req) => console.log(req.data.imagePath))
 }
 
 
 function Images() {
 
-  const [file, setFile] = useState()
+  const [file, setFile] = useState("")
   const [description, setDescription] = useState("")
   const [images, setImages] = useState([])
 
@@ -35,17 +35,9 @@ function Images() {
     <div className="App">
       <form onSubmit={submit}>
         <input onChange={fileSelected} type="file" accept="image/*"></input>
-        <input value={description} onChange={e => setDescription(e.target.value)} type="text"></input>
+        <input value={description} onChange={e => setDescription(e.target.value)} type="text" ></input>
         <button type="submit">Submit</button>
       </form>
-
-      { images.map( image => (
-        <div key={image}>
-          <img src={image}></img>
-        </div>
-      ))}
-
-      <img src={`${ServerName}/images/8fa9e836078233bedd8d43770978d805`}></img>
 
     </div>
   );
