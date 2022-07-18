@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import styled, { ThemeProvider } from 'styled-components';
+import { ThemeProvider } from 'styled-components';
 
 
 // common import
@@ -10,7 +9,6 @@ import { Background } from "../common/Background.tsx";
 import SignIn from "./members/SignIn.js";
 import SignUp from "./members/SignUp.js";
 import Header from "../common/members/Header";
-import "../common/Button.css"
 
 // images import
 import mainBackground from '../../images/main_Back.gif';
@@ -31,9 +29,9 @@ const Main = () => {
             <Background
                 background={mainBackground}
                 element={
-                    <div>
-                        <a class="btn btn-sm animated-button thar-two" style={ { position: "absolute", bottom: "20%", left: "50%", transform: "translate(-50%, -50%)", width: "300px", height: "100px"} } onClick={() => { setModal(true); }}> <p style={ {fontSize: "40px", fontWeight: "900", fontFamily: "Black Han Sans", margin: "15px"} }> Game Start </p> </a>
-                    </div>
+                    <Button style={ { position: "absolute", bottom: "10%", left: "50%", transform: "translate(-50%, -50%)", width: "300px", height: "100px"} } onClick = {() => { setModal(true); }} >
+                        <p style={ {fontSize: "40px", fontWeight: "900", fontFamily: "Black Han Sans", backgroundColor: "transparent", margin: 0, lineHeight: "104px"} }> Game Start </p> 
+                    </Button>
                 }
 
             />
