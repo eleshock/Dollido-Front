@@ -5,7 +5,10 @@ import styled, { ThemeProvider } from 'styled-components';
 // common import
 import Button from "../common/Button.js";
 import { Modal } from "../common/Modal.tsx";
-import { Background } from "../common/Background.tsx"
+import { Background } from "../common/Background.tsx";
+import SignIn from "./members/SignIn.js";
+import SignUp from "./members/SignUp.js";
+import Header from "../common/members/Header";
 
 // images import
 import mainBackground from '../../images/main_background.png';
@@ -33,6 +36,7 @@ const MainLeft = styled.img`
 
 const Main = () => {
     const [modal, setModal] = useState(false);
+    const [change, setChange] = useState(true);
 
     return (
         <ThemeProvider
@@ -67,7 +71,7 @@ const Main = () => {
                                 </Button>
                             </Link>
                             <Link to="/test">
-                                <Button color="yellow" size="large" style={ { position: "absolute", top: "10%" } }>
+                                <Button color="yellow" size="large" style={ { position: "absolute", top: "10%"} }>
                                     test
                                 </Button>
                             </Link>
@@ -75,19 +79,32 @@ const Main = () => {
                     </div>
                 }
             />
-            {modal && (
-                <Modal
-                    modal={modal}
-                    setModal={setModal}
-                    width="900"
-                    height="600"
-                    element={
-                        <div>
-                            <h2 style={{margin: "30px"}}>안녕하세요</h2>
-                        </div>
-                    }
-                />
-            )}
+            {modal ?
+                change ?
+                    <Modal
+                        modal={modal}
+                        setModal={setModal}
+                        setChange={setChange}
+                        width="500"
+                        height="520"
+                        element={
+                            <Header children={<SignIn setChange={setChange}/>} />
+                        }
+                    />
+                    :
+                    <Modal
+                        modal={modal}
+                        setModal={setModal}
+                        setChange={setChange}
+                        width="500"
+                        height="670"
+                        element={
+                            <Header children={<SignUp/>} />
+                        }
+                    />
+            :
+            <></>
+            }
         </ThemeProvider>
     );
 };

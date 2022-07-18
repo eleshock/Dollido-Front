@@ -70,10 +70,6 @@ const StyledButton = styled.button`
 
     ${sizeStyles}
     ${colorStyles}
-    
-    & + & {
-        margin-left: 1rem;
-    }
 `;
 
 function Button({ children, color, size, outline, fullWidth, ...rest }) {

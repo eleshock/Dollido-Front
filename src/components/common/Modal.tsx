@@ -7,6 +7,7 @@ interface Props {
     element: JSX.Element;
     modal: boolean;
     setModal: Dispatch <SetStateAction<boolean>> ;
+    setChange: Dispatch <SetStateAction<boolean>> ;
 };
 
 const View = styled.div<{ width: string; height: string }>`
@@ -26,22 +27,24 @@ const View = styled.div<{ width: string; height: string }>`
     top: calc(50vh - ${(props) => props.height}px / 2);
     width: ${(props) => props.width}px;
     height: ${(props) => props.height}px;
-    padding: 8px;
     background-color: white;
-    border-radius: 8px;
     animation-name: switchModalOn;
     animation-duration: 0.5s;
     z-index: 2000;
+    border-radius: 8px;
     
     .exit-wrapper {
         position: absolute;
-        top: 4px;
-        right: 4px;
+        top: -10px;
+        right: -10px;
         font-size: 32px;
         width: 32px;
         height: 32px;
-        line-height: 26px;
-        background-color: transparent;
+        line-height: 22px;
+        border: 1px solid black;
+        border-radius: 100%;
+        text-align: center;
+        background-color: white;
         cursor: pointer;
     }
 `;
@@ -58,10 +61,11 @@ const Canvas = styled.div`
     animation-duration: 0.5s;
 `;
 
-export const Modal = ({ width, height, element, modal, setModal}: Props) => {
+export const Modal = ({ width, height, element, modal, setModal, setChange}: Props) => {
     
     const modalOff = () => {
         setModal(false);
+        setChange(true);
     };
 
     return (
