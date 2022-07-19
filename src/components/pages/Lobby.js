@@ -202,7 +202,6 @@ const Lobby = () => {
   const roomNameRef = useRef(null);
   const [rooms, setRooms] = useState({});
   const [roomName, setRoomName] = useState("");
-  const roomMatserName = useRef();
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage, setPostsPerPage] = useState(7);
@@ -418,7 +417,7 @@ const Lobby = () => {
                           return (
                               <RoomLinkList key={room[0]} onClick = { () => selectRoom(room) }>
                                 <RoomLink1>{room[1].roomName}</RoomLink1>
-                                <RoomLink2>방장이름</RoomLink2>
+                                <RoomLink2>{room[1].members[0]? room[1].members[0].nickName : "없음" }</RoomLink2>
                                 <RoomLink3>개인전</RoomLink3>
                                 <RoomLink4>
                                   {room[1].members.length}/4
