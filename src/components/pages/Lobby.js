@@ -90,7 +90,7 @@ const RoomTag4 = styled.div`
 const RoomLinkList = styled.li`
   display: flex;
   justify-content: space-between;
-  color: white; 
+  color: white;
   border: 1px solid transparent;
   background-color: #16364A79;
   text-decoration: none;
@@ -173,6 +173,7 @@ const RightTriangle = styled.button`
 let startVideoPromise;
 
 const Lobby = () => {
+
   /* 닉네임 생성 절차 */
   const [nickname, setNickname] = useState("");
   const [loggedNickname, setLoggedNickname] = useState("");
@@ -207,7 +208,7 @@ const Lobby = () => {
   const [postsPerPage, setPostsPerPage] = useState(7);
 
 
-  // 방 리스트 받아오기
+  // 1. 방 리스트 받아오기
   useEffect(() => {
     socket.current = io(SERVER_ADDRESS.current, {
       withCredentials: false,
@@ -217,6 +218,7 @@ const Lobby = () => {
     });
     socket.current.emit("get room list");
   }, []);
+  // console.log(socket);
   useEffect(() => {
     socket.current.on("give room list", (rooms) => {
       setRooms(rooms);
@@ -241,12 +243,12 @@ const Lobby = () => {
   const onClickMakeRoom = useCallback(
     (e) => {
       e.preventDefault();
-      // 방제 없을 시, 생성 불가
+      // 2-1. 방제 없을 시, 생성 불가
       if (roomName === "") {
         alert("방 이름을 입력하세요");
         return;
       }
-      // 방 중복 시, 생성 불가
+      // 2-2. 방 중복 시, 생성 불가
       let roomNameCheck = false;
       Object.entries(rooms).map((room) => {
         if (room[1].roomName === roomName) {
@@ -256,7 +258,7 @@ const Lobby = () => {
           return;
         }
       });
-      // 방 생성, 방이름과 방ID 서버에 전달
+      // 2-3. 방 생성, 방이름과 방ID 서버에 전달
       if (!roomNameCheck) {
         socket.current.emit("make room", { roomName, roomID: uuid() });
         alert(`${roomName} 방이 생성되었습니다`);
@@ -361,7 +363,7 @@ const Lobby = () => {
                             닉네임 변경
                           </Button2>
                         </div>
-                      
+
                     ) : (
                       <div>
                         <input
