@@ -31,3 +31,8 @@ code {
 *:after {
   box-sizing: inherit;
 }
+
+@font-face {
+  font-family: "koverwatch";
+  src: url("./fonts/koverwatch.ttf");
+}
