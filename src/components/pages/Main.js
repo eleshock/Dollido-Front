@@ -55,7 +55,7 @@ const Main = () => {
                         width="500"
                         height="670"
                         element={
-                            <Header children={<SignUp/>} />
+                            <Header children={<SignUp setChange={setChange}/>} />
                         }
                     />
             :

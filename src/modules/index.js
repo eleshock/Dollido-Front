@@ -12,7 +12,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   videos: videos,
-  member: member
+  member: member,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

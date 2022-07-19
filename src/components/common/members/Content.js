@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import oc from 'open-color';
 
 const Content = styled.div`
-    padding: 25px;
+    padding: 10px;
 `;
 
 const Title = styled.div`
