@@ -1,5 +1,10 @@
 .videos-grid {
+  
   display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  
 }
 .local-video {
   display: inline-block;
@@ -8,3 +13,4 @@
 .other-video {
   display: inline-block;
 }
+

@@ -1,8 +1,44 @@
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { updateVideos, deleteVideo, clearVideos } from "../../modules/videos";
-import "./VideoStyle.css";
+import { Background } from "../common/Background.tsx";
+import styled from "styled-components";
+import { ThemeProvider } from "styled-components";
+import mainBackground from "../../images/mainBackground.gif";
+
+/* In Game 추가 사항 */
+import LoadGIF from "./Giftest";
+import Button from "../common/Button.js";
+import { Link } from "react-router-dom";
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: koverwatch
+`
+
+const Header = styled.div`
+  display: flex;
+  flex: 1;
+  font-family: koverwatch
+`
+
+const Middle = styled.div`
+  display: flex;
+  flex: 60;
+  width: 100%;
+  font-family: koverwatch
+`
+const Bottom = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  flex: 30;
+  font-family: koverwatch
+`
+
 
 function Videos({ match, socket }) {
   const dispatch = useDispatch();
@@ -49,7 +85,7 @@ function Videos({ match, socket }) {
 
       // 유저가 나갔을 때
       socket.on("out user", ({ nickname, streamID }) => {
-        alert(`${nickname} (이)가 나갔습니다!`);
+        // alert(`${nickname} (이)가 나갔습니다!`);
         console.log(nickname + " out!");
         dispatch(deleteVideo(streamID));
       });
@@ -67,7 +103,7 @@ function Videos({ match, socket }) {
         otherUsers.current.push(userID);
       });
       socket.on("offer", handleRecieveCall); // Callee는 Caller의 offer을 들을 것
-      socket.on("answer", handleAnswer); // Caller은 Callee의 answer을 들을 것
+      socket.on("answer", handleAnswer);
       socket.on("ice-candidate", handleNewICECandidateMsg); // IceCandidate 정보를 서로 주고 받음
     },
     // eslint-disable-next-line
@@ -219,14 +255,14 @@ function Videos({ match, socket }) {
   const handleNewICECandidateMsg = useCallback(
     (incoming) => {
       const candidate = new RTCIceCandidate(incoming.candidate);
-
       const index = otherUsers.current.findIndex(
         (otherUser) => otherUser.socketID === incoming.caller
       );
       const thePeer = peers.current[index];
       thePeer
         .addIceCandidate(candidate)
-        .catch((e) => console.log("ICE 에러" + e));
+        .catch((e) => console.log("ICE 에러\n" + e));
+
     },
     // eslint-disable-next-line
     [socket, match]
@@ -235,40 +271,290 @@ function Videos({ match, socket }) {
   const handleTrackEvent = useCallback(
     (e) => {
       dispatch(updateVideos(e.streams[0])); // redux에 새로운 유저 video stream state를 update하는 함수 dispatch
-      socket.on("member out", (id) => {
-        alert(id + "가 나갔다!");
-      });
     },
     // eslint-disable-next-line
     [socket, match]
   );
-  return (
-    <div>
-      <div className="videos-grid">
-        <div className="local-video">
-          <p>{localStorage.nickname}</p>
-          <video autoPlay width="700px" ref={userVideo} />
-        </div>
-        {partnerVideos.map((partnerVideo) => (
-          <div key={partnerVideo.id} className="other-video">
-            {otherUsers.current.map((otherUser) =>
-              otherUser.streamID === partnerVideo.id ? (
-                <p key={otherUser.socketID}>{otherUser.nickName}</p>
-              ) : null
-            )}
-            <Video stream={partnerVideo} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+
+//InGame
+/** setInterval 안에서 setState 쓰려면 setInterval 대신에 이 함수 써야 함 */
+
+const [gameStarted, setGameStart] = useState(false);
+
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+      savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+      function tick() {
+          savedCallback.current();
+      }
+      if (delay !== null) {
+          let id = setInterval(tick, delay);
+          return () => clearInterval(id);
+      }
+  }, [delay]);
 }
+
+/** 1초 줄어든 시간을 리턴 */
+function decreaseOneSec(minutes, seconds) {
+  if (seconds === 0) {
+      seconds = 59;
+      minutes -= 1;
+  } else {
+      seconds -= 1;
+  }
+  return [minutes, seconds];
+}
+
+function handleGameStart() {
+  console.log("Game Start");
+}
+
+
+function ChattingWindow(props) {
+  return <div style={{width:"100%"}}>
+      <h1>Chatting Window Here</h1>
+  </div>
+}
+
+function GifWindow(props) {
+  return  <div>
+              <h1>GIF Here</h1>
+              <LoadGIF></LoadGIF>
+          </div>
+}
+
+
+function Timer(props) {
+  const gameMinutes = 1;
+  const gameSeconds = 30;
+  const [remainTime, setTimer] = useState([gameMinutes, gameSeconds]);
+  const [minutes, seconds] = remainTime;
+
+  let delay = 1000;
+  let insertZero = '';
+  let content = '';
+
+  if (minutes === 0 && seconds === 0) { // 종료 조건
+      content = <h1> Game Over! </h1>
+      delay = null; // clear useInterval
+  } else {
+      if (seconds < 10) insertZero = '0';
+      content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
+  }
+
+  useInterval(() => {
+      setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
+  }, delay);
+
+  return content;
+
+}
+
+function handleStart(event) {
+  setGameStart(!gameStarted);
+  handleGameStart();
+}
+
+
+
+const HeaderStyle = {
+
+  display: 'flex',
+  alignItems: 'center',
+  flexDirection: 'row',
+  width: '100%'
+
+
+}
+
+const HeaderLeft ={
+
+  flex: "2",
+  textAlign: "Center",
+  color: 'gray',
+  backgroundColor: 'White'
+
+
+}
+const HeaderMiddle ={
+
+  flex: "6",
+  textAlign: "Center",
+  color: 'gray',
+  backgroundColor: 'Black'
+
+
+}
+const HeaderRight ={
+
+  flex: "2",
+  textAlign: "Center",
+  color: 'gray',
+  backgroundColor: 'White'
+
+}
+
+const MiddleLeft ={
+  flex: "7",
+  textAlign: "Center",
+  backgroundColor: "beige"
+}
+
+const MiddleRight ={
+
+  flex: "3",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "space-between",
+  textAlign: "Center"
+
+}
+
+const MyNickname={
+
+  display: 'flex',
+  alignItems: 'flex-end',
+  justifyContent: 'center',
+  flex: '1',
+  color: 'gray'
+
+}
+
+const MyVideo={
+
+  flex:'6',
+  padding:"0 20px 20px 20px",
+  height:"auto",
+  width:"100%"
+
+}
+
+const MyButton={
+  flex: '3',
+  display:"flex",
+  justifyContent: 'center',
+  textAlign:"center",
+  alignItems:'center'
+}
+
+const ButtonSize ={
+
+    margin:"25px"
+}
+
+const OthersVideoStyle = {
+
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'flex-end'
+
+}
+
+const OthersVideoBox = {
+  display: "flex",
+  flexDirection: 'column',
+  alignItems: 'center'
+  // justifyContent: 'space-around'
+}
+
+const OtherNickname ={
+  color: 'gray',
+  flex : "1"
+}
+
+
+const HPstyle ={
+ color: 'gray',
+ flex : "2"
+}
+
+
+
+
+  return (
+    <ThemeProvider
+      theme={{
+        palette: {
+          yellow: "#E5B941",
+        },
+      }}
+    >
+  <Background
+    background={mainBackground}
+    element={
+      <FlexContainer>
+
+        <Header>
+          <div style={HeaderStyle}>
+                <div style={HeaderLeft}>
+                      <h1> {localStorage.roomName}</h1>
+                  </div>
+                  <div style={HeaderMiddle}>
+                      {!gameStarted ? <h1>DOLLIDO</h1> : <Timer></Timer>}
+                  </div>
+                  <div style={HeaderRight}>
+                      <h1> Mode </h1>
+                  </div>
+              </div>
+        </Header>
+        <Middle>
+              <div style={MiddleLeft}>
+                {!gameStarted ? <ChattingWindow></ChattingWindow> : <GifWindow></GifWindow>}
+              </div>
+              <div style={MiddleRight}>
+                <h1 style={MyNickname}>{localStorage.nickname}</h1>
+                <video autoPlay style={MyVideo} ref={userVideo} />
+                <div style={MyButton}>
+                <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
+                <Link to="/Lobby">
+                  <Button color="yellow" size="large" style={ButtonSize}>
+                      QUIT
+                  </Button>
+                </Link>
+              </div>
+              </div>
+        </Middle>
+        <Bottom>
+          <div style={OthersVideoStyle}>
+            {partnerVideos.map((partnerVideo) => (
+                <div key={partnerVideo.id} style={OthersVideoBox} >
+                  {otherUsers.current.map((otherUser) =>
+                    otherUser.streamID === partnerVideo.id ? (
+                    <h2 key={otherUser.socketID} style={OtherNickname}>{otherUser.nickName ? otherUser.nickName:"UNDEFINED"}</h2>
+                    ) : null
+
+                  )}
+                <Video stream={partnerVideo}></Video>
+                <h2 style={HPstyle} >HP : 100</h2>
+              </div>
+              ))}
+            </div>
+        </Bottom>
+      </FlexContainer>
+
+      }>
+
+    </Background>
+  </ThemeProvider>
+  );
+};
+
+
+
 const Video = ({ stream }) => {
   const ref = useRef();
   useEffect(() => {
     ref.current.srcObject = stream;
   }, [stream]);
-  return <video width="200px" autoPlay ref={ref} />;
+  return <video style={{width:"80%", flex : "7"}} autoPlay ref={ref} />;
 };
 
 export default React.memo(Videos); // 메모이징 최적화
