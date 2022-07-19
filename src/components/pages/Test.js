@@ -1,20 +1,33 @@
 import axios from "axios";
 import { ServerName } from "../../serverName";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+const defaultPlayerId = "깨랑까랑";
 
-function Test() {
-    const hi = () => {
-        axios.get(`${ServerName}/api/test/test`).then((res) => {
-            console.log("test: ", res.data.test);
-            console.log("name: ", res.data.name);
-            console.log("status: ", res.data.status);
-        });
-    };
+
+function Test(props) {
+   
+
+    const ref = useRef();
+     useEffect(() => {
+        ref.current.srcObject = props.stream;
+     }, [props.stream]);
 
     return (
-        <div>
-            <button onClick={hi}>TEST</button>
-        </div>
+
+        
+        <video autoplay height = {300} ref={ref} style={{ backgroundColor: 'white', width: "100%" }} autoPlay />
+
     );
+
+
+};
+
+function Test2(props) {
+
+    
+    return <video autoPlay width="400px" ref={props.userVideo} />
+
 }
 
-export default Test;
+
+export { Test as default, Test2};
