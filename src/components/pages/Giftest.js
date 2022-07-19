@@ -2,7 +2,7 @@ import axios from "axios"
 import { useEffect, useState, useRef } from 'react';
 import styled from "styled-components";
 import {ServerName} from "../../serverName";
-// import { s3Domain } from "../../s3Domain";
+import { s3Domain } from "../../s3Domain";
 
 const BackgroundSizeStyle = styled.img`
     width: 700px;
@@ -12,6 +12,10 @@ const BackgroundSizeStyle = styled.img`
     background-color: gray;
 `;
 
+
+function onScreenGif(props) {
+    console.log(props.seconds);
+}
 
 const Giftest = (props) => {
     const [name, setName] = useState(['0.gif'])
@@ -71,8 +75,7 @@ const Giftest = (props) => {
 
 
     return (
-        <div></div>
-        // !countDown ? <BackgroundSizeStyle src={`${s3Domain}${name[gifList[count]]}`}></BackgroundSizeStyle> : <p style={ {fontSize: "100px", fontWeight: "900", fontFamily: "Black Han Sans"} }> {seconds} </p>
+        !countDown ? <BackgroundSizeStyle src={`${s3Domain}${name[gifList[count]]}`}></BackgroundSizeStyle> : <p style={ {fontSize: "100px", fontWeight: "900", fontFamily: "Black Han Sans"} }> {seconds} </p>
     );
 };
 

@@ -33,6 +33,7 @@ const SingUp = ({ setChange }) => {
         let args = {user_id: id, user_nick: nick, user_pw: pw};
         await axios.post(`${ServerName}/api/user/signup/`, args).then((res) => {
             let result = res.data;
+            console.log(result);
             if(result.bool) {
                 setChange(true);
             } else {
