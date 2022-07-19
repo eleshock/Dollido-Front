@@ -12,10 +12,9 @@ const socket = io(SERVER_ADDRESS, {
 });
 
 function Room({ match }) {
-  console.log(localStorage.roomName);
   return (
     <div>
-      <h1>방 이름 : {localStorage.roomName}</h1>
+      {/* <h1>방 이름 : {localStorage.roomName}</h1> */}
       <Videos match={match} socket={socket} />
     </div>
   );

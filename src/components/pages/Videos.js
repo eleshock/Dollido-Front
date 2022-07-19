@@ -2,7 +2,18 @@ import React, { useRef, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { updateVideos, deleteVideo, clearVideos } from "../../modules/videos";
-import "./VideoStyle.css";
+import mainBackGround from "../../images/mainBackground.gif";
+import { Background } from "../common/Background.tsx";
+import styled from "styled-components";
+import { ThemeProvider } from "styled-components";
+
+const FlexContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  weight: 100%;
+  font-family: koverwatch
+`
 
 function Videos({ match, socket }) {
   const dispatch = useDispatch();
@@ -49,7 +60,7 @@ function Videos({ match, socket }) {
 
       // 유저가 나갔을 때
       socket.on("out user", ({ nickname, streamID }) => {
-        alert(`${nickname} (이)가 나갔습니다!`);
+        // alert(`${nickname} (이)가 나갔습니다!`);
         console.log(nickname + " out!");
         dispatch(deleteVideo(streamID));
       });
@@ -243,24 +254,36 @@ function Videos({ match, socket }) {
     [socket, match]
   );
   return (
-    <div>
-      <div className="videos-grid">
-        <div className="local-video">
-          <p>{localStorage.nickname}</p>
-          <video autoPlay width="700px" ref={userVideo} />
-        </div>
-        {partnerVideos.map((partnerVideo) => (
-          <div key={partnerVideo.id} className="other-video">
-            {otherUsers.current.map((otherUser) =>
-              otherUser.streamID === partnerVideo.id ? (
-                <p key={otherUser.socketID}>{otherUser.nickName}</p>
-              ) : null
-            )}
-            <Video stream={partnerVideo} />
+    <ThemeProvider
+    theme={{
+        palette: {
+            yellow: "#E5B941"
+        }
+    }}>
+      <Background
+        background={mainBackGround}
+        element={
+        <FlexContainer>
+          <div className="videos-grid">
+            <div className="local-video">
+              <p>{localStorage.nickname}</p>
+              <video autoPlay height="25%" ref={userVideo} />
+            </div>
+            {partnerVideos.map((partnerVideo) => (
+              <div key={partnerVideo.id} className="other-video">
+                {otherUsers.current.map((otherUser) =>
+                  otherUser.streamID === partnerVideo.id ? (
+                    <p key={otherUser.socketID}>{otherUser.nickName}</p>
+                  ) : null
+                )}
+                <Video stream={partnerVideo} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
+        </FlexContainer>
+        }>
+      </Background>
+    </ThemeProvider>
   );
 }
 const Video = ({ stream }) => {
@@ -268,7 +291,7 @@ const Video = ({ stream }) => {
   useEffect(() => {
     ref.current.srcObject = stream;
   }, [stream]);
-  return <video width="200px" autoPlay ref={ref} />;
+  return <video autoPlay ref={ref} />;
 };
 
 export default React.memo(Videos); // 메모이징 최적화

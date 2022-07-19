@@ -6,7 +6,7 @@ import { v4 as uuid } from "uuid";
 
 import Button2 from "../common/Button2.js";
 import { LobbyModal } from "../common/LobbyModal.tsx";
-import mainBgOpacity from "../../images/main_bg_opacity.png";
+import mainBackGround from "../../images/mainBackground.gif";
 import { Background } from "../common/Background.tsx";
 import styled from "styled-components";
 
@@ -16,7 +16,7 @@ const FlexContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  font-family: koverwatch
+  font-family: koverwatch;
 `
 
 const TabList = styled.div`
@@ -87,7 +87,7 @@ const RoomTag4 = styled.div`
   padding: 10px;
 `
 
-const RoomLinkList = styled.div`
+const RoomLinkList = styled.li`
   display: flex;
   justify-content: space-between;
   color: white; 
@@ -98,6 +98,7 @@ const RoomLinkList = styled.div`
   padding: 10px;
   margin: 2px 0 2px 0;
   cursor: pointer;
+  list-style: none;
   &:hover {
     background-color: #FFD124C9;
   };
@@ -134,6 +135,40 @@ const Video = styled.video`
   width: 450px;
   height: 340px;
 `
+const PageControl = styled.div`
+  display: flex;
+  justify-content: center;
+`
+
+const LeftTriangle = styled.button`
+  display: flex;
+  flex: 2;
+  border-bottom: 15px solid transparent;
+  border-top: 15px solid transparent;
+  border-left: 15px solid transparent;
+  border-right: 15px solid skyblue;
+  border-radius: 5px;
+  background-color: transparent;
+  cursor: pointer;
+  &:hover {
+    border-right: 15px solid orange;
+  };
+`
+
+const RightTriangle = styled.button`
+  display: flex;
+  flex: 2;
+  border-bottom: 15px solid transparent;
+  border-top: 15px solid transparent;
+  border-left: 15px solid skyblue;
+  border-right: 15px solid transparent;
+  border-radius: 5px;
+  background-color: transparent;
+  cursor: pointer;
+  &:hover {
+    border-left: 15px solid orange;
+  };
+`
 
 let startVideoPromise;
 
@@ -168,6 +203,10 @@ const Lobby = () => {
   const [rooms, setRooms] = useState({});
   const [roomName, setRoomName] = useState("");
   const roomMatserName = useRef();
+  const [roomCount, setRoomCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(7);
+
 
   // 방 리스트 받아오기
   useEffect(() => {
@@ -182,8 +221,18 @@ const Lobby = () => {
   useEffect(() => {
     socket.current.on("give room list", (rooms) => {
       setRooms(rooms);
+      setRoomCount(Object.keys(rooms).length);
+      // console.log("방의 개수", Object.keys(rooms).length);
     });
   }, [rooms]);
+
+  const indexOfLast = currentPage * postsPerPage;
+  const indexOfFirst = indexOfLast - postsPerPage;
+  const currentPosts = (rooms) => {
+    let currentPosts = 0;
+    currentPosts = Object.entries(rooms).reverse().slice(indexOfFirst, indexOfLast);
+    return currentPosts;
+  };
 
   // 방 생성 절차
   const onChangeRoomName = useCallback((e) => {
@@ -219,7 +268,18 @@ const Lobby = () => {
     [roomName, rooms]
   );
 
-  // 방 참가
+  const nextPage = (roomCount) => {
+    if (currentPage < Math.ceil(roomCount / 5)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage >= 2) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   const [modal, setModal] = useState(false);
   const selectRoom = (room) => {
     localStorage.roomLink = room[0];
@@ -284,7 +344,7 @@ const Lobby = () => {
       }}
     >
       <Background
-        background={mainBgOpacity}
+        background={mainBackGround}
         element={
           <FlexContainer>
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
@@ -354,7 +414,7 @@ const Lobby = () => {
                         <RoomTag3>게임모드</RoomTag3>
                         <RoomTag4>인원</RoomTag4>
                       </RoomTagList>
-                        {Object.entries(rooms).map((room) => {
+                        {currentPosts(rooms).map((room) => {
                           return (
                               <RoomLinkList key={room[0]} onClick = { () => selectRoom(room) }>
                                 <RoomLink1>{room[1].roomName}</RoomLink1>
@@ -364,8 +424,13 @@ const Lobby = () => {
                                   {room[1].members.length}/4
                                 </RoomLink4>
                               </RoomLinkList>
-                          );
-                        })}
+                            );
+                        })};
+                        <PageControl>
+                          <LeftTriangle onClick = {prevPage}></LeftTriangle>
+                          <div style = {{display: "flex", flex:"1"}}></div>
+                          <RightTriangle onClick = {() => nextPage(roomCount)}></RightTriangle>
+                        </PageControl>
                   </RoomListFrame>
               </Content>
             </FlexContainer>
