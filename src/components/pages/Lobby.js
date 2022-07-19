@@ -269,7 +269,7 @@ const Lobby = () => {
   );
 
   const nextPage = (roomCount) => {
-    if (currentPage < Math.ceil(roomCount / 5)) {
+    if (currentPage < Math.ceil(roomCount / postsPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
