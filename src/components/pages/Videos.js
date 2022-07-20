@@ -607,7 +607,7 @@ const HPstyle ={
               <div style={MiddleRight}>
                 <h1 style={MyNickname}>{localStorage.nickname}</h1>
                 <video autoPlay style={MyVideo} ref={userVideo} />
-                <ShowStatus></ShowStatus>
+                { modelsLoaded ? <ShowStatus></ShowStatus> : <h1> Model Loading... </h1> }
                 <div style={MyButton}>
                   <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>
                     START
