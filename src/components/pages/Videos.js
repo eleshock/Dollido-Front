@@ -200,6 +200,8 @@ function Videos({ match, socket }) {
         nickName: localStorage.nickname,
       });
 
+      socket.emit("wait", ({roomID: roomID}));
+      
       // 유저가 나갔을 때
       socket.on("out user", ({ nickname, streamID }) => {
         // alert(`${nickname} (이)가 나갔습니다!`);
@@ -400,6 +402,65 @@ function Videos({ match, socket }) {
 
 
 
+
+
+
+
+  const [chief, setChief] = useState(false);
+
+  function handleReady() {
+    console.log(roomID);
+    socket.emit("ready", {roomID: roomID});
+  }
+
+  function handleStart() {
+    socket.emit("start", {roomID: roomID});
+  }
+
+  useEffect(() => {
+    socket.on("ready", ({nickName, status}) => {
+      console.log(nickName);
+      console.log(status);
+    });
+
+    socket.on("chief", ({readyCount}) => {
+      console.log(readyCount);
+    });
+
+    socket.on("wait", (status) => {
+      setChief(status);
+    })
+
+    socket.on("start", (status) => {
+      if (status) {
+        setGameStart(!gameStarted);
+      } else {
+        alert("아직 다 ready를 하지 않았습니다");
+      }
+    });
+
+    socket.on("finsh", () => {
+      console.log("finsh", gameFinished);
+      setGameFinished(!gameFinished);
+    });
+  }, [socket]);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   //InGame
   const [gameStarted, setGameStart] = useState(false);
 
@@ -470,15 +531,6 @@ function Videos({ match, socket }) {
   }
 
 
-  function handleStart(event) {
-    setGameStart(!gameStarted);
-    handleGameStart();
-  }
-
-  function handleFinish() {
-    console.log("Game Finished");
-    setGameFinished(true);
-  }
 
   // function OtherVideoPlay(partnerVideos, otherUsers) {
   //   const playerNickname = useRef()
@@ -639,7 +691,13 @@ function Videos({ match, socket }) {
                   <h1> {localStorage.roomName}</h1>
                 </div>
                 <div style={HeaderMiddle}>
-                  {!gameStarted ? <h1>DOLLIDO</h1> : <Timer></Timer>}
+                  {!gameFinished?
+                        <>
+                          {!gameStarted ? <h1>DOLLIDO</h1>: <Timer></Timer>}
+                        </>
+                        :
+                        <h1>Game Over !</h1>
+                      }
                 </div>
                 <div style={HeaderRight}>
                   <h1> Mode </h1>
@@ -684,15 +742,19 @@ function Videos({ match, socket }) {
             </Middle>
             <Bottom>
               <div style={MyButton}>
-                <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
+                {chief?
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
+                    :
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
+                  }
                 <Link to="/Lobby">
                   <Button color="yellow" size="large" style={ButtonSize}>
                     QUIT
                   </Button>
                 </Link>
-                <Button color="yellow" size="large" style={ButtonSize} onClick={handleFinish}>
+                {/* <Button color="yellow" size="large" style={ButtonSize} onClick={handleFinish}>
                   FINISH GAME
-                </Button>
+                </Button> */}
               </div>
 
             </Bottom>
