@@ -52,7 +52,6 @@ const Giftest = (props) => {
     useEffect(() => {
         if(seconds >= 0 && seconds <= 3) {
             const timer = setInterval(() => {
-                console.log(seconds)
                 if (seconds === 0){
                     setSeconds(4);
                     setCountDown(false);
