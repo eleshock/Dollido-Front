@@ -368,24 +368,19 @@ function handleStart(event) {
 }
 
 function OtherVideoPlay(partnerVideos, otherUsers) {
-  const [playerNickname, setplayerNickname] = useState([])
+  const playerNickname = useRef()
 
   
   partnerVideos.map((partnerVideo) => (
 
     otherUsers.current.map((otherUser, index) => 
     otherUser.streamID === partnerVideo.id ? (
-      otherUser.nickName ? setplayerNickname(otherUser.nickName) : index
+      otherUser.nickName ? playerNickname.current = otherUser.nickName : index
     ) : null )
   ))
 
 
-  return 
-
-  
-  
-  
-
+  return playerNickname
 
 }
 
@@ -508,25 +503,14 @@ const playerBox ={
   flex: "5"
 }
 
-// console.log(otherUsers.current.length);
-// console.log(partnerVideos);
 
 
-// const [player1, setPlayer1] = useState(false);
-// const [player2, setPlayer2] = useState(false);
-// const [player3, setPlayer3] = useState(false);
-
-// for (let i=0;i<otherUsers.current.length;i++){
-//   console.log(otherUsers.current[i]);
-  
-// }
-
-
-const X = partnerVideos.map((partnerVideo, index) => {
-
-    console.log(partnerVideo)
-    console.log(index)
- })
+if (otherUsers.current[0]){
+  console.log(otherUsers.current[0].nickName)
+}
+else{
+  console.log("시발")
+}
 
   return (
     <ThemeProvider
@@ -562,7 +546,7 @@ const X = partnerVideos.map((partnerVideo, index) => {
                   <h2 style={HPstyle} >HP : 100</h2>
                 </div>
                 <div style={playerBox}>
-
+                  <h1 style={{color:"gray"}}>{otherUsers.current[1] ? otherUsers.current[1].nickName : "Undefined"}</h1>
                   <Video stream={partnerVideos[1]}></Video>
                   <h2 style={HPstyle} >HP : 100</h2>
 
@@ -573,10 +557,12 @@ const X = partnerVideos.map((partnerVideo, index) => {
               </div>
               <div style={MiddleRight}>
                 <div style={playerBox} >
+                <h1 style={{color:"gray"}}>{otherUsers.current[0] ? otherUsers.current[0].nickName : "Undefined"}</h1>
                     <Video stream={partnerVideos[0]}></Video>
                     <h2 style={HPstyle} >HP : 100</h2>
                 </div>
                 <div style={playerBox} >
+                <h1 style={{color:"gray"}}>{otherUsers.current[2] ? otherUsers.current[2].nickName : "Undefined"}</h1>
                     <Video stream={partnerVideos[2]}></Video>
                     <h2 style={HPstyle} >HP : 100</h2>
                 </div>

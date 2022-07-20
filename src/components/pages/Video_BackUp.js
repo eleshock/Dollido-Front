@@ -9,7 +9,7 @@ import mainBackground from "../../images/mainBackground.gif";
 
 /* In Game 추가 사항 */
 import LoadGIF from "./Giftest";
-import Button from "../common/Button2.js";
+import Button from "../common/Button.js";
 import { Link } from "react-router-dom";
 
 const FlexContainer = styled.div`
@@ -485,6 +485,7 @@ const HPstyle ={
   
 // }
 console.log(otherUsers.current.length)
+
 // otherUsers.current.map((otherUser) => (
 
 //   console.log(otherUser.current.streamID)
