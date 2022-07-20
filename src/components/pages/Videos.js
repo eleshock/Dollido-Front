@@ -6,11 +6,116 @@ import { Background } from "../common/Background.tsx";
 import styled from "styled-components";
 import { ThemeProvider } from "styled-components";
 import mainBackground from "../../images/mainBackground.gif";
+import { useInterval } from "../common/usefulFuntions";
+import axios from "axios";
+import { ServerName } from "../../serverName";
+import * as faceapi from 'face-api.js';
+import BestPerformer from "./BestPerformer";
+import ProgressBar from 'react-bootstrap/ProgressBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 /* In Game 추가 사항 */
 import LoadGIF from "./Giftest";
 import Button from "../common/Button.js";
 import { Link } from "react-router-dom";
+
+const userId = "salmonsushi"; // 임시(temp)
+
+const recordTime = 3000; // 녹화 시간(ms)
+const modelInterval = 500; // 웃음 인식 간격(ms)
+let startVideoPromise;
+let videoRecorded = false; // 녹화 여부
+
+/** 1초 줄어든 시간을 리턴 */
+function decreaseOneSec(minutes, seconds) {
+  if (seconds === 0) {
+    seconds = 59;
+    minutes -= 1;
+  } else {
+    seconds -= 1;
+  }
+  return [minutes, seconds];
+}
+
+function handleGameStart() {
+  console.log("Game Start");
+}
+
+
+function ChattingWindow(props) {
+  return <div style={{ width: "100%" }}>
+    <h1>Chatting Window Here</h1>
+  </div>
+}
+
+function GifWindow(props) {
+  return <div>
+    <h1>GIF Here</h1>
+    <LoadGIF></LoadGIF>
+  </div>
+}
+
+
+function Timer(props) {
+  const gameMinutes = 1;
+  const gameSeconds = 30;
+  const [remainTime, setTimer] = useState([gameMinutes, gameSeconds]);
+  const [minutes, seconds] = remainTime;
+
+  let delay = 1000;
+  let insertZero = '';
+  let content = '';
+
+  if (minutes === 0 && seconds === 0) { // 종료 조건
+    content = <h1> Game Over! </h1>
+    delay = null; // clear useInterval
+  } else {
+    if (seconds < 10) insertZero = '0';
+    content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
+  }
+
+  useInterval(() => {
+    setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
+  }, delay);
+
+  return content;
+
+}
+
+// 녹화가 완료된 후 서버로 비디오 데이터 post
+async function postVideo(recordedBlob) {
+  // let file = new File([recordedChunks[0]], "userVideo");
+  const formdata = new FormData();
+
+  formdata.append('userId', userId);
+  formdata.append('video', recordedBlob, 'video.mp4');
+
+  console.log('Blob data : ', recordedBlob);
+
+  await axios.post(`${ServerName}/api/best/send-video`, formdata, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+    .then((res) => { console.log('POST res : ', res) })
+    .catch((err) => { console.log('err : ', err) });
+}
+
+
+function recordVideo(stream) {
+  console.log("Start Recording...");
+  let recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = (event) => {
+    const recordedBlob = new Blob([event.data], { type: "video/mp4" });
+    postVideo(recordedBlob);
+  };
+
+  recorder.start();
+  setTimeout(() => {
+    recorder.stop();
+    console.log("Recording Finished!");
+  }, recordTime);
+}
+
 
 const FlexContainer = styled.div`
   display: flex;
@@ -21,13 +126,13 @@ const FlexContainer = styled.div`
 
 const Header = styled.div`
   display: flex;
-  flex: 1;
+  flex: 5;
   font-family: koverwatch
 `
 
 const Middle = styled.div`
   display: flex;
-  flex: 60;
+  flex: 80;
   width: 100%;
   font-family: koverwatch
 `
@@ -35,7 +140,7 @@ const Bottom = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  flex: 30;
+  flex: 15;
   font-family: koverwatch
 `
 
@@ -51,12 +156,23 @@ function Videos({ match, socket }) {
   const otherUsers = useRef([]); // 다른 유저들의 userID를 저장
   const peers = useRef([]); // 다른 유저들의 peer들을 저장
   const { roomID } = useParams();
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [gameFinished, setGameFinished] = useState(false);
+
 
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then(getStream)
       .catch((err) => console.error(err));
+
+    const MODEL_URL = process.env.PUBLIC_URL + '/models';
+    console.log("AI Model Loading...");
+    Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+      faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+    ]).then(setModelsLoaded(true));
+
     return () => {
       socket.emit("out room");
       socket.off();
@@ -72,6 +188,7 @@ function Videos({ match, socket }) {
     };
     // eslint-disable-next-line
   }, [socket, match]);
+
 
   const getStream = useCallback(
     (stream) => {
@@ -110,6 +227,7 @@ function Videos({ match, socket }) {
     [socket, match]
   );
 
+
   const callUser = useCallback(
     (userID) => {
       try {
@@ -128,6 +246,7 @@ function Videos({ match, socket }) {
     // eslint-disable-next-line
     [socket, match]
   );
+
 
   // 나 자신의 peer 객체를 생성하는데 상대방(userID)와의 offer, answer작업에 대한 콜백 함수를 설정
   const createPeer = useCallback(
@@ -155,6 +274,7 @@ function Videos({ match, socket }) {
     [socket, match]
   );
 
+
   // Caller 입장에서 Offer을 제공(offer 이벤트를 emit)
   const handleNegotiationNeededEvent = useCallback(
     (userID) => {
@@ -180,6 +300,8 @@ function Videos({ match, socket }) {
     // eslint-disable-next-line
     [socket, match]
   );
+
+
   // Callee 입장에서 'offer' 이벤트를 listen했을 때
   const handleRecieveCall = useCallback(
     (incoming) => {
@@ -276,205 +398,224 @@ function Videos({ match, socket }) {
     [socket, match]
   );
 
-//InGame
-/** setInterval 안에서 setState 쓰려면 setInterval 대신에 이 함수 써야 함 */
-
-const [gameStarted, setGameStart] = useState(false);
 
 
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
+  //InGame
+  const [gameStarted, setGameStart] = useState(false);
 
-  // Remember the latest callback.
-  useEffect(() => {
-      savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-      function tick() {
-          savedCallback.current();
+  function handleHP(happiness) {
+    if (happiness > 0.2) { // 피를 깎아야 하는 경우
+      if (happiness > 0.6) {
+        if (!videoRecorded) { // 딱 한 번만 record
+          videoRecorded = true;
+          recordVideo(userVideo.current.srcObject);
+        }
+        return 2;
+      } else {
+        return 1;
       }
-      if (delay !== null) {
-          let id = setInterval(tick, delay);
-          return () => clearInterval(id);
-      }
-  }, [delay]);
-}
-
-/** 1초 줄어든 시간을 리턴 */
-function decreaseOneSec(minutes, seconds) {
-  if (seconds === 0) {
-      seconds = 59;
-      minutes -= 1;
-  } else {
-      seconds -= 1;
-  }
-  return [minutes, seconds];
-}
-
-function handleGameStart() {
-  console.log("Game Start");
-}
-
-
-function ChattingWindow(props) {
-  return <div style={{width:"100%"}}>
-      <h1>Chatting Window Here</h1>
-  </div>
-}
-
-function GifWindow(props) {
-  return  <div>
-              <h1>GIF Here</h1>
-              <LoadGIF></LoadGIF>
-          </div>
-}
-
-
-function Timer(props) {
-  const gameMinutes = 1;
-  const gameSeconds = 30;
-  const [remainTime, setTimer] = useState([gameMinutes, gameSeconds]);
-  const [minutes, seconds] = remainTime;
-
-  let delay = 1000;
-  let insertZero = '';
-  let content = '';
-
-  if (minutes === 0 && seconds === 0) { // 종료 조건
-      content = <h1> Game Over! </h1>
-      delay = null; // clear useInterval
-  } else {
-      if (seconds < 10) insertZero = '0';
-      content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
+    }
+    return 0;
   }
 
-  useInterval(() => {
-      setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
-  }, delay);
+  const OthersShowStatus = ({nickname}) => {
+    const [peersHP, setPeersHP] = useState(100);
+    useEffect(() => {
+      socket.on("smile", (peerHP, peerID) => {
+        console.log("peerHP: " + peerHP + "peerID: " + peerID);
+        if (nickname === peerID) {
+          setPeersHP(peerHP);
+        }
+      })}, [nickname])
+      return <ProgressBar striped variant="danger" now={peersHP} />
+  }
 
-  return content;
+  const ShowStatus = () => {
+    const [myHP, setMyHP] = useState(100);
+    const [faceDetected, setFaceDetected] = useState(false);
+    const [smiling, setSmiling] = useState(false);
+    const [interval, setInterval] = useState(modelInterval);
+    let content = "";
 
-}
+    /** 모델 돌리기 + 체력 깎기 */
+    useInterval(async () => {
+      const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+      if (detections[0]) {
+        const decrease = handleHP(detections[0].expressions.happy);
+        if (decrease > 0) {
+          const newHP = myHP - decrease;
+          if (newHP <= 0) { // game over
+            setInterval(null);
+          }
+          setMyHP(newHP);
+          socket.emit("smile", newHP, roomID, localStorage.getItem("nickname"));
+          setSmiling(true);
+        } else setSmiling(false);
+        setFaceDetected(true);
+      } else {
+        setFaceDetected(false);
+        setSmiling(false);
+      }
+    }, interval);
 
-function handleStart(event) {
-  setGameStart(!gameStarted);
-  handleGameStart();
-}
+    let detecContent = faceDetected ? "인식 중" : "인식 불가";
 
+    if (interval) {
+      content = <ProgressBar striped variant="danger" now={myHP} />
+    } else {
+      content = <h2 style={HPstyle}> Game Over!!! </h2>
+    }
 
-
-const HeaderStyle = {
-
-  display: 'flex',
-  alignItems: 'center',
-  flexDirection: 'row',
-  width: '100%'
-
-
-}
-
-const HeaderLeft ={
-
-  flex: "2",
-  textAlign: "Center",
-  color: 'gray',
-  backgroundColor: 'White'
-
-
-}
-const HeaderMiddle ={
-
-  flex: "6",
-  textAlign: "Center",
-  color: 'gray',
-  backgroundColor: 'Black'
-
-
-}
-const HeaderRight ={
-
-  flex: "2",
-  textAlign: "Center",
-  color: 'gray',
-  backgroundColor: 'White'
-
-}
-
-const MiddleLeft ={
-  flex: "7",
-  textAlign: "Center",
-  backgroundColor: "beige"
-}
-
-const MiddleRight ={
-
-  flex: "3",
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  textAlign: "Center"
-
-}
-
-const MyNickname={
-
-  display: 'flex',
-  alignItems: 'flex-end',
-  justifyContent: 'center',
-  flex: '1',
-  color: 'gray'
-
-}
-
-const MyVideo={
-
-  flex:'6',
-  padding:"0 20px 20px 20px",
-  height:"auto",
-  width:"100%"
-
-}
-
-const MyButton={
-  flex: '3',
-  display:"flex",
-  justifyContent: 'center',
-  textAlign:"center",
-  alignItems:'center'
-}
-
-const ButtonSize ={
-
-    margin:"25px"
-}
-
-const OthersVideoStyle = {
-
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-end'
-
-}
-
-const OthersVideoBox = {
-  display: "flex",
-  flexDirection: 'column',
-  alignItems: 'center'
-  // justifyContent: 'space-around'
-}
-
-const OtherNickname ={
-  color: 'gray',
-  flex : "1"
-}
+    return content
+  }
 
 
-const HPstyle ={
- color: 'gray',
- flex : "2"
-}
+  function handleStart(event) {
+    setGameStart(!gameStarted);
+    handleGameStart();
+  }
+
+  function handleFinish() {
+    console.log("Game Finished");
+    setGameFinished(true);
+  }
+
+  // function OtherVideoPlay(partnerVideos, otherUsers) {
+  //   const playerNickname = useRef()
+
+
+  //   partnerVideos.map((partnerVideo) => (
+
+  //     otherUsers.current.map((otherUser, index) =>
+  //     otherUser.streamID === partnerVideo.id ? (
+  //       otherUser.nickName ? playerNickname.current = otherUser.nickName : index
+  //     ) : null )
+  //   ))
+
+
+  //   return playerNickname
+
+  // }
+
+
+
+  const HeaderStyle = {
+
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%'
+
+
+  }
+
+  const HeaderLeft = {
+
+    flex: "2.5",
+    textAlign: "Center",
+    color: 'gray',
+    backgroundColor: 'White'
+
+
+  }
+  const HeaderMiddle = {
+
+    flex: "5",
+    textAlign: "Center",
+    color: 'gray',
+    backgroundColor: 'Black'
+
+
+  }
+  const HeaderRight = {
+
+    flex: "2.5",
+    textAlign: "Center",
+    color: 'gray',
+    backgroundColor: 'White'
+
+  }
+
+  const MiddleLeft = {
+    flex: "2.5",
+    textAlign: "Center",
+    display: "flex",
+    flexDirection: "Column"
+    // backgroundColor: "beige"
+  }
+
+  const Middlemiddle = {
+    flex: "5",
+    backgroundColor: "beige",
+    textAlign: "Center"
+
+  }
+  const MiddleRight = {
+
+    flex: "2.5",
+    textAlign: "Center",
+    display: "flex",
+    flexDirection: "Column"
+  }
+
+  const MyNickname = {
+
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    color: 'gray'
+
+  }
+
+  const MyVideo = {
+
+    flex: '5',
+    // height:"auto",
+    width: "100%",
+    transform: 'scaleX(-1)',
+
+  }
+
+  const MyButton = {
+    flex: '3',
+    display: "flex",
+    justifyContent: 'center',
+    textAlign: "center",
+    alignItems: 'center'
+  }
+
+  const ButtonSize = {
+
+    margin: "25px"
+  }
+
+  const OthersVideoStyle = {
+
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-end'
+
+  }
+
+  const OthersVideoBox = {
+    display: "flex",
+    flexDirection: 'column',
+    alignItems: 'center'
+    // justifyContent: 'space-around'
+  }
+
+  const OtherNickname = {
+    color: 'gray',
+    flex: "1"
+  }
+
+
+  const HPstyle = {
+    color: 'gray'
+  }
+
+  const playerBox = {
+    flex: "5"
+  }
 
 
 
@@ -487,63 +628,80 @@ const HPstyle ={
         },
       }}
     >
-  <Background
-    background={mainBackground}
-    element={
-      <FlexContainer>
+      <Background
+        background={mainBackground}
+        element={
+          <FlexContainer>
 
-        <Header>
-          <div style={HeaderStyle}>
+            <Header>
+              <div style={HeaderStyle}>
                 <div style={HeaderLeft}>
-                      <h1> {localStorage.roomName}</h1>
-                  </div>
-                  <div style={HeaderMiddle}>
-                      {!gameStarted ? <h1>DOLLIDO</h1> : <Timer></Timer>}
-                  </div>
-                  <div style={HeaderRight}>
-                      <h1> Mode </h1>
-                  </div>
+                  <h1> {localStorage.roomName}</h1>
+                </div>
+                <div style={HeaderMiddle}>
+                  {!gameStarted ? <h1>DOLLIDO</h1> : <Timer></Timer>}
+                </div>
+                <div style={HeaderRight}>
+                  <h1> Mode </h1>
+                </div>
               </div>
-        </Header>
-        <Middle>
+            </Header>
+            <Middle>
               <div style={MiddleLeft}>
-                {!gameStarted ? <ChattingWindow></ChattingWindow> : <GifWindow></GifWindow>}
+                <div style={playerBox}>
+                  <h1 style={MyNickname}>{localStorage.nickname}</h1>
+                  <video autoPlay style={MyVideo} ref={userVideo} />
+                  {modelsLoaded ? <ShowStatus></ShowStatus> : <h1> Model Loading... </h1>}
+                </div>
+                <div style={playerBox}>
+                  <h1 style={{ color: "gray" }}>{otherUsers.current[1] ? otherUsers.current[1].nickName : "Undefined"}</h1>
+                  <Video stream={partnerVideos[1]}></Video>
+                  <OthersShowStatus nickname={otherUsers.current[1] ? otherUsers.current[1].nickName : "Undefined"}></OthersShowStatus>
+                </div>
+              </div>
+              <div style={Middlemiddle}>
+                {gameStarted ?
+                  gameFinished ?
+                    <BestPerformer></BestPerformer> :
+                    <GifWindow></GifWindow> :
+                  <ChattingWindow></ChattingWindow>}
               </div>
               <div style={MiddleRight}>
-                <h1 style={MyNickname}>{localStorage.nickname}</h1>
-                <video autoPlay style={MyVideo} ref={userVideo} />
-                <div style={MyButton}>
+                <div style={playerBox} >
+                  <h1 style={{ color: "gray" }}>{otherUsers.current[0] ? otherUsers.current[0].nickName : "Undefined"}</h1>
+                  <Video stream={partnerVideos[0]}></Video>
+                  <OthersShowStatus nickname={otherUsers.current[0] ? otherUsers.current[0].nickName : "Undefined"}></OthersShowStatus>
+                  {/* <OthersShowStatus nickname={otherUsers.current[1].nickName}></OthersShowStatus> */}
+
+                </div>
+                <div style={playerBox} >
+                  <h1 style={{ color: "gray" }}>{otherUsers.current[2] ? otherUsers.current[2].nickName : "Undefined"}</h1>
+                  <Video stream={partnerVideos[2]}></Video>
+                  <OthersShowStatus nickname={otherUsers.current[2] ? otherUsers.current[2].nickName : "Undefined"}></OthersShowStatus>
+                </div>
+              </div>
+
+            </Middle>
+            <Bottom>
+              <div style={MyButton}>
                 <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
                 <Link to="/Lobby">
                   <Button color="yellow" size="large" style={ButtonSize}>
-                      QUIT
+                    QUIT
                   </Button>
                 </Link>
+                <Button color="yellow" size="large" style={ButtonSize} onClick={handleFinish}>
+                  FINISH GAME
+                </Button>
               </div>
-              </div>
-        </Middle>
-        <Bottom>
-          <div style={OthersVideoStyle}>
-            {partnerVideos.map((partnerVideo) => (
-                <div key={partnerVideo.id} style={OthersVideoBox} >
-                  {otherUsers.current.map((otherUser) =>
-                    otherUser.streamID === partnerVideo.id ? (
-                    <h2 key={otherUser.socketID} style={OtherNickname}>{otherUser.nickName ? otherUser.nickName:"UNDEFINED"}</h2>
-                    ) : null
 
-                  )}
-                <Video stream={partnerVideo}></Video>
-                <h2 style={HPstyle} >HP : 100</h2>
-              </div>
-              ))}
-            </div>
-        </Bottom>
-      </FlexContainer>
+            </Bottom>
+          </FlexContainer>
 
-      }>
+        }>
 
-    </Background>
-  </ThemeProvider>
+      </Background>
+    </ThemeProvider>
   );
 };
 
@@ -554,7 +712,7 @@ const Video = ({ stream }) => {
   useEffect(() => {
     ref.current.srcObject = stream;
   }, [stream]);
-  return <video style={{width:"80%", flex : "7"}} autoPlay ref={ref} />;
+  return <video style={{ width: "100%", transform: 'scaleX(-1)' }} autoPlay ref={ref} />;
 };
 
 export default React.memo(Videos); // 메모이징 최적화

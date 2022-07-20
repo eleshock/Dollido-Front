@@ -415,6 +415,7 @@ const Lobby = () => {
                         <RoomTag4>인원</RoomTag4>
                       </RoomTagList>
                         {currentPosts(rooms).map((room) => {
+                          // console.log(room)
                           return (
                               <RoomLinkList key={room[0]} onClick = { () => selectRoom(room) }>
                                 <RoomLink1>{room[1].roomName}</RoomLink1>
