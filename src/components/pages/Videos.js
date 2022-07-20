@@ -6,11 +6,113 @@ import { Background } from "../common/Background.tsx";
 import styled from "styled-components";
 import { ThemeProvider } from "styled-components";
 import mainBackground from "../../images/mainBackground.gif";
+import { useInterval } from "../common/usefulFuntions";
+import axios from "axios";
+import { ServerName } from "../../serverName";
+import * as faceapi from 'face-api.js';
+import BestPerformer from "./BestPerformer";
 
 /* In Game 추가 사항 */
 import LoadGIF from "./Giftest";
 import Button from "../common/Button.js";
 import { Link } from "react-router-dom";
+
+const userId = "salmonsushi"; // 임시(temp)
+
+const recordTime = 3000; // 녹화 시간(ms)
+const modelInterval = 500; // 웃음 인식 간격(ms)
+let startVideoPromise;
+let videoRecorded = false; // 녹화 여부
+
+/** 1초 줄어든 시간을 리턴 */
+function decreaseOneSec(minutes, seconds) {
+  if (seconds === 0) {
+      seconds = 59;
+      minutes -= 1;
+  } else {
+      seconds -= 1;
+  }
+  return [minutes, seconds];
+}
+
+function handleGameStart() {
+  console.log("Game Start");
+}
+
+
+function ChattingWindow(props) {
+  return <div style={{width:"100%"}}>
+      <h1>Chatting Window Here</h1>
+  </div>
+}
+
+function GifWindow(props) {
+  return  <div>
+              <h1>GIF Here</h1>
+              <LoadGIF></LoadGIF>
+          </div>
+}
+
+
+function Timer(props) {
+  const gameMinutes = 1;
+  const gameSeconds = 30;
+  const [remainTime, setTimer] = useState([gameMinutes, gameSeconds]);
+  const [minutes, seconds] = remainTime;
+
+  let delay = 1000;
+  let insertZero = '';
+  let content = '';
+
+  if (minutes === 0 && seconds === 0) { // 종료 조건
+      content = <h1> Game Over! </h1>
+      delay = null; // clear useInterval
+  } else {
+      if (seconds < 10) insertZero = '0';
+      content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
+  }
+
+  useInterval(() => {
+      setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
+  }, delay);
+
+  return content;
+
+}
+
+// 녹화가 완료된 후 서버로 비디오 데이터 post
+async function postVideo(recordedBlob) {
+  // let file = new File([recordedChunks[0]], "userVideo");
+  const formdata = new FormData();
+
+  formdata.append('userId', userId);
+  formdata.append('video', recordedBlob, 'video.mp4');
+
+  console.log('Blob data : ', recordedBlob);
+
+  await axios.post(`${ServerName}/api/best/send-video`, formdata, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+  })
+      .then((res) => { console.log('POST res : ', res) })
+      .catch((err) => { console.log('err : ', err) });
+}
+
+
+function recordVideo(stream) {
+  console.log("Start Recording...");
+  let recorder = new MediaRecorder(stream);
+  recorder.ondataavailable = (event) => {
+      const recordedBlob = new Blob([event.data], { type: "video/mp4" });
+      postVideo(recordedBlob);
+  };
+
+  recorder.start();
+  setTimeout(() => {
+      recorder.stop();
+      console.log("Recording Finished!");
+  }, recordTime);
+}
+
 
 const FlexContainer = styled.div`
   display: flex;
@@ -51,12 +153,22 @@ function Videos({ match, socket }) {
   const otherUsers = useRef([]); // 다른 유저들의 userID를 저장
   const peers = useRef([]); // 다른 유저들의 peer들을 저장
   const { roomID } = useParams();
+  const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [gameFinished, setGameFinished] = useState(false);
 
   useEffect(() => {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: false })
       .then(getStream)
       .catch((err) => console.error(err));
+    
+    const MODEL_URL = process.env.PUBLIC_URL + '/models';
+    console.log("AI Model Loading...");
+    Promise.all([
+        faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+        faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
+    ]).then(setModelsLoaded(true));
+
     return () => {
       socket.emit("out room");
       socket.off();
@@ -276,93 +388,74 @@ function Videos({ match, socket }) {
     [socket, match]
   );
 
-//InGame
-/** setInterval 안에서 setState 쓰려면 setInterval 대신에 이 함수 써야 함 */
 
+
+//InGame
 const [gameStarted, setGameStart] = useState(false);
 
-
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  // Remember the latest callback.
-  useEffect(() => {
-      savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-      function tick() {
-          savedCallback.current();
+function handleHP(happiness) {
+  if (happiness > 0.2) { // 피를 깎아야 하는 경우
+      if (happiness > 0.6) {
+          if (!videoRecorded) { // 딱 한 번만 record
+              videoRecorded = true;
+              recordVideo(userVideo.current.srcObject);
+          }
+          return 2;
+      } else {
+          return 1;
       }
-      if (delay !== null) {
-          let id = setInterval(tick, delay);
-          return () => clearInterval(id);
-      }
-  }, [delay]);
-}
-
-/** 1초 줄어든 시간을 리턴 */
-function decreaseOneSec(minutes, seconds) {
-  if (seconds === 0) {
-      seconds = 59;
-      minutes -= 1;
-  } else {
-      seconds -= 1;
   }
-  return [minutes, seconds];
+  return 0;
 }
 
-function handleGameStart() {
-  console.log("Game Start");
-}
+const ShowStatus = () => {
+  const [myHP, setMyHP] = useState(100);
+  const [faceDetected, setFaceDetected] = useState(false);
+  const [smiling, setSmiling] = useState(false);
+  const [interval, setInterval] = useState(modelInterval);
+  let content = "";
 
+  /** 모델 돌리기 + 체력 깎기 */
+  useInterval(async () => {
+      const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+      if (detections[0]) {
+          const decrease = handleHP(detections[0].expressions.happy);
+          if (decrease > 0) {
+              const newHP = myHP - decrease;
+              if (newHP <= 0) { // game over
+                  setInterval(null);
+              }
+              setMyHP(newHP);
+              setSmiling(true);
+          } else setSmiling(false);
+          setFaceDetected(true);
+      } else {
+          setFaceDetected(false);
+          setSmiling(false);
+      }
+  }, interval);
 
-function ChattingWindow(props) {
-  return <div style={{width:"100%"}}>
-      <h1>Chatting Window Here</h1>
-  </div>
-}
+  let detecContent = faceDetected ? "인식 중" : "인식 불가";
 
-function GifWindow(props) {
-  return  <div>
-              <h1>GIF Here</h1>
-              <LoadGIF></LoadGIF>
-          </div>
-}
-
-
-function Timer(props) {
-  const gameMinutes = 1;
-  const gameSeconds = 30;
-  const [remainTime, setTimer] = useState([gameMinutes, gameSeconds]);
-  const [minutes, seconds] = remainTime;
-
-  let delay = 1000;
-  let insertZero = '';
-  let content = '';
-
-  if (minutes === 0 && seconds === 0) { // 종료 조건
-      content = <h1> Game Over! </h1>
-      delay = null; // clear useInterval
+  if (interval) {
+      content = <h2>{detecContent}  HP : {myHP} {smiling && "^^"}</h2>
   } else {
-      if (seconds < 10) insertZero = '0';
-      content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
+      content = <h2> Game Over!!! </h2>
   }
 
-  useInterval(() => {
-      setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
-  }, delay);
-
-  return content;
-
+  return content
 }
+
 
 function handleStart(event) {
   setGameStart(!gameStarted);
   handleGameStart();
 }
 
+function handleFinish() {
+  console.log("Game Finished");
+  setGameFinished(true);
+}
 
 
 const HeaderStyle = {
@@ -414,8 +507,8 @@ const MiddleRight ={
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
-  textAlign: "Center"
-
+  textAlign: "Center",
+  color : 'white'
 }
 
 const MyNickname={
@@ -477,8 +570,6 @@ const HPstyle ={
 }
 
 
-
-
   return (
     <ThemeProvider
       theme={{
@@ -507,18 +598,28 @@ const HPstyle ={
         </Header>
         <Middle>
               <div style={MiddleLeft}>
-                {!gameStarted ? <ChattingWindow></ChattingWindow> : <GifWindow></GifWindow>}
+              {gameStarted ?
+                  gameFinished ?
+                    <BestPerformer></BestPerformer> :
+                    <GifWindow></GifWindow> :
+                  <ChattingWindow></ChattingWindow>}
               </div>
               <div style={MiddleRight}>
                 <h1 style={MyNickname}>{localStorage.nickname}</h1>
                 <video autoPlay style={MyVideo} ref={userVideo} />
+                <ShowStatus></ShowStatus>
                 <div style={MyButton}>
-                <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
+                  <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>
+                    START
+                  </Button>
                 <Link to="/Lobby">
                   <Button color="yellow" size="large" style={ButtonSize}>
                       QUIT
                   </Button>
                 </Link>
+                <Button color="yellow" size="large" style={ButtonSize} onClick={handleFinish}>
+                  FINISH GAME
+                </Button>
               </div>
               </div>
         </Middle>
