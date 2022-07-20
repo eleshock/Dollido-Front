@@ -12,7 +12,7 @@ function BestPerformer() {
     console.log("Show Best Performer");
 
     useEffect(() => {
-        // 패배자Id와 패배자 비디오 얻어오기
+        // Best Performer Nick과 비디오 얻어오기
         async function getLoserVideo() {
             response = await axios.get(`${ServerName}/api/best/get-video`)
                 .then(res => res)
@@ -29,10 +29,10 @@ function BestPerformer() {
         if (response === null) {
             content = <h1> 오류가 발생했습니다 </h1>
         } else {
-            const bestPerformerId = response.data.bestPerformerId;
+            const bestPerformerNick = response.data.bestPerformerNick;
             const bestVideoName = response.data.bestVideoName;
 
-            console.log("Best Performer Id :", bestPerformerId);
+            console.log("Best Performer Nick :", bestPerformerNick);
             console.log("Best Video Name :", bestVideoName);
             
             if (bestVideoName === undefined) {
@@ -41,7 +41,7 @@ function BestPerformer() {
                 const videoUrl = ServerName + '/' + bestVideoName;
 
                 content = <>
-                    <h1> { bestPerformerId } </h1>
+                    <h1> { bestPerformerNick } </h1>
                     <video src={ videoUrl } autoPlay loop
                         style={{ borderRadius: '10px', width: "90%", transform: 'scaleX(-1)' }} />
                 </>

@@ -20,11 +20,10 @@ import LoadGIF from "./Giftest";
 import Button from "../common/Button.js";
 import { Link } from "react-router-dom";
 
-const userId = "salmonsushi"; // 임시(temp)
+const defaultUserNick = "salmonsushi"; // 임시(temp)
 
 const recordTime = 3000; // 녹화 시간(ms)
 const modelInterval = 500; // 웃음 인식 간격(ms)
-let startVideoPromise;
 let videoRecorded = false; // 녹화 여부
 
 /** 1초 줄어든 시간을 리턴 */
@@ -84,11 +83,11 @@ function Timer(props) {
 }
 
 // 녹화가 완료된 후 서버로 비디오 데이터 post
-async function postVideo(recordedBlob) {
+async function postVideo(recordedBlob, user_nick) {
   // let file = new File([recordedChunks[0]], "userVideo");
   const formdata = new FormData();
 
-  formdata.append('userId', userId);
+  formdata.append('user_nick', user_nick);
   formdata.append('video', recordedBlob, 'video.mp4');
 
   console.log('Blob data : ', recordedBlob);
@@ -100,13 +99,22 @@ async function postVideo(recordedBlob) {
     .catch((err) => { console.log('err : ', err) });
 }
 
+/** 서버에 유저의 best perform 영상 삭제 요청  */
+function deleteBestVideo(user_nick) {
+  const data = { user_nick: user_nick };
 
-function recordVideo(stream) {
+  axios.post(`${ServerName}/api/best/delete-video`, data)
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+}
+
+
+function recordVideo(stream, user_nick) {
   console.log("Start Recording...");
   let recorder = new MediaRecorder(stream);
   recorder.ondataavailable = (event) => {
     const recordedBlob = new Blob([event.data], { type: "video/mp4" });
-    postVideo(recordedBlob);
+    postVideo(recordedBlob, user_nick);
   };
 
   recorder.start();
@@ -158,6 +166,10 @@ function Videos({ match, socket }) {
   const { roomID } = useParams();
   const [modelsLoaded, setModelsLoaded] = useState(false);
   const [gameFinished, setGameFinished] = useState(false);
+  const user_nick = useSelector((state) => {
+    const nick = state.member.member.user_nick;
+    return nick ? nick : defaultUserNick;
+  });
 
 
   useEffect(() => {
@@ -185,6 +197,7 @@ function Videos({ match, socket }) {
       otherUsers.current = null;
       peers.current = null;
       dispatch(clearVideos());
+      deleteBestVideo(user_nick);
     };
     // eslint-disable-next-line
   }, [socket, match]);
@@ -408,7 +421,7 @@ function Videos({ match, socket }) {
       if (happiness > 0.6) {
         if (!videoRecorded) { // 딱 한 번만 record
           videoRecorded = true;
-          recordVideo(userVideo.current.srcObject);
+          recordVideo(userVideo.current.srcObject, user_nick);
         }
         return 2;
       } else {
@@ -418,7 +431,7 @@ function Videos({ match, socket }) {
     return 0;
   }
 
-  const OthersShowStatus = ({nickname}) => {
+  const OthersShowStatus = ({ nickname }) => {
     const [peersHP, setPeersHP] = useState(100);
     useEffect(() => {
       socket.on("smile", (peerHP, peerID) => {
@@ -426,8 +439,9 @@ function Videos({ match, socket }) {
         if (nickname === peerID) {
           setPeersHP(peerHP);
         }
-      })}, [nickname])
-      return <ProgressBar striped variant="danger" now={peersHP} />
+      })
+    }, [nickname])
+    return <ProgressBar striped variant="danger" now={peersHP} />
   }
 
   const ShowStatus = () => {
