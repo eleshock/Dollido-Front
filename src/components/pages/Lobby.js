@@ -223,7 +223,6 @@ const Lobby = () => {
     socket.current.on("give room list", (rooms) => {
       setRooms(rooms);
       setRoomCount(Object.keys(rooms).length);
-      // console.log("방의 개수", Object.keys(rooms).length);
     });
   }, [rooms]);
 
