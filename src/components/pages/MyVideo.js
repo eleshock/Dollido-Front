@@ -4,6 +4,9 @@ import * as faceapi from 'face-api.js';
 import axios from "axios";
 import { ServerName } from "../../serverName";
 import FormData from "form-data";
+import ProgressBar from 'react-bootstrap/ProgressBar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const userId = "salmonsushi"; // 임시(temp)
 
@@ -48,7 +51,7 @@ function MyVideo(props) {
     const [onVideo, setOnVideo] = useState(false);
     const videoRef = useRef();
     const defaultPlayerId = "깨랑까랑";
-    
+
     useEffect(() => gameFinished, []); // MyVideo component가 unmount됐을 때 실행
 
     const startVideo = (deviceId) => {
@@ -145,12 +148,13 @@ function MyVideo(props) {
         let detecContent = faceDetected ? "인식 중" : "인식 불가";
 
         if (interval) {
-            content = <h2>{detecContent}  HP : {myHP} {smiling && "^^"}</h2>
+            content = <ProgressBar striped variant="danger" now={myHP} label={`${myHP}`}/>
+            // content = <h2>{detecContent}  HP : {myHP} {smiling && "^^"}</h2>
         } else {
             content = <h2> Game Over!!! </h2>
         }
 
-        return content
+        return content;
     }
 
     return (

@@ -223,7 +223,6 @@ const Lobby = () => {
     socket.current.on("give room list", (rooms) => {
       setRooms(rooms);
       setRoomCount(Object.keys(rooms).length);
-      // console.log("방의 개수", Object.keys(rooms).length);
     });
   }, [rooms]);
 
@@ -416,6 +415,7 @@ const Lobby = () => {
                         <RoomTag4>인원</RoomTag4>
                       </RoomTagList>
                         {currentPosts(rooms).map((room) => {
+                          // console.log(room)
                           return (
                               <RoomLinkList key={room[0]} onClick = { () => selectRoom(room) }>
                                 <RoomLink1>{room[1].roomName}</RoomLink1>
