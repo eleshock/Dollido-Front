@@ -56,32 +56,6 @@ function GifWindow(props) {
 }
 
 
-function Timer(props) {
-  const gameMinutes = 1;
-  const gameSeconds = 30;
-  const [remainTime, setTimer] = useState([gameMinutes, gameSeconds]);
-  const [minutes, seconds] = remainTime;
-
-  let delay = 1000;
-  let insertZero = '';
-  let content = '';
-
-  if (minutes === 0 && seconds === 0) { // 종료 조건
-    content = <h1> Game Over! </h1>
-    delay = null; // clear useInterval
-    socket.emit("finsh", ({roomID : roomID}));
-  } else {
-    if (seconds < 10) insertZero = '0';
-    content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
-  }
-
-  useInterval(() => {
-    setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
-  }, delay);
-
-  return content;
-
-}
 
 // 녹화가 완료된 후 서버로 비디오 데이터 post
 async function postVideo(recordedBlob, user_nick) {
@@ -453,11 +427,12 @@ function Videos({ match, socket }) {
       }
     });
 
-    socket.on("finsh", () => {
-      console.log("finsh", gameFinished);
+    socket.on("finish", () => {
+      console.log("finish", gameFinished);
       setGameFinished(!gameFinished);
     });
   }, [socket]);
+
 
 
 
@@ -522,7 +497,7 @@ function Videos({ match, socket }) {
           const newHP = myHP - decrease;
           if (newHP <= 0) { // game over
             setInterval(null);
-            socket.emit("finsh", {roomID : roomID});
+            socket.emit("finish", {roomID : roomID});
           }
           setMyHP(newHP);
           socket.emit("smile", newHP, roomID, localStorage.getItem("nickname"));
@@ -547,6 +522,33 @@ function Videos({ match, socket }) {
   }
 
 
+  function Timer() {
+    const gameMinutes = 1;
+    const gameSeconds = 30;
+    const [remainTime, setTimer] = useState([gameMinutes, gameSeconds]);
+    const [minutes, seconds] = remainTime;
+
+    let delay = 1000;
+    let insertZero = '';
+    let content = '';
+
+    if (minutes === 0 && seconds === 0) { // 종료 조건
+      content = <h1> Game Over! </h1>
+      delay = null; // clear useInterval
+      socket.emit("finish", ({roomID : roomID}));
+    } else {
+      if (seconds < 10) insertZero = '0';
+      content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
+    }
+
+    useInterval(() => {
+      setTimer(decreaseOneSec(remainTime[0], remainTime[1]));
+    }, delay);
+
+    return content;
+
+  }
+
 
   // function OtherVideoPlay(partnerVideos, otherUsers) {
   //   const playerNickname = useRef()
@@ -564,6 +566,8 @@ function Videos({ match, socket }) {
   //   return playerNickname
 
   // }
+
+
 
 
 
