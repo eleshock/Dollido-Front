@@ -70,6 +70,7 @@ function Timer(props) {
   if (minutes === 0 && seconds === 0) { // 종료 조건
     content = <h1> Game Over! </h1>
     delay = null; // clear useInterval
+    socket.emit("finsh", ({roomID : roomID}));
   } else {
     if (seconds < 10) insertZero = '0';
     content = <h1> {'0' + remainTime[0] + ":" + insertZero + remainTime[1]} </h1>
@@ -201,7 +202,7 @@ function Videos({ match, socket }) {
       });
 
       socket.emit("wait", ({roomID: roomID}));
-      
+
       // 유저가 나갔을 때
       socket.on("out user", ({ nickname, streamID }) => {
         // alert(`${nickname} (이)가 나갔습니다!`);
@@ -507,6 +508,7 @@ function Videos({ match, socket }) {
           const newHP = myHP - decrease;
           if (newHP <= 0) { // game over
             setInterval(null);
+            socket.emit("finsh", {roomID : roomID});
           }
           setMyHP(newHP);
           socket.emit("smile", newHP, roomID, localStorage.getItem("nickname"));
