@@ -12,6 +12,9 @@ import LoadGIF from "./Giftest";
 import Button from "../common/Button.js";
 import { Link } from "react-router-dom";
 
+/* 채팅 */
+import Chat from "./Chat"
+
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -21,13 +24,13 @@ const FlexContainer = styled.div`
 
 const Header = styled.div`
   display: flex;
-  flex: 1;
+  flex: 5;
   font-family: koverwatch
 `
 
 const Middle = styled.div`
   display: flex;
-  flex: 60;
+  flex: 80;
   width: 100%;
   font-family: koverwatch
 `
@@ -35,7 +38,7 @@ const Bottom = styled.div`
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  flex: 30;
+  flex: 15;
   font-family: koverwatch
 `
 
@@ -276,6 +279,9 @@ function Videos({ match, socket }) {
     [socket, match]
   );
 
+
+
+
 //InGame
 /** setInterval 안에서 setState 쓰려면 setInterval 대신에 이 함수 써야 함 */
 
@@ -318,10 +324,12 @@ function handleGameStart() {
 }
 
 
-function ChattingWindow(props) {
-  return <div style={{width:"100%"}}>
-      <h1>Chatting Window Here</h1>
-  </div>
+function ChattingWindow() {
+  return (
+      <div style={{display:"flex", justifyContent:"center"}}>
+        <Chat style ={{height:"100vh"}} socket={socket} username={localStorage.nickname} room={roomID} />
+      </div>
+  );
 }
 
 function GifWindow(props) {
@@ -361,6 +369,31 @@ function Timer(props) {
 function handleStart(event) {
   setGameStart(!gameStarted);
   handleGameStart();
+  return {
+
+  }
+}
+
+function OtherVideoPlay(partnerVideos, otherUsers) {
+  const [playerNickname, setplayerNickname] = useState([])
+
+  
+  partnerVideos.map((partnerVideo) => (
+
+    otherUsers.current.map((otherUser, index) => 
+    otherUser.streamID === partnerVideo.id ? (
+      otherUser.nickName ? setplayerNickname(otherUser.nickName) : index
+    ) : null )
+  ))
+
+
+  return 
+
+  
+  
+  
+
+
 }
 
 
@@ -377,7 +410,7 @@ const HeaderStyle = {
 
 const HeaderLeft ={
 
-  flex: "2",
+  flex: "2.5",
   textAlign: "Center",
   color: 'gray',
   backgroundColor: 'White'
@@ -386,7 +419,7 @@ const HeaderLeft ={
 }
 const HeaderMiddle ={
 
-  flex: "6",
+  flex: "5",
   textAlign: "Center",
   color: 'gray',
   backgroundColor: 'Black'
@@ -395,7 +428,7 @@ const HeaderMiddle ={
 }
 const HeaderRight ={
 
-  flex: "2",
+  flex: "2.5",
   textAlign: "Center",
   color: 'gray',
   backgroundColor: 'White'
@@ -403,36 +436,38 @@ const HeaderRight ={
 }
 
 const MiddleLeft ={
-  flex: "7",
+  flex: "2.5",
   textAlign: "Center",
-  backgroundColor: "beige"
+  display: "flex",
+  flexDirection: "Column"
+  // backgroundColor: "beige"
 }
 
+const Middlemiddle = {
+  flex: "5",
+  backgroundColor: "beige",
+  textAlign: "Center"
+}
 const MiddleRight ={
 
-  flex: "3",
+  flex: "2.5",
+  textAlign: "Center",
   display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  textAlign: "Center"
-
+  flexDirection: "Column"
 }
 
 const MyNickname={
 
-  display: 'flex',
   alignItems: 'flex-end',
   justifyContent: 'center',
-  flex: '1',
   color: 'gray'
 
 }
 
 const MyVideo={
 
-  flex:'6',
-  padding:"0 20px 20px 20px",
-  height:"auto",
+  flex:'5',
+  // height:"auto",
   width:"100%"
 
 }
@@ -472,12 +507,18 @@ const OtherNickname ={
 
 
 const HPstyle ={
- color: 'gray',
- flex : "2"
+  color: 'gray'
 }
 
+const playerBox ={
+  flex: "5"
+}
 
+const X = partnerVideos.map((partnerVideo, index) => {
 
+    console.log(partnerVideo)
+    console.log(index)
+  })
 
   return (
     <ThemeProvider
@@ -507,12 +548,37 @@ const HPstyle ={
         </Header>
         <Middle>
               <div style={MiddleLeft}>
-                {!gameStarted ? <ChattingWindow></ChattingWindow> : <GifWindow></GifWindow>}
+                <div style={playerBox}>
+                  <h1 style={MyNickname}>{localStorage.nickname}</h1>
+                  <video autoPlay style={MyVideo} ref={userVideo}/>
+                  <h2 style={HPstyle} >HP : 100</h2>
+                </div>
+                <div style={playerBox}>
+
+                  <Video stream={partnerVideos[1]}></Video>
+                  <h2 style={HPstyle} >HP : 100</h2>
+
+                </div>
+              </div>
+              <div style={Middlemiddle}>
+                  {!gameStarted ? <ChattingWindow></ChattingWindow> : <GifWindow></GifWindow>}
               </div>
               <div style={MiddleRight}>
-                <h1 style={MyNickname}>{localStorage.nickname}</h1>
-                <video autoPlay style={MyVideo} ref={userVideo} />
-                <div style={MyButton}>
+                <div style={playerBox} >
+                    <Video stream={partnerVideos[0]}></Video>
+                    <h2 style={HPstyle} >HP : 100</h2>
+                </div>
+                <div style={playerBox} >
+                    <Video stream={partnerVideos[2]}></Video>
+                    <h2 style={HPstyle} >HP : 100</h2>
+                </div>
+                        
+
+              </div>
+
+        </Middle>
+        <Bottom>
+            <div style={MyButton}>
                 <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
                 <Link to="/Lobby">
                   <Button color="yellow" size="large" style={ButtonSize}>
@@ -520,23 +586,7 @@ const HPstyle ={
                   </Button>
                 </Link>
               </div>
-              </div>
-        </Middle>
-        <Bottom>
-          <div style={OthersVideoStyle}>
-            {partnerVideos.map((partnerVideo) => (
-                <div key={partnerVideo.id} style={OthersVideoBox} >
-                  {otherUsers.current.map((otherUser) =>
-                    otherUser.streamID === partnerVideo.id ? (
-                    <h2 key={otherUser.socketID} style={OtherNickname}>{otherUser.nickName ? otherUser.nickName:"UNDEFINED"}</h2>
-                    ) : null
 
-                  )}
-                <Video stream={partnerVideo}></Video>
-                <h2 style={HPstyle} >HP : 100</h2>
-              </div>
-              ))}
-            </div>
         </Bottom>
       </FlexContainer>
 
@@ -554,7 +604,7 @@ const Video = ({ stream }) => {
   useEffect(() => {
     ref.current.srcObject = stream;
   }, [stream]);
-  return <video style={{width:"80%", flex : "7"}} autoPlay ref={ref} />;
+  return <video style={{width:"100%"}} autoPlay ref={ref} />;
 };
 
 export default React.memo(Videos); // 메모이징 최적화
