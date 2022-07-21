@@ -13,9 +13,6 @@ const BackgroundSizeStyle = styled.img`
 `;
 
 
-function onScreenGif(props) {
-    console.log(props.seconds);
-}
 
 const Giftest = (props) => {
     const [name, setName] = useState(['0.gif'])
@@ -24,6 +21,10 @@ const Giftest = (props) => {
     const [gifList, setGifList] = useState([null]);
     const tempGIF = useRef();
     const [countDown, setCountDown] = useState(true);
+    axios.defaults.xsrfCookieName = 'csrftoken';
+    axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
+
+
 
     // get gifs file subjects from server
     const nameFunction = () => {
