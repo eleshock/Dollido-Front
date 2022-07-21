@@ -218,7 +218,6 @@ const Lobby = () => {
     });
     socket.current.emit("get room list");
   }, []);
-  // console.log(socket);
   useEffect(() => {
     socket.current.on("give room list", (rooms) => {
       setRooms(rooms);
@@ -397,6 +396,9 @@ const Lobby = () => {
                           name="roomName"
                           value={roomName}
                           onChange={onChangeRoomName}
+                          onKeyPress= {(e) => {
+                            e.key === "Enter" && onClickMakeRoom(e);
+                          }}
                           ref={roomNameRef}
                           style={sizes}
                         />

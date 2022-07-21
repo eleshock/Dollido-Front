@@ -17,8 +17,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 /* In Game 추가 사항 */
 import LoadGIF from "./Giftest";
-import Button from "../common/Button.js";
+import Button from "../common/Button";
 import { Link } from "react-router-dom";
+import dollidoLogo from "../../images/DollidoLogo2.png";
+import gifwindow from "../../images/gifwindow.png";
+
+/* 채팅 */
+import Chat from "./Chat"
 
 const defaultUserNick = "salmonsushi"; // 임시(temp)
 
@@ -39,20 +44,6 @@ function decreaseOneSec(minutes, seconds) {
 
 function handleGameStart() {
   console.log("Game Start");
-}
-
-
-function ChattingWindow(props) {
-  return <div style={{ width: "100%" }}>
-    <h1>Chatting Window Here</h1>
-  </div>
-}
-
-function GifWindow(props) {
-  return <div>
-    <h1>GIF Here</h1>
-    <LoadGIF></LoadGIF>
-  </div>
 }
 
 
@@ -104,6 +95,7 @@ const FlexContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 10px 30px 10px 30px;
   font-family: koverwatch
 `
 
@@ -405,6 +397,25 @@ function Videos({ match, socket }) {
     socket.emit("start", {roomID: roomID});
   }
 
+
+
+function ChattingWindow() {
+  return (
+      <div style={{display:"flex", justifyContent:"center"}}>
+        <Chat style ={{height:"100vh"}} socket={socket} username={localStorage.nickname} room={roomID} />
+      </div>
+  );
+}
+
+function GifWindow(props) {
+  return  <div>
+
+              <h1 style={{color:"gray"}}>GIF Here</h1>
+              <LoadGIF></LoadGIF>
+              </div>
+}
+
+
   useEffect(() => {
     socket.on("ready", ({nickName, status}) => {
       console.log(nickName);
@@ -549,13 +560,100 @@ function Videos({ match, socket }) {
 
   }
 
+  const HeaderStyle = {
+
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+
+  }
+
+  const HeaderLeft ={
+
+    flex: "2.5",
+    textAlign: "Center",
+    color: 'gray'
+
+
+  }
+  const HeaderMiddle ={
+
+    flex: "5",
+    textAlign: "Center",
+    color: 'gray',
+    width: "100%",
+    padding: "10px 0 0 0"
+
+  }
+  const HeaderRight ={
+
+    flex: "2.5",
+    textAlign: "Center",
+    color: 'gray'
+
+  }
+
+  const MiddleLeft ={
+    flex: "2.5",
+    textAlign: "Center",
+    display: "flex",
+    flexDirection: "Column"
+  }
+
+  const Middlemiddle = {
+    flex: "5",
+    textAlign: "Center"
+  }
+  const MiddleRight ={
+
+    flex: "2.5",
+    textAlign: "Center",
+    display: "flex",
+    flexDirection: "Column"
+  }
+
+  const MyNickname={
+
+    alignItems: 'flex-end',
+    justifyContent: 'center',
+    color: 'White',
+  }
+
+  const MyVideo={
+
+    flex:'5',
+    // height:"auto",
+    width:"100%",
+    borderRadius:"10%"
+  }
+
+  const MyButton={
+    flex: '3',
+    display:"flex",
+    justifyContent: 'center',
+    textAlign:"center",
+    alignItems:'center'
+  }
+
+  const ButtonSize ={
+
+      margin:"25px"
+  }
+
+  const HPstyle ={
+    color: 'gray'
+  }
+
+  const playerBox ={
+    flex: "5"
+  }
+
+
 
   // function OtherVideoPlay(partnerVideos, otherUsers) {
   //   const playerNickname = useRef()
-
-
   //   partnerVideos.map((partnerVideo) => (
-
   //     otherUsers.current.map((otherUser, index) =>
   //     otherUser.streamID === partnerVideo.id ? (
   //       otherUser.nickName ? playerNickname.current = otherUser.nickName : index
@@ -563,134 +661,12 @@ function Videos({ match, socket }) {
   //   ))
 
 
-  //   return playerNickname
 
-  // }
+const X = partnerVideos.map((partnerVideo, index) => {
 
-
-
-
-
-  const HeaderStyle = {
-
-    display: 'flex',
-    alignItems: 'center',
-    flexDirection: 'row',
-    width: '100%'
-
-
-  }
-
-  const HeaderLeft = {
-
-    flex: "2.5",
-    textAlign: "Center",
-    color: 'gray',
-    backgroundColor: 'White'
-
-
-  }
-  const HeaderMiddle = {
-
-    flex: "5",
-    textAlign: "Center",
-    color: 'gray',
-    backgroundColor: 'Black'
-
-
-  }
-  const HeaderRight = {
-
-    flex: "2.5",
-    textAlign: "Center",
-    color: 'gray',
-    backgroundColor: 'White'
-
-  }
-
-  const MiddleLeft = {
-    flex: "2.5",
-    textAlign: "Center",
-    display: "flex",
-    flexDirection: "Column"
-    // backgroundColor: "beige"
-  }
-
-  const Middlemiddle = {
-    flex: "5",
-    backgroundColor: "beige",
-    textAlign: "Center"
-
-  }
-  const MiddleRight = {
-
-    flex: "2.5",
-    textAlign: "Center",
-    display: "flex",
-    flexDirection: "Column"
-  }
-
-  const MyNickname = {
-
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    color: 'gray'
-
-  }
-
-  const MyVideo = {
-
-    flex: '5',
-    // height:"auto",
-    width: "100%",
-    transform: 'scaleX(-1)',
-
-  }
-
-  const MyButton = {
-    flex: '3',
-    display: "flex",
-    justifyContent: 'center',
-    textAlign: "center",
-    alignItems: 'center'
-  }
-
-  const ButtonSize = {
-
-    margin: "25px"
-  }
-
-  const OthersVideoStyle = {
-
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end'
-
-  }
-
-  const OthersVideoBox = {
-    display: "flex",
-    flexDirection: 'column',
-    alignItems: 'center'
-    // justifyContent: 'space-around'
-  }
-
-  const OtherNickname = {
-    color: 'gray',
-    flex: "1"
-  }
-
-
-  const HPstyle = {
-    color: 'gray'
-  }
-
-  const playerBox = {
-    flex: "5"
-  }
-
-
-
+    console.log(partnerVideo)
+    console.log(index)
+  })
 
   return (
     <ThemeProvider
@@ -713,7 +689,7 @@ function Videos({ match, socket }) {
                 <div style={HeaderMiddle}>
                   {!gameFinished?
                         <>
-                          {!gameStarted ? <h1>DOLLIDO</h1>: <Timer></Timer>}
+                          {!gameStarted ? <img src={dollidoLogo} style={{height:"75px"}} /> : <Timer></Timer>}
                         </>
                         :
                         <h1>Game Over !</h1>
@@ -732,7 +708,7 @@ function Videos({ match, socket }) {
                   {modelsLoaded ? <ShowStatus></ShowStatus> : <h1> Model Loading... </h1>}
                 </div>
                 <div style={playerBox}>
-                  <h1 style={{ color: "gray" }}>{otherUsers.current[1] ? otherUsers.current[1].nickName : "Undefined"}</h1>
+                  {otherUsers.current[1] ? <h1 style={{color:"white"}}> {otherUsers.current[1].nickName}</h1> : <h1>{"Undefined"}</h1>}
                   <Video stream={partnerVideos[1]}></Video>
                   <OthersShowStatus nickname={otherUsers.current[1] ? otherUsers.current[1].nickName : "Undefined"}></OthersShowStatus>
                 </div>
@@ -746,14 +722,14 @@ function Videos({ match, socket }) {
               </div>
               <div style={MiddleRight}>
                 <div style={playerBox} >
-                  <h1 style={{ color: "gray" }}>{otherUsers.current[0] ? otherUsers.current[0].nickName : "Undefined"}</h1>
+                  {otherUsers.current[0] ? <h1 style={{color:"white"}}>{otherUsers.current[0].nickName}</h1> : <h1>{"Undefined"}</h1>}
                   <Video stream={partnerVideos[0]}></Video>
                   <OthersShowStatus nickname={otherUsers.current[0] ? otherUsers.current[0].nickName : "Undefined"}></OthersShowStatus>
                   {/* <OthersShowStatus nickname={otherUsers.current[1].nickName}></OthersShowStatus> */}
 
                 </div>
                 <div style={playerBox} >
-                  <h1 style={{ color: "gray" }}>{otherUsers.current[2] ? otherUsers.current[2].nickName : "Undefined"}</h1>
+                  {otherUsers.current[2] ? <h1 style={{color:"white"}}> {otherUsers.current[2].nickName}</h1> : <h1>{"Undefined"}</h1>}
                   <Video stream={partnerVideos[2]}></Video>
                   <OthersShowStatus nickname={otherUsers.current[2] ? otherUsers.current[2].nickName : "Undefined"}></OthersShowStatus>
                 </div>
@@ -794,7 +770,7 @@ const Video = ({ stream }) => {
   useEffect(() => {
     ref.current.srcObject = stream;
   }, [stream]);
-  return <video style={{ width: "100%", transform: 'scaleX(-1)' }} autoPlay ref={ref} />;
+  return <video style={{width:"100%", borderRadius:"10%"}} autoPlay ref={ref} />;
 };
 
 export default React.memo(Videos); // 메모이징 최적화
