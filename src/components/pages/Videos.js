@@ -9,14 +9,16 @@ import mainBackground from "../../images/mainBackground.gif";
 
 /* In Game 추가 사항 */
 import LoadGIF from "./Giftest";
-import Button from "../common/Button.js";
+import Button from "../common/Button";
 import { Link } from "react-router-dom";
-
+import dollidoLogo from "../../images/DollidoLogo2.png";
+import gifwindow from "../../images/gifwindow.png";
 
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 10px 30px 10px 30px;
   font-family: koverwatch
 `
 
@@ -323,16 +325,17 @@ function handleGameStart() {
 
 
 function ChattingWindow(props) {
-  return <div style={{width:"100%"}}>
-      <h1>Chatting Window Here</h1>
+  return <div style={{width:"100%", color:"gray"}}>
+       <h2>Chatting Window Here</h2>
   </div>
 }
 
 function GifWindow(props) {
   return  <div>
-              <h1>GIF Here</h1>
+              
+              <h1 style={{color:"gray"}}>GIF Here</h1>
               <LoadGIF></LoadGIF>
-          </div>
+              </div>
 }
 
 
@@ -391,7 +394,7 @@ const HeaderStyle = {
   display: 'flex',
   alignItems: 'center',
   flexDirection: 'row',
-  width: '100%'
+  width: '100%',
 
 
 }
@@ -400,8 +403,7 @@ const HeaderLeft ={
 
   flex: "2.5",
   textAlign: "Center",
-  color: 'gray',
-  backgroundColor: 'White'
+  color: 'gray'
 
 
 }
@@ -410,16 +412,15 @@ const HeaderMiddle ={
   flex: "5",
   textAlign: "Center",
   color: 'gray',
-  backgroundColor: 'Black'
-
+  width: "100%",
+  padding: "10px 0 0 0"
 
 }
 const HeaderRight ={
 
   flex: "2.5",
   textAlign: "Center",
-  color: 'gray',
-  backgroundColor: 'White'
+  color: 'gray'
 
 }
 
@@ -428,12 +429,10 @@ const MiddleLeft ={
   textAlign: "Center",
   display: "flex",
   flexDirection: "Column"
-  // backgroundColor: "beige"
 }
 
 const Middlemiddle = {
   flex: "5",
-  backgroundColor: "beige",
   textAlign: "Center"
 
 }
@@ -449,7 +448,7 @@ const MyNickname={
 
   alignItems: 'flex-end',
   justifyContent: 'center',
-  color: 'gray'
+  color: 'White',
 
 }
 
@@ -457,8 +456,8 @@ const MyVideo={
 
   flex:'5',
   // height:"auto",
-  width:"100%"
-
+  width:"100%",
+  borderRadius:"10%"
 }
 
 const MyButton={
@@ -474,26 +473,6 @@ const ButtonSize ={
     margin:"25px"
 }
 
-const OthersVideoStyle = {
-
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'flex-end'
-
-}
-
-const OthersVideoBox = {
-  display: "flex",
-  flexDirection: 'column',
-  alignItems: 'center'
-  // justifyContent: 'space-around'
-}
-
-const OtherNickname ={
-  color: 'gray',
-  flex : "1"
-}
-
 
 const HPstyle ={
  color: 'gray'
@@ -505,12 +484,7 @@ const playerBox ={
 
 
 
-if (otherUsers.current[0]){
-  console.log(otherUsers.current[0].nickName)
-}
-else{
-  console.log("시발")
-}
+
 
   return (
     <ThemeProvider
@@ -531,7 +505,7 @@ else{
                       <h1> {localStorage.roomName}</h1>
                   </div>
                   <div style={HeaderMiddle}>
-                      {!gameStarted ? <h1>DOLLIDO</h1> : <Timer></Timer>}
+                      {!gameStarted ? <img src={dollidoLogo} style={{height:"75px"}} /> : <Timer></Timer>}
                   </div>
                   <div style={HeaderRight}>
                       <h1> Mode </h1>
@@ -546,7 +520,7 @@ else{
                   <h2 style={HPstyle} >HP : 100</h2>
                 </div>
                 <div style={playerBox}>
-                  <h1 style={{color:"gray"}}>{otherUsers.current[1] ? otherUsers.current[1].nickName : "Undefined"}</h1>
+                {otherUsers.current[1] ? <h1 style={{color:"white"}}> {otherUsers.current[1].nickName}</h1> : <h1>{"Undefined"}</h1>}
                   <Video stream={partnerVideos[1]}></Video>
                   <h2 style={HPstyle} >HP : 100</h2>
 
@@ -557,12 +531,12 @@ else{
               </div>
               <div style={MiddleRight}>
                 <div style={playerBox} >
-                <h1 style={{color:"gray"}}>{otherUsers.current[0] ? otherUsers.current[0].nickName : "Undefined"}</h1>
+                {otherUsers.current[0] ? <h1 style={{color:"white"}}>{otherUsers.current[0].nickName}</h1> : <h1>{"Undefined"}</h1>}
                     <Video stream={partnerVideos[0]}></Video>
                     <h2 style={HPstyle} >HP : 100</h2>
                 </div>
                 <div style={playerBox} >
-                <h1 style={{color:"gray"}}>{otherUsers.current[2] ? otherUsers.current[2].nickName : "Undefined"}</h1>
+                {otherUsers.current[2] ? <h1 style={{color:"white"}}> {otherUsers.current[2].nickName}</h1> : <h1>{"Undefined"}</h1>}
                     <Video stream={partnerVideos[2]}></Video>
                     <h2 style={HPstyle} >HP : 100</h2>
                 </div>
@@ -573,9 +547,9 @@ else{
         </Middle>
         <Bottom>
             <div style={MyButton}>
-                <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
+                <Button style={ButtonSize} onClick={handleStart}>START</Button>
                 <Link to="/Lobby">
-                  <Button color="yellow" size="large" style={ButtonSize}>
+                  <Button style={ButtonSize}>
                       QUIT
                   </Button>
                 </Link>
@@ -598,7 +572,7 @@ const Video = ({ stream }) => {
   useEffect(() => {
     ref.current.srcObject = stream;
   }, [stream]);
-  return <video style={{width:"100%"}} autoPlay ref={ref} />;
+  return <video style={{width:"100%", borderRadius:"10%"}} autoPlay ref={ref} />;
 };
 
 export default React.memo(Videos); // 메모이징 최적화
