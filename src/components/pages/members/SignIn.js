@@ -23,13 +23,10 @@ const SingIn = ({ setChange }) => {
         member: state.member.member
     }));
 
-    console.log(member)
-    
     const submit = async () => {
         let args = {user_id: id,  user_pw: pw};
         await axios.post(`${ServerName}/api/user/signin/`, args).then((res) => {
             let result = res.data;
-            console.log(result.msg);
             if (result.bool){
                 dispatch(setMember(result.member));
                 window.location.href = "/univ";

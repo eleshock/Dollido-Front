@@ -12,10 +12,6 @@ const InGameSocketOn = ({ match, socket }) => {
     const finish = inGameState.state.gameFinished;
     const start = inGameState.state.gameStarted;
 
-
-    console.log("start", start);
-    console.log("finish", finish);
-    
     // socket on
     useEffect(() => {
         socket.on("stop", () => {

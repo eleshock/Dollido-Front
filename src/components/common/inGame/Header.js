@@ -41,10 +41,10 @@ const Img = styled.img`
 `
 
 const InGameHeader = ({socket}) => {
-    const inGameState = useSelector((state) => ({ state: state.inGame }));
-    const gameFinished = inGameState.state.gameFinished;
-    const gameStarted = inGameState.state.gameStarted;
-    const roomID = inGameState.state.roomID;
+    const inGameState = useSelector((state) => state.inGame);
+    const gameFinished = inGameState.gameFinished;
+    const gameStarted = inGameState.gameStarted;
+    const roomID = inGameState.roomID;
 
     /** 1초 줄어든 시간을 리턴 */
     function decreaseOneSec(minutes, seconds) {
@@ -91,7 +91,7 @@ const InGameHeader = ({socket}) => {
                 </HeaderLeft>
                 <HeaderMiddle>
                     {!gameFinished?
-                        !gameStarted ? 
+                        !gameStarted ?
                             <Img src={dollidoLogo}/> 
                             : 
                             <Timer></Timer>

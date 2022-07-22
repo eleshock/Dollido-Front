@@ -210,6 +210,10 @@ const Lobby = () => {
       },
     });
     socket.current.emit("get room list");
+    
+    return () => {
+      stopWebcam();
+    }
   }, []);
   useEffect(() => {
     socket.current.on("give room list", (rooms) => {
@@ -276,7 +280,6 @@ const Lobby = () => {
   const selectRoom = (room) => {
     localStorage.roomLink = room[0];
     localStorage.roomName = room[1].roomName;
-    // localStorage.roomLimit = room[1];
     setModal(true);
     startVideo();
   };
@@ -288,7 +291,6 @@ const Lobby = () => {
         audio: false,
         video: deviceId ? { deviceId } : true,
     })
-    console.log("camera loaded")
     startVideoPromise.then((stream) => {
         let video = videoRef.current;
         video.srcObject = stream;
@@ -299,13 +301,14 @@ const Lobby = () => {
     });
   };
 
-  const stopWebcam = () => {
-    startVideoPromise.then(stream => {
-        console.log('Video Stopped');
-        stream.getTracks().forEach(track => {
-            track.stop();
-        });
-    });
+  const stopWebcam = async () => {
+    if (startVideoPromise) {
+      await startVideoPromise.then(stream => {
+          stream.getTracks().forEach(track => {
+              track.stop();
+          });
+      });
+    }
   }
 
 

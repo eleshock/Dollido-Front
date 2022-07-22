@@ -27,7 +27,7 @@ const InGame = ({ match, socket}) => {
                 <FlexContainer>
                     <InGameSocketOn socket={socket} match={match}></InGameSocketOn>
                     <InGameHeader socket={socket} match={match}></InGameHeader>
-                    <InGameContent socket={socket} match={match}></InGameContent>
+                    {/* <InGameContent socket={socket} match={match}></InGameContent> */}
                     <InGameVideo socket={socket} match={match}></InGameVideo>
                     <InGameBottom socket={socket} match={match}></InGameBottom>
                 </FlexContainer>

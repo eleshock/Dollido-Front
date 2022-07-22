@@ -27,7 +27,6 @@ export default function inGame(state = initialState, action) {
         case SET_GAME_START:
             return { ...state, gameStarted: action.bool};
         case SET_ROOM_ID:
-            console.log(action.roomID)
             return { ...state, roomID: action.roomID };
         case SET_CHIEF:
             return { ...state, chief: action.bool };

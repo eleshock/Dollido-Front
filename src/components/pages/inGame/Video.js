@@ -115,7 +115,6 @@ const Video = ({ stream }) => {
     }, [stream]);
     return <video style={{width:"100%", borderRadius:"10%"}} autoPlay ref={ref} />;
 };
-
 const InGameVideo = ({ match, socket }) => {
     const dispatch = useDispatch();
     const inGameState = useSelector((state) => ({ state: state.inGame }));
@@ -137,23 +136,33 @@ const InGameVideo = ({ match, socket }) => {
 
     // model 적재
     useEffect(() => {
-        navigator.mediaDevices
+        async function videoOn() {
+            await navigator.mediaDevices
             .getUserMedia({ video: true, audio: false })
             .then(getStream)
             .catch((err) => console.error(err));
-            
+        }
+        
+        videoOn();
+
         const MODEL_URL = process.env.PUBLIC_URL + '/models';
         Promise.all([
             faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
             faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
-        ]).then();
+        ]).then(dispatch(setModelsLoaded(true)));
 
         return () => {
             socket.emit("out room");
             socket.off();
-            userStream.current && userStream.current.getTracks().forEach((track) => {
-                track.stop();
-            });
+            async function videoOff() {
+                if (userStream.current) {
+                    await userStream.current.getTracks().forEach((track) => {
+                        console.log(track);
+                        track.stop();
+                    });
+                }
+            }
+            videoOff();
             userVideo.current = null;
             userStream.current = null;
             otherUsers.current = null;
@@ -169,7 +178,6 @@ const InGameVideo = ({ match, socket }) => {
     const getStream = useCallback((stream) => {
             userVideo.current.srcObject = stream;
             userStream.current = stream;
-
             socket.emit("join room", {
                 roomID: roomID,
                 streamID: stream.id,
@@ -329,8 +337,7 @@ const InGameVideo = ({ match, socket }) => {
         }, [socket, match]);
 
     // Ice Cnadidate 이벤트가 발생해서 상대방이 해당 정보를 전송하면, 그 정보를 받음
-    const handleNewICECandidateMsg = useCallback(
-        (incoming) => {
+    const handleNewICECandidateMsg = useCallback((incoming) => {
         const candidate = new RTCIceCandidate(incoming.candidate);
         const index = otherUsers.current.findIndex((otherUser) => 
             otherUser.socketID === incoming.caller
@@ -365,7 +372,6 @@ const InGameVideo = ({ match, socket }) => {
         const [peersHP, setPeersHP] = useState(100);
         useEffect(() => {
             socket.on("smile", (peerHP, peerID) => {
-                console.log("peerHP: " + peerHP + "peerID: " + peerID);
                 if (nickname === peerID) {
                     setPeersHP(peerHP);
                 }
