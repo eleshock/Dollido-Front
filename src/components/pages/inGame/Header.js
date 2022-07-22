@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import dollidoLogo from "../../../images/DollidoLogo2.png";
-import { useInterval } from "../usefulFuntions";
+import { useInterval } from "../../common/usefulFuntions";
 
 // redux import
 import { useSelector } from "react-redux";

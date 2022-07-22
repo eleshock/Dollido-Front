@@ -5,8 +5,8 @@ import mainBackground from "../../../images/mainBackground.gif";
 
 // commponent import
 import { Background } from "../../common/Background.tsx";
-import InGameHeader from "../../common/inGame/Header";
-import InGameBottom from "../../common/inGame/Bottom";
+import InGameHeader from "./Header";
+import InGameBottom from "./Bottom";
 import InGameVideo from "./Video";
 import InGameSocketOn from "./InGameSocketOn";
 import InGameContent from "./InGameContent";

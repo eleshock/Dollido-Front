@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 // commponent import
-import Button from "../Button";
+import Button from "../../common/Button";
 
 // redux import
 import { useSelector } from "react-redux";
