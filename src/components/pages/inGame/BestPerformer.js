@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { ServerName } from "../../serverName";
+import { ServerName } from "../../../serverName";
 
 let response;
 

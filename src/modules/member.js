@@ -16,10 +16,7 @@ const initialState = {
 export default function member(state = initialState, action) {
     switch(action.type) {
         case SET_MEMBER:
-            return {
-                ...state,
-                member: action.data
-            };
+            return { ...state, member: action.data };
         default:
             return state;
     }

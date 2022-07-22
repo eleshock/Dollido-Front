@@ -1,8 +1,8 @@
 import axios from "axios"
 import { useEffect, useState, useRef } from 'react';
 import styled from "styled-components";
-import {ServerName} from "../../serverName";
-import { s3Domain } from "../../s3Domain";
+import {ServerName} from "../../../serverName";
+import { s3Domain } from "../../../s3Domain";
 
 const BackgroundSizeStyle = styled.img`
     width: 700px;

@@ -29,13 +29,6 @@ const Content = styled.div`
   flex: 1;
 `
 
-const UserInfo = styled.div`
-  display: flex;
-  flex: none;
-  width: 350px;
-  background-color: #404040;
-`
-
 const RoomListFrame = styled.div`
   display: flex;
   flex-direction: column;
@@ -205,7 +198,7 @@ const Lobby = () => {
   const [roomName, setRoomName] = useState("");
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(7);
+  const postsPerPage = 7;
 
 
   // 1. 방 리스트 받아오기
@@ -320,10 +313,6 @@ const Lobby = () => {
     setModal(false);
     stopWebcam();
   };
-
-  const onClickJoin = useCallback(() => {
-    alert(`${localStorage.roomName} 방에 입장합니다!`);
-  }, []);
 
   const sizes = {
     height: "36px",
@@ -451,7 +440,7 @@ const Lobby = () => {
                       <Video ref = {videoRef}></Video>
                       <div style = {{display: "flex", justifyContent: "space-around"}}>
                         <div style = {{display: "flex", justifyContent: "center"}}>
-                          <Link onClick={onClickJoin} to = {`/room/${localStorage.roomLink}`} name = {localStorage.roomName} style = {{textDecoration:"none"}}>
+                          <Link to = {`/room/${localStorage.roomLink}`} name = {localStorage.roomName} style = {{textDecoration:"none"}}>
                             <div style = {{margin: "30px"}}>
                               <Button2
                                 color="yellow"
