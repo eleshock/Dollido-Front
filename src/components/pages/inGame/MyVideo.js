@@ -10,7 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { ServerName } from "../../../serverName";
 
 // redux import
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setMyStream } from "../../../modules/inGame";
 
 // face api import
 import * as faceapi from 'face-api.js';
@@ -85,6 +86,7 @@ const MyVideoCSS = {
 
 
 const MyVideo = ({ match, socket }) => {
+    const dispatch = useDispatch();
     const inGameState = useSelector((state) => (state.inGame));
     const gameFinished = inGameState.gameFinished;
     const gameStarted = inGameState.gameStarted;
@@ -102,26 +104,29 @@ const MyVideo = ({ match, socket }) => {
         if (modelsLoaded && myStream && myStream.id) {
             userVideo.current.srcObject = myStream;
         }
-    },[modelsLoaded, myStream])
-
-    useEffect(() => {
-        
         return () => {
             async function videoOff() {
-                if (myStream) {
+                if (myStream && myStream.id) {
                     await myStream.getTracks().forEach((track) => {
                         track.stop();
                     });
                 }
             }
             videoOff();
+        }
+    }, [modelsLoaded, myStream])
+
+
+    useEffect(() => {
+        return () => {
             deleteBestVideo(user_nick);
-            userVideo.current = null;
+            dispatch(setMyStream(null));
             videoRecorded = false;
+            userVideo.current = null;
         }
     }, [socket, match]);
 
-  
+
     function handleHP(happiness) {
         if (happiness > 0.2) { // 피를 깎아야 하는 경우
             if (happiness > 0.6) {
@@ -137,20 +142,20 @@ const MyVideo = ({ match, socket }) => {
         return 0;
     }
 
-    
+
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(100);
         const [interval, setModelInterval] = useState(modelInterval);
         let content = "";
-        
+
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
             if (gameFinished) setModelInterval(null);
-            if ( myStream && myStream.id){   
+            if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0]) {
                     const decrease = handleHP(detections[0].expressions.happy);
-    
+
                     if (decrease > 0) {
                         const newHP = myHP - decrease;
                         if (newHP <= 0) { // game over
