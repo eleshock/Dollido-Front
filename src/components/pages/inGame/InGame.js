@@ -8,7 +8,9 @@ import { Background } from "../../common/Background.tsx";
 import InGameHeader from "./Header";
 import InGameBottom from "./Bottom";
 import InGameSocketOn from "./InGameSocketOn";
-import InGameVideo from "./Test";
+import InGameVideo from "./InGameVideo";
+import WebRTC from "./WebRTC";
+
 
 const FlexContainer = styled.div`
     display: flex;
@@ -24,6 +26,7 @@ const InGame = ({ match, socket}) => {
             element={
                 <FlexContainer>
                     <InGameSocketOn socket={socket} match={match}></InGameSocketOn>
+                    <WebRTC socket={socket} match={match}></WebRTC>
                     <InGameHeader socket={socket} match={match}></InGameHeader>
                     <InGameVideo socket={socket} match={match}></InGameVideo>
                     <InGameBottom socket={socket} match={match}></InGameBottom>

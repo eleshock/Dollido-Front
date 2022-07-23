@@ -2,8 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import InGameContent from "./InGameContent";
-import TestVideo from "./Video";
-import Video from "./TestVideo";
+import MyVideo from "./MyVideo";
+import Video from "./PeerVideo";
 import HP from "./HP";
 import IsReady from "./IsReady";
 
@@ -44,9 +44,7 @@ const Test = ({socket, match}) => {
         <Container>
             <LeftContent>
                 <EachContent>
-                    <Video index={0}></Video>
-                    <HP index={0}></HP>
-                    <IsReady index={0}></IsReady>
+                    <MyVideo></MyVideo>
                 </EachContent>
                 <EachContent>
                     <Video index={0}></Video>
