@@ -10,6 +10,8 @@ import InGameBottom from "./Bottom";
 import InGameVideo from "./Video";
 import InGameSocketOn from "./InGameSocketOn";
 import InGameContent from "./InGameContent";
+import WebRTC from "./WebRTC";
+import MyVideo from "./MyVideo";
 
 
 const FlexContainer = styled.div`
@@ -27,8 +29,10 @@ const InGame = ({ match, socket}) => {
                 <FlexContainer>
                     <InGameSocketOn socket={socket} match={match}></InGameSocketOn>
                     <InGameHeader socket={socket} match={match}></InGameHeader>
+                    <WebRTC socket={socket} match={match}></WebRTC>
                     {/* <InGameContent socket={socket} match={match}></InGameContent> */}
-                    <InGameVideo socket={socket} match={match}></InGameVideo>
+                    {/* <InGameVideo socket={socket} match={match}></InGameVideo> */}
+                    <MyVideo socket={socket} match={match}></MyVideo>
                     <InGameBottom socket={socket} match={match}></InGameBottom>
                 </FlexContainer>
             }>

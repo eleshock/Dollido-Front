@@ -54,7 +54,7 @@ const playerBox ={
     flex: "5"
 }
 
-const defaultUserNick = "salmonsushi"; // 임시(temp)dd
+const defaultUserNick = "salmonsushi"; // 임시(temp)
 const recordTime = 3000; // 녹화 시간(ms)
 const modelInterval = 500; // 웃음 인식 간격(ms)
 let videoRecorded = false; // 녹화 여부
@@ -100,7 +100,7 @@ function recordVideo(stream, user_nick) {
         });
         postVideo(recordedBlob, user_nick);
     };
-
+    console.log("Recording Start...");
     recorder.start();
     setTimeout(() => {
         recorder.stop();
@@ -115,12 +115,15 @@ const Video = ({ stream }) => {
     }, [stream]);
     return <video style={{width:"100%", borderRadius:"10%"}} autoPlay ref={ref} />;
 };
+
+
+
 const InGameVideo = ({ match, socket }) => {
     const dispatch = useDispatch();
-    const inGameState = useSelector((state) => ({ state: state.inGame }));
-    const gameFinished = inGameState.state.gameFinished;
-    const gameStarted = inGameState.state.gameStarted;
-    const modelsLoaded = inGameState.state.modelsLoaded;
+    const inGameState = useSelector((state) => (state.inGame));
+    const gameFinished = inGameState.gameFinished;
+    const gameStarted = inGameState.gameStarted;
+    const modelsLoaded = inGameState.modelsLoaded;
     const { roomID } = useParams();
     
     const userVideo = useRef();
