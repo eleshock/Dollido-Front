@@ -115,6 +115,7 @@ const Video = ({ stream }) => {
     }, [stream]);
     return <video style={{width:"100%", borderRadius:"10%"}} autoPlay ref={ref} />;
 };
+
 const InGameVideo = ({ match, socket }) => {
     const dispatch = useDispatch();
     const inGameState = useSelector((state) => ({ state: state.inGame }));

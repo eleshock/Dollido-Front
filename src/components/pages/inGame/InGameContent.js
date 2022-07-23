@@ -2,12 +2,25 @@ import Chat from "./Chat";
 import Giftest from "./Giftest";
 import BestPerformer from "./BestPerformer";
 
-const InGameContent = () => {
+// redux import
+import { useSelector } from "react-redux";
+
+const InGameContent = ({socket}) => {
+    const inGameState = useSelector((state) => state.inGame);
+    const gameFinished = inGameState.gameFinished;
+    const gameStarted = inGameState.gameStarted;
+    const roomID = inGameState.roomID;
+    
     return (
         <div>
-            <Giftest></Giftest>
-            <Chat></Chat>
-            <BestPerformer></BestPerformer>
+            {gameStarted ?
+                gameFinished ?
+                <BestPerformer></BestPerformer>
+                :
+                <Giftest></Giftest>
+                :
+                <Chat socket={socket} username={localStorage.nickname} room={roomID}></Chat>
+            }
         </div>
     );
 }

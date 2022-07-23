@@ -11,7 +11,7 @@ const Bottom = styled.div`
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    flex: 15;
+    flex: 3;
     font-family: koverwatch;
 `
 const MyButton = {
@@ -23,7 +23,11 @@ const MyButton = {
 }
 
 const ButtonSize = {
-    margin: "25px"
+    fontSize: "18px",
+    lineHeight: "45px",
+    width: "150px",
+    height: "45px",
+    margin: "30px"
 }
 
 const InGameBottom = ({socket}) => {

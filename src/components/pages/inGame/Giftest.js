@@ -4,15 +4,25 @@ import styled from "styled-components";
 import {ServerName} from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
 
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+`
+
+const Timer = styled.p`
+    font-size: 100px;
+    font-weight: "900"; 
+    font-family: "Black Han Sans";
+`
+
 const BackgroundSizeStyle = styled.img`
-    width: 700px;
-    height: 550px;
+    width: 900px;
+    height: 500px;
     object-fit: contain;
-    border: 3px solid gold;
     background-color: gray;
 `;
-
-
 
 const Giftest = (props) => {
     const [name, setName] = useState(['0.gif'])
@@ -73,9 +83,14 @@ const Giftest = (props) => {
         }
     }, [count, seconds]);
 
-
     return (
-        !countDown ? <BackgroundSizeStyle src={`${s3Domain}${name[gifList[count]]}`}></BackgroundSizeStyle> : <p style={ {fontSize: "100px", fontWeight: "900", fontFamily: "Black Han Sans"} }> {seconds} </p>
+        <Container>
+            <h1>GIF Here</h1>
+            {!countDown ? 
+                <BackgroundSizeStyle src={`${s3Domain}${name[gifList[count]]}`}></BackgroundSizeStyle> 
+                : 
+                <Timer> {seconds} </Timer>}
+        </Container>
     );
 };
 

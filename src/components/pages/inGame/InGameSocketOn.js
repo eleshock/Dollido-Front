@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
+import { idText } from "typescript";
 import { setChief, setGameFinish, setGamestart, setRoomID } from "../../../modules/inGame";
 
 const InGameSocketOn = ({ match, socket }) => {
@@ -14,10 +15,6 @@ const InGameSocketOn = ({ match, socket }) => {
 
     // socket on
     useEffect(() => {
-        socket.on("stop", () => {
-            socket.emit("test");
-        })
-
         socket.on("wait", ({ status, roomID }) => {
             dispatch(setRoomID(roomID));
             dispatch(setChief(status));
@@ -37,6 +34,37 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
     }, [match, socket]);
+    
+    // socket fail on
+    useEffect(() => {
+        socket.on("make room fail", ({handle}) => {
+            if (handle.bool) {
+                window.location.href = "/lobby";
+                alert(handle.msg);
+            }
+        });
+
+        socket.on("join room fail", ({handle}) => {
+            if (handle.bool) {
+                window.location.href = "/lobby";
+                alert(handle.msg);
+            }
+        });
+
+        socket.on("wait room fail", ({handle}) => {
+            if (handle.bool) {
+                window.location.href = "/lobby";
+                alert(handle.msg);
+            }
+        });
+
+        socket.on("start room fail", ({handle}) => {
+            if (handle.bool) {
+                window.location.href = "/lobby";
+                alert(handle.msg);
+            }
+        });
+    });
 
     return <div></div>;
 }
