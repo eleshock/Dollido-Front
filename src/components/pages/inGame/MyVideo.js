@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
+import styled from "styled-components";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -15,6 +16,39 @@ import { setMyStream } from "../../../modules/inGame";
 
 // face api import
 import * as faceapi from 'face-api.js';
+
+const Container = styled.div `
+    flex: 13;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+`
+
+const NickName = styled.h2 `
+    flex: 1;
+    color: white;
+`
+
+const VideoStyle = styled.video `
+    flex: 9;
+    width: 300px;
+    border-radius: 10%;
+    justify-content: center;
+`
+
+const HPContainer = styled.div `
+    display: flex;
+    width: 75%;
+    color: white;
+    flex: 1.5;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+`
+
+const HPContent = styled.div `
+    width: 80%;
+`
 
 const defaultUserNick = "salmonsushi"; // 임시(temp)
 const recordTime = 3000; // 녹화 시간(ms)
@@ -77,12 +111,6 @@ const MyNickname = {
     color: 'White',
 }
 
-const MyVideoCSS = {
-    flex: '5',
-    width: "100%",
-    borderRadius: "10%",
-    transform: 'scaleX(-1)'
-}
 
 
 const MyVideo = ({ match, socket }) => {
@@ -134,7 +162,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
-                return 2;
+                return 20;
             } else {
                 return 1;
             }
@@ -150,10 +178,10 @@ const MyVideo = ({ match, socket }) => {
 
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
-            if (gameFinished) setModelInterval(null);
+            if(gameFinished) setModelInterval(null);
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-                if (detections[0]) {
+                if (detections[0] && gameStarted) {
                     const decrease = handleHP(detections[0].expressions.happy);
 
                     if (decrease > 0) {
@@ -179,11 +207,19 @@ const MyVideo = ({ match, socket }) => {
     }
 
 
-    return <div>
-        <h1 style={MyNickname}>{localStorage.nickname}</h1>
-        <video autoPlay style={MyVideoCSS} ref={userVideo} />
-        <ShowStatus></ShowStatus>
-    </div>
+    return (
+        <>
+            <Container>
+                <NickName style={MyNickname}>{localStorage.nickname}</NickName>
+                <VideoStyle autoPlay ref={userVideo} />
+            </Container>
+            <HPContainer>
+                <HPContent>
+                    <ShowStatus></ShowStatus>
+                </HPContent>
+            </HPContainer>
+        </>
+    );
 
 }
 

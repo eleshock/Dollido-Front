@@ -30,7 +30,6 @@ const InGameSocketOn = ({ match, socket }) => {
 
         socket.on("finish", () => {
             dispatch(setGameFinish(true));
-            dispatch(setGamestart(false));
         });
 
     }, [match, socket]);
@@ -38,28 +37,28 @@ const InGameSocketOn = ({ match, socket }) => {
     // socket fail on
     useEffect(() => {
         socket.on("make room fail", ({handle}) => {
-            if (handle.bool) {
+            if (!handle.bool) {
                 window.location.href = "/lobby";
                 alert(handle.msg);
             }
         });
 
         socket.on("join room fail", ({handle}) => {
-            if (handle.bool) {
+            if (!handle.bool) {
                 window.location.href = "/lobby";
                 alert(handle.msg);
             }
         });
 
         socket.on("wait room fail", ({handle}) => {
-            if (handle.bool) {
+            if (!handle.bool) {
                 window.location.href = "/lobby";
                 alert(handle.msg);
             }
         });
 
         socket.on("start room fail", ({handle}) => {
-            if (handle.bool) {
+            if (!handle.bool) {
                 window.location.href = "/lobby";
                 alert(handle.msg);
             }

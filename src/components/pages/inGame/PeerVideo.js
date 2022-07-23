@@ -18,28 +18,27 @@ const NickName = styled.h2`
 
 const VideoStyle = styled.video`
     flex: 9;
-    width: 85%;
+    width: 270px;
     border-radius: 10%;
     justify-content: center;
-    border: 1px solid red;
 `
 
 const FindVideo = ({stream}) => {
     const ref = useRef();
     useEffect(() => {
-        ref.current.srcObject = stream;
+        console.log(stream)
+        if(stream.id) ref.current.srcObject = stream;
     }, [stream]);
     return <VideoStyle autoPlay ref={ref} />;
 };
 
 const Video = ({index}) => {
-
     const partnerVideos = useSelector((state) => state.videos);
-
+    // console.log(partnerVideos)
     return (
         <Container>
             <NickName>닉네임</NickName>
-            <FindVideo stream={partnerVideos[index]}></FindVideo>
+            {partnerVideos[index] && <FindVideo stream={partnerVideos[index]}></FindVideo>}
         </Container>
     );
 }

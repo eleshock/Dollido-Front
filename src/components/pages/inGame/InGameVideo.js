@@ -44,7 +44,7 @@ const Test = ({socket, match}) => {
         <Container>
             <LeftContent>
                 <EachContent>
-                    <MyVideo></MyVideo>
+                    <MyVideo socket={socket} match={match}></MyVideo>
                 </EachContent>
                 <EachContent>
                     <Video index={0}></Video>
@@ -54,7 +54,7 @@ const Test = ({socket, match}) => {
             </LeftContent>
             <MidleContent>
                 <Content>
-                    <InGameContent></InGameContent>
+                    <InGameContent socket={socket}></InGameContent>
                 </Content>
             </MidleContent>
             <RightContent>
