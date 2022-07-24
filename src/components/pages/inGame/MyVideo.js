@@ -115,6 +115,7 @@ const MyNickname = {
 
 const MyVideo = ({ match, socket }) => {
     const dispatch = useDispatch();
+    const nickName = useSelector((state) => state.member.member.user_nick);
     const inGameState = useSelector((state) => (state.inGame));
     const gameFinished = inGameState.gameFinished;
     const gameStarted = inGameState.gameStarted;
@@ -210,7 +211,7 @@ const MyVideo = ({ match, socket }) => {
     return (
         <>
             <Container>
-                <NickName style={MyNickname}>{localStorage.nickname}</NickName>
+                <NickName style={MyNickname}>{nickName}</NickName>
                 <VideoStyle autoPlay ref={userVideo} />
             </Container>
             <HPContainer>

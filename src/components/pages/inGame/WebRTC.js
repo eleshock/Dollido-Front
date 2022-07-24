@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 // redux import
 import { useDispatch, useSelector } from "react-redux";
-import { setModelsLoaded, setGameFinish, setGamestart, setMyStream } from "../../../modules/inGame";
+import { setModelsLoaded, setGameFinish, setGamestart, setMyStream, setPeerNick, clearPeerNick, deletePeerNick } from "../../../modules/inGame";
 import { updateVideos, deleteVideo, clearVideos } from "../../../modules/videos";
 
 // face api import
@@ -14,9 +14,9 @@ const WebRTC = ({ socket, match }) => {
     const dispatch = useDispatch();
     const { roomID } = useParams();
 
+    const otherUsers = useRef([])
     const userStream = useRef(); // 사용자의 stream
     const peerRef = useRef(); // peer 객체 생성에 사용하는 임시 변수
-    const otherUsers = useRef([]); // 다른 유저들의 userID를 저장
     const peers = useRef([]); // 다른 유저들의 peer들을 저장
 
 
@@ -43,6 +43,7 @@ const WebRTC = ({ socket, match }) => {
             userStream.current = null;
             otherUsers.current = null;
             peers.current = null;
+            dispatch(clearPeerNick());
             dispatch(clearVideos());
             dispatch(setGameFinish(false));
             dispatch(setGamestart(false));
@@ -64,6 +65,7 @@ const WebRTC = ({ socket, match }) => {
 
         socket.on("out user", ({ nickname, streamID }) => {
             dispatch(deleteVideo(streamID));
+            dispatch(deletePeerNick(nickname));
         });
 
         // 새로 들어간 사람 입장에서 다른 사람 전부의 정보를 전해들음
@@ -72,12 +74,14 @@ const WebRTC = ({ socket, match }) => {
                 // userID들은 이미 존재하던 사람들. 그 사람들에게 call
                 console.log(userID);
                 callUser(userID.socketID);
+                dispatch(setPeerNick(userID.nickName));
                 otherUsers.current.push(userID);
             });
         });
 
         // 기존 사람들 입장에서 다른 유저가 들어왔음을 확인
         socket.on("user joined", (userID) => {
+            dispatch(setPeerNick(userID.nickName));
             otherUsers.current.push(userID);
         });
 
@@ -234,7 +238,6 @@ const WebRTC = ({ socket, match }) => {
     }, [socket, match]);
 
     const handleTrackEvent = useCallback((e) => {
-        console.log(e.streams);
         dispatch(updateVideos(e.streams[0])); // redux에 새로운 유저 video stream state를 update하는 함수 dispatch
     }, [socket, match]);
 
