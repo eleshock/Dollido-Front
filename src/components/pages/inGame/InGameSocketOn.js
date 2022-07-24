@@ -25,6 +25,10 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setGameFinish(true));
         });
 
+        socket.on("restart", (roomID) => {
+            window.location.href = `/room/${roomID}`;
+        })
+        
     }, [match, socket]);
 
     // socket fail on
