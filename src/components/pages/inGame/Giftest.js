@@ -25,7 +25,7 @@ const BackgroundSizeStyle = styled.img`
     background-color: gray;
 `;
 
-const Giftest = (props) => {
+const Giftest = () => {
     const [name, setName] = useState(['0.gif'])
 
     const tempGIF = useRef();
@@ -36,7 +36,7 @@ const Giftest = (props) => {
     const [count, setCount] = useState(0);
     const [seconds, setSeconds] = useState(3);
 
-    const Timer = () => {
+    const Ticktock = () => {
         useEffect(() => {
                 if(seconds >= 0 && seconds <= 3) {
                     const timer = setInterval(() => {
@@ -53,12 +53,13 @@ const Giftest = (props) => {
                     const timer = setInterval(() => {
                         setSeconds(3)
                         setCount(value => value+1);
-                        console.log(count);
                         setCountDown(true);
                     }, 4000);
                     return () => clearInterval(timer);
                 }
-            }, [seconds, count]);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+
+            }, [seconds]);
     }
 
 
@@ -67,7 +68,6 @@ const Giftest = (props) => {
         axios.get(`${ServerName}/api/gifs/list`)
             .then((response) => {
                 setName(response.data);
-                console.log(randomGIF);
             });
     }
     tempGIF.current = nameFunction;
@@ -77,9 +77,7 @@ const Giftest = (props) => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
-
-
-    Timer();
+    Ticktock();
 
     return (
         <Container>
