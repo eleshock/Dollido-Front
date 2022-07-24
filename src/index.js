@@ -11,6 +11,7 @@ import "./index.css";
 import App from "./App";
 import rootReducer from "./modules/index";
 import reportWebVitals from './reportWebVitals';
+import {StyledEngineProvider} from '@mui/styled-engine';
 
 const store = createStore(rootReducer, compose(
         applyMiddleware(promiseMiddleware, thunk),
@@ -21,11 +22,13 @@ const persistors = persistStore(store);
 const rootNode = document.getElementById('root');
 
 ReactDOM.createRoot(rootNode).render(
-    <Provider store={store}>
-        <PersistGate persistor={persistors}>
-            <App/>
-        </PersistGate>
-    </Provider>
+    <StyledEngineProvider injectFirst>
+        <Provider store={store}>
+            <PersistGate persistor={persistors}>
+                <App/>
+            </PersistGate>
+        </Provider>
+    </StyledEngineProvider>
 );
 
 reportWebVitals();
