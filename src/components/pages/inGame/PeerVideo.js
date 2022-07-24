@@ -21,6 +21,7 @@ const VideoStyle = styled.video`
     width: 270px;
     border-radius: 10%;
     justify-content: center;
+    transform: scaleX(-1);
 `
 
 const FindVideo = ({stream}) => {

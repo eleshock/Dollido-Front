@@ -130,6 +130,7 @@ const Video = styled.video`
   margin: 0 auto;
   width: 450px;
   height: 340px;
+  transform: scaleX(-1);
 `
 const PageControl = styled.div`
   display: flex;

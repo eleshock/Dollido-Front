@@ -34,6 +34,7 @@ const VideoStyle = styled.video `
     width: 300px;
     border-radius: 10%;
     justify-content: center;
+    transform: scaleX(-1);
 `
 
 const HPContainer = styled.div `
@@ -50,9 +51,9 @@ const HPContent = styled.div `
     width: 80%;
 `
 
-const defaultUserNick = "salmonsushi"; // 임시(temp)
 const recordTime = 3000; // 녹화 시간(ms)
 const modelInterval = 500; // 웃음 인식 간격(ms)
+const initialHP = 100;
 let videoRecorded = false; // 녹화 여부
 
 
@@ -120,10 +121,7 @@ const MyVideo = ({ match, socket }) => {
     const gameStarted = inGameState.gameStarted;
     const modelsLoaded = inGameState.modelsLoaded;
     const myStream = inGameState.myStream;
-    const user_nick = useSelector((state) => {
-        const nick = state.member.member.user_nick;
-        return nick ? nick : defaultUserNick;
-    });
+    const user_nick = useSelector((state) => state.member.member.user_nick);
 
     const { roomID } = useParams();
     const userVideo = useRef();
@@ -172,7 +170,7 @@ const MyVideo = ({ match, socket }) => {
 
 
     const ShowStatus = () => {
-        const [myHP, setMyHP] = useState(100);
+        const [myHP, setMyHP] = useState(initialHP);
         const [interval, setModelInterval] = useState(modelInterval);
         let content = "";
 
@@ -191,7 +189,7 @@ const MyVideo = ({ match, socket }) => {
                             setModelInterval(null);
                         }
                         setMyHP(newHP);
-                        socket.emit("smile", newHP, roomID, localStorage.getItem("nickname"), myStream.id);
+                        socket.emit("smile", newHP, roomID, user_nick, myStream.id);
                     }
                 }
             }
@@ -210,7 +208,7 @@ const MyVideo = ({ match, socket }) => {
     return (
         <>
             <Container>
-                <NickName style={MyNickname}>{localStorage.nickname}</NickName>
+                <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoStyle autoPlay ref={userVideo} />
             </Container>
             <HPContainer>
@@ -223,4 +221,5 @@ const MyVideo = ({ match, socket }) => {
 
 }
 
+export { initialHP };
 export default MyVideo;
