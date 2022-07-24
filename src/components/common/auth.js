@@ -1,17 +1,22 @@
 import axios from 'axios';
 import { ServerName } from '../../serverName';
+import { useSelector } from 'react-redux';
 
-export default async (token) => {
-    console.log(token.token);
-    await axios.post(`${ServerName}/api/user/signin/auth`, {}, {
-        headers: {
-            token: token.token
-        }
-    }).then((res) => {
-        let result = res.data;
-        if (!result.bool) {
-            window.location.href = "/";
-            alert("로그인 해주세요");
-        }
-    })
+export default () => {
+    const token = useSelector((state) => ({
+        token: state.member.member.tokenInfo.token
+    }));
+    let bool;
+    async function auth() {
+    
+        let result = await axios.post(`${ServerName}/api/user/signin/auth`, {}, {
+            headers: {
+                token: token
+            }
+        })
+
+        bool = result.data.bool;
+    }
+    auth();
+    return bool;
 }

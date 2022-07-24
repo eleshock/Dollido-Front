@@ -26,7 +26,6 @@ const VideoStyle = styled.video`
 const FindVideo = ({stream}) => {
     const ref = useRef();
     useEffect(() => {
-        console.log(stream)
         if(stream.id) ref.current.srcObject = stream;
     }, [stream]);
     return <VideoStyle autoPlay ref={ref} />;
@@ -34,7 +33,6 @@ const FindVideo = ({stream}) => {
 
 const Video = ({index}) => {
     const partnerVideos = useSelector((state) => state.videos);
-    // console.log(partnerVideos)
     return (
         <Container>
             <NickName>닉네임</NickName>

@@ -12,6 +12,9 @@ import styled from "styled-components";
 
 import { ServerName } from "../../serverName";
 
+// 임시
+import { useSelector } from "react-redux";
+
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -166,29 +169,8 @@ const RightTriangle = styled.button`
 let startVideoPromise;
 
 const Lobby = () => {
-
-  /* 닉네임 생성 절차 */
-  const [nickname, setNickname] = useState("");
-  const [loggedNickname, setLoggedNickname] = useState("");
-
-  const onCreateNickname = useCallback((e) => {
-    setNickname(e.target.value);
-  }, []);
-  const onClickNickname = useCallback(
-    (e) => {
-      e.preventDefault();
-      localStorage.nickname = nickname;
-      setLoggedNickname(nickname);
-    },
-    [nickname]
-  );
-
-  const onChangeNickname = useCallback((e) => {
-    e.preventDefault();
-    localStorage.removeItem("nickname");
-    setLoggedNickname("");
-    window.location.href = "/lobby";
-  }, []);
+  // 임시
+  const nickname = useSelector((state) => state.member.member.user_nick);
 
   /* 방 만들기 & 입장 */
   const SERVER_ADDRESS = useRef(ServerName);
@@ -199,7 +181,6 @@ const Lobby = () => {
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 7;
-
 
   // 1. 방 리스트 받아오기
   useEffect(() => {
@@ -339,39 +320,14 @@ const Lobby = () => {
         element={
           <FlexContainer>
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
-                    {loggedNickname !== "" || localStorage.nickname ? (
+                    {nickname &&
                         <div>
                           <span style={{ color: "white" }}>
                             {" "}
-                            {localStorage.nickname}님 Dollido에 오신걸 환영합니다
+                            {nickname}님 Dollido에 오신걸 환영합니다
                           </span>
-                          <Button2
-                            color="yellow"
-                            size="small"
-                            onClick={onChangeNickname}
-                          >
-                            닉네임 변경
-                          </Button2>
                         </div>
-
-                    ) : (
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="닉네임을 입력하세요"
-                          name={nickname}
-                          onChange={onCreateNickname}
-                          style={sizes}
-                        />
-                        <Button2
-                          color="orange"
-                          size="medium"
-                          onClick={onClickNickname}
-                        >
-                          닉네임 생성
-                        </Button2>
-                      </div>
-                    )}
+                    } 
               </header>
               <TabList>
                 <h1 style = {{padding: "0 0 0 100px", color: "white", fontSize: "60px", fontStyle: "italic", userSelect: "none"}}>게임 대기실</h1>

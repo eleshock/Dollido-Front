@@ -27,8 +27,8 @@ const initialState = [];
 export const videos = (videos = initialState, action) => {
   switch (action.type) {
     case "UPDATE_VIDEOS":
-      if (action.payload == null) return [...videos];
-      return [...videos, action.payload];
+      const temp = [...videos, action.payload];
+      return temp.filter((v) => v.id !== undefined);
     case "DELETE_VIDEO":
       return videos.filter((v) => v.id !== action.payload);
     case "CLEAR_VIDEOS":

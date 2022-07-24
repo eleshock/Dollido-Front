@@ -1,17 +1,11 @@
 import { useEffect } from "react";
 
 // redux import
-import { useSelector, useDispatch } from "react-redux";
-import { idText } from "typescript";
+import { useDispatch } from "react-redux";
 import { setChief, setGameFinish, setGamestart, setRoomID } from "../../../modules/inGame";
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
-    const inGameState = useSelector((state) => ({
-        state: state.inGame
-    }));
-    const finish = inGameState.state.gameFinished;
-    const start = inGameState.state.gameStarted;
 
     // socket on
     useEffect(() => {
@@ -36,28 +30,28 @@ const InGameSocketOn = ({ match, socket }) => {
     
     // socket fail on
     useEffect(() => {
-        socket.on("make room fail", ({handle}) => {
+        socket.on("make room fail", (handle) => {
+            if (!handle.bool) {
+                window.location.replace("/lobby");
+                alert(handle.msg);
+            }
+        });
+
+        socket.on("join room fail", (handle) => {
             if (!handle.bool) {
                 window.location.href = "/lobby";
                 alert(handle.msg);
             }
         });
 
-        socket.on("join room fail", ({handle}) => {
+        socket.on("wait room fail", (handle) => {
             if (!handle.bool) {
                 window.location.href = "/lobby";
                 alert(handle.msg);
             }
         });
 
-        socket.on("wait room fail", ({handle}) => {
-            if (!handle.bool) {
-                window.location.href = "/lobby";
-                alert(handle.msg);
-            }
-        });
-
-        socket.on("start room fail", ({handle}) => {
+        socket.on("start room fail", (handle) => {
             if (!handle.bool) {
                 window.location.href = "/lobby";
                 alert(handle.msg);

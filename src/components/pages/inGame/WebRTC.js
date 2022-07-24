@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useRef, useState } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
 
 // redux import
@@ -10,7 +10,7 @@ import { updateVideos, deleteVideo, clearVideos } from "../../../modules/videos"
 import * as faceapi from 'face-api.js';
 
 const WebRTC = ({ socket, match }) => {
-    const partnerVideos = useSelector((state) => state.videos);
+    const nickName = useSelector((state) => state.member.member.user_nick);
     const dispatch = useDispatch();
     const { roomID } = useParams();
 
@@ -38,7 +38,6 @@ const WebRTC = ({ socket, match }) => {
         ]).then(dispatch(setModelsLoaded(true)));
 
         return () => {
-            console.log(peers.current);
             socket.emit("out room");
             socket.off();
             userStream.current = null;
@@ -58,7 +57,7 @@ const WebRTC = ({ socket, match }) => {
         socket.emit("join room", {
             roomID: roomID,
             streamID: stream.id,
-            nickName: localStorage.nickname,
+            nickName: nickName,
         });
 
         socket.emit("wait", ({ roomID: roomID }));
@@ -235,8 +234,8 @@ const WebRTC = ({ socket, match }) => {
     }, [socket, match]);
 
     const handleTrackEvent = useCallback((e) => {
-        dispatch(updateVideos(e.streams[0])); // redux에 새로운 유저 video stream state를 update하는 함수 dispatch
         console.log(e.streams);
+        dispatch(updateVideos(e.streams[0])); // redux에 새로운 유저 video stream state를 update하는 함수 dispatch
     }, [socket, match]);
 
 }

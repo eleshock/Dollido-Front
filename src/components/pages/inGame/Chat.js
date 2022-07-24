@@ -24,11 +24,11 @@ function Chat({ socket, username, room }) {
     }
   };
 
-  // useEffect(() => {
-  //   socket.on("receive_message", (data) => {
-  //     setMessageList((list) => [...list, data]);
-  //   });
-  // }, [socket]);
+  useEffect(() => {
+    socket.on("receive_message", (data) => {
+      setMessageList((list) => [...list, data]);
+    });
+  }, [socket]);
 
   return (
     <div style={{display: "flex", justifyContent: "center"}}>
@@ -40,20 +40,20 @@ function Chat({ socket, username, room }) {
             <ScrollToBottom className="message-container">
               {messageList.map((messageContent) => {
                 return (
-                  <div
-                    className="message"
-                    id={username === messageContent.author ? "you" : "other"}
-                  >
-                    <div>
-                      <p id="author">{messageContent.author}</p>
-                      <div className="message-content">
-                        <p>{messageContent.message}</p>
-                      </div>
-                      <div className="message-meta">
-                        <p id="time">{messageContent.time}</p>
+                    <div
+                      className="message"
+                      id={username === messageContent.author ? "you" : "other"}
+                    >
+                      <div>
+                        <p id="author">{messageContent.author}</p>
+                        <div className="message-content">
+                          <p>{messageContent.message}</p>
+                        </div>
+                        <div className="message-meta">
+                          <p id="time">{messageContent.time}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
                 );
               })}
             </ScrollToBottom>
