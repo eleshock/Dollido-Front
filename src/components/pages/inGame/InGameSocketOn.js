@@ -2,16 +2,17 @@ import { useEffect } from "react";
 
 // redux import
 import { useDispatch } from "react-redux";
-import { setChief, setGameFinish, setGamestart, setRoomID } from "../../../modules/inGame";
+import { setChief, setChiefStream, setGameFinish, setGamestart, setRoomID } from "../../../modules/inGame";
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
 
     // socket on
     useEffect(() => {
-        socket.on("wait", ({ status, roomID }) => {
+        socket.on("wait", ({ status, roomID, chiefStream }) => {
             dispatch(setRoomID(roomID));
             dispatch(setChief(status));
+            dispatch(setChiefStream(chiefStream));
         });
 
         socket.on("start", (status) => {
@@ -27,7 +28,7 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
     }, [match, socket]);
-    
+
     // socket fail on
     useEffect(() => {
         socket.on("make room fail", (handle) => {

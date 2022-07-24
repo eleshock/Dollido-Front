@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 import InGameContent from "./InGameContent";
 import MyVideo from "./MyVideo";
 import Video from "./PeerVideo";
 import HP from "./HP";
 import IsReady from "./IsReady";
+
 
 const Container = styled.div`
     display: flex;
@@ -40,6 +42,8 @@ const EachContent = styled.div`
 `
 
 const Test = ({socket, match}) => {
+    const partnerVideos = useSelector((state) => state.videos);
+
     return (
         <Container>
             <LeftContent>
@@ -47,9 +51,12 @@ const Test = ({socket, match}) => {
                     <MyVideo socket={socket} match={match}></MyVideo>
                 </EachContent>
                 <EachContent>
-                    <Video index={0}></Video>
-                    <HP index={0}></HP>
-                    <IsReady index={0}></IsReady>
+                    <Video index={1}></Video>
+                    {partnerVideos[1] ?
+                    <>
+                    <HP socket={socket} index={1}></HP>
+                    <IsReady socket={socket} index={1}></IsReady>
+                    </> : <></>}
                 </EachContent>
             </LeftContent>
             <MidleContent>
@@ -59,14 +66,21 @@ const Test = ({socket, match}) => {
             </MidleContent>
             <RightContent>
                 <EachContent>
-                    <Video index={1}></Video>
-                    <HP index={1}></HP>
-                    <IsReady index={1}></IsReady>
+                    <Video index={0}></Video>
+                    {partnerVideos[0] ?
+                    <>
+                    <HP socket={socket} index={0}></HP>
+                    <IsReady socket={socket} index={0}></IsReady>
+                    </> : <></>}
+
                 </EachContent>
                 <EachContent>
                     <Video index={2}></Video>
-                    <HP index={2}></HP>
-                    <IsReady index={2}></IsReady>
+                    {partnerVideos[2] ?
+                    <>
+                    <HP socket={socket} index={2}></HP>
+                    <IsReady socket={socket} index={2}></IsReady>
+                    </> : <></>}
                 </EachContent>
             </RightContent>
         </Container>
