@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
-    flex: 13;
+    flex: 14;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -21,6 +21,7 @@ const VideoStyle = styled.video`
     width: 270px;
     border-radius: 10%;
     justify-content: center;
+    transform: scaleX(-1);
 `
 
 const FindVideo = ({stream}) => {

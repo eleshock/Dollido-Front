@@ -6,11 +6,12 @@ import MyVideo from "./MyVideo";
 import Video from "./PeerVideo";
 import HP from "./HP";
 import IsReady from "./IsReady";
+import Bottom from "./Bottom";
 
 const Container = styled.div`
     display: flex;
     justify-content: space-between;
-    flex: 19;
+    flex: 20;
 `
 
 const LeftContent = styled.div`
@@ -26,6 +27,9 @@ const RightContent = styled.div`
 `
 
 const Content = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
     height: 100%;
 `
 
@@ -55,6 +59,7 @@ const Test = ({socket, match}) => {
             <MidleContent>
                 <Content>
                     <InGameContent socket={socket}></InGameContent>
+                    <Bottom socket={socket} match={match}></Bottom>
                 </Content>
             </MidleContent>
             <RightContent>

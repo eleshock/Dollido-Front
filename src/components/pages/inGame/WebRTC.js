@@ -9,6 +9,9 @@ import { updateVideos, deleteVideo, clearVideos } from "../../../modules/videos"
 // face api import
 import * as faceapi from 'face-api.js';
 
+// constant value import
+import { initialHP } from "./MyVideo";
+
 const WebRTC = ({ socket, match }) => {
     const nickName = useSelector((state) => state.member.member.user_nick);
     const dispatch = useDispatch();
@@ -59,6 +62,7 @@ const WebRTC = ({ socket, match }) => {
             roomID: roomID,
             streamID: stream.id,
             nickName: nickName,
+            initialHP : initialHP,
         });
 
         socket.emit("wait", ({ roomID: roomID }));

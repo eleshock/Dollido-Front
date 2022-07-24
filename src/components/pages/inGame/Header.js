@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 const Header = styled.div`
     display: flex;
-    flex: 3;
+    flex: 1;
     font-family: koverwatch;
 `
 const HeaderStyle = styled.div`

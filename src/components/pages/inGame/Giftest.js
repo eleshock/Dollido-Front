@@ -85,7 +85,6 @@ const Giftest = (props) => {
 
     return (
         <Container>
-            <h1>GIF Here</h1>
             {!countDown ? 
                 <BackgroundSizeStyle src={`${s3Domain}${name[gifList[count]]}`}></BackgroundSizeStyle> 
                 : 

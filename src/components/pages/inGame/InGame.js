@@ -29,7 +29,6 @@ const InGame = ({ match, socket}) => {
                     <WebRTC socket={socket} match={match}></WebRTC>
                     <InGameHeader socket={socket} match={match}></InGameHeader>
                     <InGameVideo socket={socket} match={match}></InGameVideo>
-                    <InGameBottom socket={socket} match={match}></InGameBottom>
                 </FlexContainer>
             }>
         </Background>

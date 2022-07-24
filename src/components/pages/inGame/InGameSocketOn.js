@@ -17,8 +17,6 @@ const InGameSocketOn = ({ match, socket }) => {
         socket.on("start", (status) => {
             if (status) {
                 dispatch(setGamestart(true));
-            } else {
-                alert("아직 다 ready를 하지 않았습니다");
             }
         });
 

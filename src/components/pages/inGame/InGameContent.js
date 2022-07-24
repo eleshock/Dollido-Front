@@ -6,6 +6,7 @@ import BestPerformer from "./BestPerformer";
 import { useSelector } from "react-redux";
 
 const InGameContent = ({socket}) => {
+    const nickName = useSelector((state) => state.member.member.user_nick);
     const inGameState = useSelector((state) => state.inGame);
     const gameFinished = inGameState.gameFinished;
     const gameStarted = inGameState.gameStarted;
@@ -15,11 +16,11 @@ const InGameContent = ({socket}) => {
         <div>
             {gameStarted ?
                 gameFinished ?
-                <BestPerformer></BestPerformer>
+                <BestPerformer roomID={roomID}></BestPerformer>
                 :
                 <Giftest></Giftest>
                 :
-                <Chat socket={socket} username={localStorage.nickname} room={roomID}></Chat>
+                <Chat socket={socket} username={nickName} room={roomID}></Chat>
             }
         </div>
     );
