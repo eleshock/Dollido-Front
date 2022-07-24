@@ -5,7 +5,7 @@ export const setMember = (data) => ({type: SET_MEMBER, data});
 const initialState = {
     member: {
         user_id: null,
-        user_nick: "yunchan",
+        user_nick: "anonymous",
         tokenInfo: {
             token: null,
             refreshToken: null
