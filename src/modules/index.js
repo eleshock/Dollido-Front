@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { videos } from "./videos";
 import member from "./member";
 import inGame from './inGame';
+import { random } from "./random";
 
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
   inGame: inGame,
   videos: videos,
   member: member,
+  random: random,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
