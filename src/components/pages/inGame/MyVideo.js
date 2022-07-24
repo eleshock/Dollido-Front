@@ -4,6 +4,7 @@ import axios from "axios";
 import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import styled from "styled-components";
+import effect from "../../../images/laughEffection.webp";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -122,6 +123,7 @@ const MyVideo = ({ match, socket }) => {
     const modelsLoaded = inGameState.modelsLoaded;
     const myStream = inGameState.myStream;
     const user_nick = useSelector((state) => state.member.member.user_nick);
+    const chiefStream = inGameState.chiefStream;
 
     const { roomID } = useParams();
     const userVideo = useRef();
@@ -160,7 +162,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
-                return 20;
+                return 3;
             } else {
                 return 1;
             }
@@ -172,6 +174,7 @@ const MyVideo = ({ match, socket }) => {
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(initialHP);
         const [interval, setModelInterval] = useState(modelInterval);
+        const [smiling, setSmiling] = useState(false);
         let content = "";
 
         /** 모델 돌리기 + 체력 깎기 */
@@ -190,18 +193,57 @@ const MyVideo = ({ match, socket }) => {
                         }
                         setMyHP(newHP);
                         socket.emit("smile", newHP, roomID, user_nick, myStream.id);
+                        setSmiling(true);
+                    } else {
+                        setSmiling(false);
                     }
+                } else {
+                    setSmiling(false);
                 }
             }
         }, interval);
 
-        if (interval) {
+        if (interval && smiling) {
+            content =<>
+            <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"10%", left:"8%" }}></img>
+            <ProgressBar striped variant="danger" now={myHP} />
+            </>;
+        } else if(interval && !smiling){
             content = <ProgressBar striped variant="danger" now={myHP} />
         } else {
-            content = <h2 style={{ color: "gray" }}> Game Over!!! </h2>
+            content = <>
+            {/* <img src={gameOver} style={{position:"absolute", width:"auto", height:"auto", top:"10%", left:"2%" }}></img> */}
+            <h2> Game Over!!! </h2>
+            </>
         }
 
         return content;
+    }
+
+    const ShowMyReady = () => {
+
+        const [ready, setReady] = useState(false)
+        useEffect(() => {
+            socket.on("ready", ({readyList}) => {
+                if (myStream && myStream.id) {
+                    readyList.map((readyUser) => {
+                        if (myStream.id === readyUser[1]) {
+                            setReady(true);
+                        }
+                    })
+                }
+            });
+        }, [socket])
+
+        return (
+            !gameStarted?
+                myStream && myStream.id && myStream.id === chiefStream?
+                    <h2 style = {{color:"orange"}}>방장</h2> :
+                    <h1 style = {{color: "white"}}>
+                    {ready ? "ready" : "not ready"}
+                    </h1> :
+            <h2 style = {{color:"white"}}>Playing</h2>
+        )
     }
 
 
@@ -216,6 +258,7 @@ const MyVideo = ({ match, socket }) => {
                     <ShowStatus></ShowStatus>
                 </HPContent>
             </HPContainer>
+            <ShowMyReady></ShowMyReady>
         </>
     );
 

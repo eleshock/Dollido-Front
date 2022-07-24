@@ -7,6 +7,8 @@ const CLEAR_PEER_NICK = "inGame/CLEAR_PEER_NICK";
 const DELETE_PEER_NICK = "inGame/DELETE_PEER_NICK"
 const SET_ROOM_ID = "inGame/SET_ROOM_ID";
 const SET_CHIEF = "inGame/SET_CHIEF";
+const SET_CHIEF_STREAM = "inGame/SET_CHIEF_STREAM";
+
 
 export const setModelsLoaded = (bool) => ({type: SET_MODELS_LOADED, bool});
 export const setGameFinish = (bool) => ({type: SET_GAME_FINISH, bool});
@@ -17,6 +19,8 @@ export const clearPeerNick = () => ({type: CLEAR_PEER_NICK});
 export const deletePeerNick = (nickName) => ({type: DELETE_PEER_NICK, nickName});
 export const setRoomID = (roomID) => ({type: SET_ROOM_ID, roomID});
 export const setChief = (bool) => ({type: SET_CHIEF, bool});
+export const setChiefStream = (streamID) => ({type: SET_CHIEF_STREAM, streamID});
+
 
 const initialState = {
     gameFinished: false,
@@ -26,6 +30,7 @@ const initialState = {
     peerNick: [], 
     roomID: null,
     chief: false,
+    chiefStream: null,
 }
 
 export default function inGame(state = initialState, action) {
@@ -51,6 +56,8 @@ export default function inGame(state = initialState, action) {
             return { ...state, roomID: action.roomID };
         case SET_CHIEF:
             return { ...state, chief: action.bool };
+        case SET_CHIEF_STREAM:
+            return { ...state, chiefStream: action.streamID };
         default:
             return state;
     }
