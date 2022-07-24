@@ -12,6 +12,9 @@ import styled from "styled-components";
 
 import { ServerName } from "../../serverName";
 
+// 임시
+import { useSelector } from "react-redux";
+
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -27,13 +30,6 @@ const TabList = styled.div`
 const Content = styled.div`
   display: flex;
   flex: 1;
-`
-
-const UserInfo = styled.div`
-  display: flex;
-  flex: none;
-  width: 350px;
-  background-color: #404040;
 `
 
 const RoomListFrame = styled.div`
@@ -134,6 +130,7 @@ const Video = styled.video`
   margin: 0 auto;
   width: 450px;
   height: 340px;
+  transform: scaleX(-1);
 `
 const PageControl = styled.div`
   display: flex;
@@ -173,29 +170,8 @@ const RightTriangle = styled.button`
 let startVideoPromise;
 
 const Lobby = () => {
-
-  /* 닉네임 생성 절차 */
-  const [nickname, setNickname] = useState("");
-  const [loggedNickname, setLoggedNickname] = useState("");
-
-  const onCreateNickname = useCallback((e) => {
-    setNickname(e.target.value);
-  }, []);
-  const onClickNickname = useCallback(
-    (e) => {
-      e.preventDefault();
-      localStorage.nickname = nickname;
-      setLoggedNickname(nickname);
-    },
-    [nickname]
-  );
-
-  const onChangeNickname = useCallback((e) => {
-    e.preventDefault();
-    localStorage.removeItem("nickname");
-    setLoggedNickname("");
-    window.location.href = "/lobby";
-  }, []);
+  // 임시
+  const nickname = useSelector((state) => state.member.member.user_nick);
 
   /* 방 만들기 & 입장 */
   const SERVER_ADDRESS = useRef(ServerName);
@@ -205,8 +181,7 @@ const Lobby = () => {
   const [roomName, setRoomName] = useState("");
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postsPerPage, setPostsPerPage] = useState(7);
-
+  const postsPerPage = 7;
 
   // 1. 방 리스트 받아오기
   useEffect(() => {
@@ -217,6 +192,10 @@ const Lobby = () => {
       },
     });
     socket.current.emit("get room list");
+    
+    return () => {
+      stopWebcam();
+    }
   }, []);
   useEffect(() => {
     socket.current.on("give room list", (rooms) => {
@@ -283,7 +262,6 @@ const Lobby = () => {
   const selectRoom = (room) => {
     localStorage.roomLink = room[0];
     localStorage.roomName = room[1].roomName;
-    // localStorage.roomLimit = room[1];
     setModal(true);
     startVideo();
   };
@@ -295,7 +273,6 @@ const Lobby = () => {
         audio: false,
         video: deviceId ? { deviceId } : true,
     })
-    console.log("camera loaded")
     startVideoPromise.then((stream) => {
         let video = videoRef.current;
         video.srcObject = stream;
@@ -306,13 +283,14 @@ const Lobby = () => {
     });
   };
 
-  const stopWebcam = () => {
-    startVideoPromise.then(stream => {
-        console.log('Video Stopped');
-        stream.getTracks().forEach(track => {
-            track.stop();
-        });
-    });
+  const stopWebcam = async () => {
+    if (startVideoPromise) {
+      await startVideoPromise.then(stream => {
+          stream.getTracks().forEach(track => {
+              track.stop();
+          });
+      });
+    }
   }
 
 
@@ -320,10 +298,6 @@ const Lobby = () => {
     setModal(false);
     stopWebcam();
   };
-
-  const onClickJoin = useCallback(() => {
-    alert(`${localStorage.roomName} 방에 입장합니다!`);
-  }, []);
 
   const sizes = {
     height: "36px",
@@ -347,39 +321,14 @@ const Lobby = () => {
         element={
           <FlexContainer>
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
-                    {loggedNickname !== "" || localStorage.nickname ? (
+                    {nickname &&
                         <div>
                           <span style={{ color: "white" }}>
                             {" "}
-                            {localStorage.nickname}님 Dollido에 오신걸 환영합니다
+                            {nickname}님 Dollido에 오신걸 환영합니다
                           </span>
-                          <Button2
-                            color="yellow"
-                            size="small"
-                            onClick={onChangeNickname}
-                          >
-                            닉네임 변경
-                          </Button2>
                         </div>
-
-                    ) : (
-                      <div>
-                        <input
-                          type="text"
-                          placeholder="닉네임을 입력하세요"
-                          name={nickname}
-                          onChange={onCreateNickname}
-                          style={sizes}
-                        />
-                        <Button2
-                          color="orange"
-                          size="medium"
-                          onClick={onClickNickname}
-                        >
-                          닉네임 생성
-                        </Button2>
-                      </div>
-                    )}
+                    } 
               </header>
               <TabList>
                 <h1 style = {{padding: "0 0 0 100px", color: "white", fontSize: "60px", fontStyle: "italic", userSelect: "none"}}>게임 대기실</h1>
@@ -451,7 +400,7 @@ const Lobby = () => {
                       <Video ref = {videoRef}></Video>
                       <div style = {{display: "flex", justifyContent: "space-around"}}>
                         <div style = {{display: "flex", justifyContent: "center"}}>
-                          <Link onClick={onClickJoin} to = {`/room/${localStorage.roomLink}`} name = {localStorage.roomName} style = {{textDecoration:"none"}}>
+                          <Link to = {`/room/${localStorage.roomLink}`} name = {localStorage.roomName} style = {{textDecoration:"none"}}>
                             <div style = {{margin: "30px"}}>
                               <Button2
                                 color="yellow"

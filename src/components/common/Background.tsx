@@ -7,13 +7,13 @@ interface Props {
 
 const Content = styled.div`
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
 `;
 
 const MainBackgroundDiv = styled.div<{ background: string }>`
     position: relative;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     background-image: url(${(props) => props.background});
     background-repeat: no-repeat;

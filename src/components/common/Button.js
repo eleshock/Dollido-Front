@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledButton = styled.a`
+const StyledButton = styled.div`
     text-align: center;
     color: rgb(245, 160, 40);
     display: block;

@@ -1,7 +1,7 @@
 import React from "react";
-import Videos from "./Videos";
+import InGame from "./InGame";
 import io from "socket.io-client";
-import { ServerName } from "../../serverName";
+import { ServerName } from "../../../serverName";
 
 const SERVER_ADDRESS = ServerName;
 const socket = io(SERVER_ADDRESS, {
@@ -14,8 +14,7 @@ const socket = io(SERVER_ADDRESS, {
 function Room({ match }) {
   return (
     <div>
-      {/* <h1>방 이름 : {localStorage.roomName}</h1> */}
-      <Videos match={match} socket={socket} />
+      <InGame match={match} socket={socket} />
     </div>
   );
 }

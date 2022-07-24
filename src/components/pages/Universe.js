@@ -2,15 +2,8 @@ import univBackground from '../../images/DollidoUniverse.gif';
 import { Background } from "../common/Background.tsx"
 import { Link } from "react-router-dom";
 import Button from '../common/Button';
-import auth from "../common/auth"
-import { useSelector } from 'react-redux';
 
 const Universe = () => {
-    const token = useSelector((state) => ({
-        token: state.member.member.tokenInfo.token
-    }));
-
-    auth(token);
     return (
         <Background background={univBackground}
         element={

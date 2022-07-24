@@ -5,7 +5,7 @@ export const setMember = (data) => ({type: SET_MEMBER, data});
 const initialState = {
     member: {
         user_id: null,
-        user_nick: null,
+        user_nick: "anonymous",
         tokenInfo: {
             token: null,
             refreshToken: null
@@ -16,10 +16,7 @@ const initialState = {
 export default function member(state = initialState, action) {
     switch(action.type) {
         case SET_MEMBER:
-            return {
-                ...state,
-                member: action.data
-            };
+            return { ...state, member: action.data };
         default:
             return state;
     }
