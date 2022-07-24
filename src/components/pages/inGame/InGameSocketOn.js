@@ -11,6 +11,7 @@ import {
     setRoomID,
     clearReadyList
 } from "../../../modules/inGame";
+import { setRandom } from "../../../modules/random";
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
@@ -27,8 +28,9 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setChiefStream(chiefStream));
         });
 
-        socket.on("start", (status) => {
+        socket.on("start", (status, randomList) => {
             if (status) {
+                dispatch(setRandom(randomList));
                 dispatch(setGamestart(true));
             }
         });
