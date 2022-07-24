@@ -34,8 +34,9 @@ const FindVideo = ({stream}) => {
 
 const Video = ({index}) => {
     const partnerVideos = useSelector((state) => state.videos);
-    const nickName = useSelector((state) => state.inGame.peerNick);
-    console.log(nickName)
+    let nickName = [];
+    nickName = useSelector((state) => state.inGame.peerNick);
+    
     return (
         <Container>
             <NickName>{nickName[index]}</NickName>
