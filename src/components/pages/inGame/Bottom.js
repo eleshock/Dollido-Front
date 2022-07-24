@@ -30,10 +30,11 @@ const ButtonSize = {
 }
 
 const InGameBottom = ({socket}) => {
-    const inGameState = useSelector((state) => ({ state: state.inGame }));
-    const chief = inGameState.state.chief;
-    const gameStarted = inGameState.state.gameStarted
-    const roomID = inGameState.state.roomID;
+    const inGameState = useSelector((state) => (state.inGame));
+    const chief = inGameState.chief;
+    const gameStarted = inGameState.gameStarted;
+    const gameFinished = inGameState.gameFinished;
+    const roomID = inGameState.roomID;
 
     function handleReady() {
         socket.emit("ready", {roomID: roomID});
@@ -45,7 +46,7 @@ const InGameBottom = ({socket}) => {
 
     return (
         <Bottom>
-            {!gameStarted &&
+            {(!gameStarted | gameFinished) &&
                 <div style={MyButton}>
                     {chief?
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
