@@ -44,9 +44,13 @@ const InGameBottom = ({socket}) => {
         socket.emit("start", {roomID: roomID});
     }
 
+    function handleRestart() {
+        socket.emit("restart", {roomID: roomID});
+    }
+
     return (
         <Bottom>
-            {(!gameStarted | gameFinished) &&
+            {!gameStarted &&
                 <div style={MyButton}>
                     {chief?
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
@@ -57,6 +61,16 @@ const InGameBottom = ({socket}) => {
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
                 </div>
+            }
+            {gameFinished && 
+                <div style={MyButton}>
+                {chief &&
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
+                }
+                <Link to="/Lobby">
+                    <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
+                </Link>
+            </div>
             }
         </Bottom>
     );

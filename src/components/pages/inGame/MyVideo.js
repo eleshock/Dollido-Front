@@ -55,7 +55,6 @@ const HPContent = styled.div `
 const recordTime = 3000; // 녹화 시간(ms)
 const modelInterval = 500; // 웃음 인식 간격(ms)
 const initialHP = 100;
-let videoRecorded = false; // 녹화 여부
 
 
 // 녹화가 완료된 후 서버로 비디오 데이터 post
@@ -91,6 +90,7 @@ function deleteBestVideo(user_nick) {
 
 
 function recordVideo(stream, user_nick) {
+    deleteBestVideo(user_nick); // 이전 비디오 삭제 요청
     let recorder = new MediaRecorder(stream);
 
     recorder.ondataavailable = (event) => {
@@ -129,6 +129,8 @@ const MyVideo = ({ match, socket }) => {
     const { roomID } = useParams();
     const userVideo = useRef();
 
+    let videoRecorded = false; // 녹화 여부
+
     useEffect(() => {
         if (modelsLoaded && myStream && myStream.id) {
             userVideo.current.srcObject = myStream;
@@ -150,7 +152,6 @@ const MyVideo = ({ match, socket }) => {
         return () => {
             deleteBestVideo(user_nick);
             dispatch(setMyStream(null));
-            videoRecorded = false;
             userVideo.current = null;
         }
     }, [socket, match]);

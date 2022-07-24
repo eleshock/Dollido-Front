@@ -40,6 +40,12 @@ const InGameSocketOn = ({ match, socket }) => {
         socket.on("ready", ({streamID, isReady}) => {
             dispatch(setReadyList(streamID, isReady));
         });
+        
+        socket.on("restart", () => {
+            dispatch(setGamestart(false));
+            dispatch(setGameFinish(false));
+        });
+        
         return () => {
             dispatch(clearReadyList());
         }
