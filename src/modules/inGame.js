@@ -8,6 +8,8 @@ const DELETE_PEER_NICK = "inGame/DELETE_PEER_NICK"
 const SET_ROOM_ID = "inGame/SET_ROOM_ID";
 const SET_CHIEF = "inGame/SET_CHIEF";
 const SET_CHIEF_STREAM = "inGame/SET_CHIEF_STREAM";
+const SET_READY_LIST = "inGame/SET_READY_LIST";
+const CLEAR_READY_LIST = "inGame/CLEAR_READY_LIST";
 
 
 export const setModelsLoaded = (bool) => ({type: SET_MODELS_LOADED, bool});
@@ -20,7 +22,8 @@ export const deletePeerNick = (nickName) => ({type: DELETE_PEER_NICK, nickName})
 export const setRoomID = (roomID) => ({type: SET_ROOM_ID, roomID});
 export const setChief = (bool) => ({type: SET_CHIEF, bool});
 export const setChiefStream = (streamID) => ({type: SET_CHIEF_STREAM, streamID});
-
+export const setReadyList = (streamID, bool) => ({type: SET_READY_LIST, streamID, bool});
+export const clearReadyList = () => ({type: CLEAR_READY_LIST});
 
 const initialState = {
     gameFinished: false,
@@ -31,6 +34,7 @@ const initialState = {
     roomID: null,
     chief: false,
     chiefStream: null,
+    readyList: {}
 }
 
 export default function inGame(state = initialState, action) {
@@ -44,9 +48,9 @@ export default function inGame(state = initialState, action) {
         case SET_MY_STREAM:
             return { ...state, myStream: action.stream};
         case SET_PEER_NICK:
-            const temp = [...state.peerNick, action.nickName];
-            const peer = temp.filter((val) => val !== undefined);
-            return {...state , peerNick: peer};
+            const peerList = [...state.peerNick, action.nickName];
+            const peerFilter = peerList.filter((val) => val !== undefined);
+            return {...state , peerNick: peerFilter};
         case CLEAR_PEER_NICK:
             return {...state, peerNick: []};
         case DELETE_PEER_NICK:
@@ -58,6 +62,11 @@ export default function inGame(state = initialState, action) {
             return { ...state, chief: action.bool };
         case SET_CHIEF_STREAM:
             return { ...state, chiefStream: action.streamID };
+        case SET_READY_LIST:
+            state.readyList[action.streamID] = action.bool;
+            return { ...state, ...state.readyList};
+        case CLEAR_READY_LIST:
+            return  { ...state, readyList: {} }
         default:
             return state;
     }

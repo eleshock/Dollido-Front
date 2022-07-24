@@ -124,6 +124,7 @@ const MyVideo = ({ match, socket }) => {
     const myStream = inGameState.myStream;
     const user_nick = useSelector((state) => state.member.member.user_nick);
     const chiefStream = inGameState.chiefStream;
+    const readyList = inGameState.readyList;
 
     const { roomID } = useParams();
     const userVideo = useRef();
@@ -220,29 +221,21 @@ const MyVideo = ({ match, socket }) => {
         return content;
     }
 
+    
     const ShowMyReady = () => {
-
-        const [ready, setReady] = useState(false)
+        const [bool, setBool] = useState(false);
         useEffect(() => {
-            socket.on("ready", ({readyList}) => {
-                if (myStream && myStream.id) {
-                    readyList.map((readyUser) => {
-                        if (myStream.id === readyUser[1]) {
-                            setReady(true);
-                        }
-                    })
-                }
-            });
-        }, [socket])
+            if(myStream && myStream.id) {
+                setBool(readyList[myStream.id]);
+            }
+        }, [readyList]);
 
         return (
             !gameStarted?
-                myStream && myStream.id && myStream.id === chiefStream?
+                myStream && myStream.id === chiefStream ?
                     <h2 style = {{color:"orange"}}>방장</h2> :
-                    <h1 style = {{color: "white"}}>
-                    {ready ? "ready" : "not ready"}
-                    </h1> :
-            <h2 style = {{color:"white"}}>Playing</h2>
+                    <h2 style = {{color: "white"}}>{bool ? "ready" : "not ready"}</h2> :
+                    <h2 style = {{color:"white"}}>Playing</h2>
         )
     }
 
