@@ -6,6 +6,8 @@ import mainBackground from "../../../images/mainBackground.gif";
 import { Background } from "../../common/Background.tsx";
 import styled from "styled-components";
 import moai from "../../../images/moai.png";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 /* MUI */
 import Box from '@mui/material/Box';
@@ -15,10 +17,12 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
 import Ranking from './Ranking';
-import Weapon from './Weapon.tsx';
+import Images from '../Images';
+
 
 const MyPage = () => {
 
+  const nickname = useSelector((state) => state.member.member.user_nick);
   const [value, setValue] = React.useState('1');
 
   const handleChange = (event, newValue) => {
@@ -40,19 +44,13 @@ const MyPage = () => {
               element={
                 <FlexContainer>
                   <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
-                    {localStorage.nickname ? (
+                    {nickname && (
                         <div>
                           <h3 style={{ color: "white" }}>
-                            {localStorage.nickname}님, Dollido에 오신걸 환영합니다!
+                            {nickname}님, Dollido에 오신걸 환영합니다!
                           </h3>
                         </div>
 
-                    ) : (
-                      <div>
-                        <h3 style={{ color: "white" }}>
-                          닉네임이 없습니다
-                        </h3>
-                      </div>
                     )}
                   </header>
                   <Title>
@@ -81,16 +79,32 @@ const MyPage = () => {
                               <img style = {{width: "100%", height: "100%", objectFit: "cover"}} src= {moai} />
                             </TierImage>
                             <Profile>
-                              <div>닉네임: 모아이는웃지않아</div>
-                              <div>승/패/승률</div>
-                              <div>티어</div>
-                              <div>랭킹</div>
+                            <div style = {{display:"flex", flexDirection:"column"}}>
+                              <div style = {{margin: "10px"}}>
+                                <ProfileTitle>닉 네 임</ProfileTitle>
+                                <ProfileContent>나웃는거본사람</ProfileContent>
+                              </div>
+                              <div style = {{margin: "10px"}}>
+                                <ProfileTitle>전 적</ProfileTitle>
+                                <ProfileContent>WIN 103 / LOSE 10</ProfileContent>
+                              </div>
+                            </div>
+                            <div style = {{display:"flex", flexDirection:"column", marginLeft: "30px"}}>
+                              <div style = {{margin: "10px"}}>
+                                <ProfileTitle>랭 킹</ProfileTitle>
+                                <ProfileContent>1위</ProfileContent>
+                              </div>
+                              <div style = {{margin: "10px"}}>
+                                <ProfileTitle>티 어</ProfileTitle>
+                                <ProfileContent>모아이</ProfileContent>
+                              </div>
+                            </div>
                             </Profile>
                           </div>
                         </TabPanel>
                         <TabPanel value="2">
                           <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
-                            <Weapon></Weapon>
+                            <Images></Images>
                           </div>
                         </TabPanel>
                         <TabPanel value="3">
@@ -108,6 +122,9 @@ const MyPage = () => {
                       </MyTabContext>
                     </MyBox>
                   </Content>
+                    <BackToLobby to = {'/lobby'}>
+                    &lt; 뒤로가기
+                    </BackToLobby>
                 </FlexContainer>
 
 
@@ -175,10 +192,10 @@ const TierImage = styled.div`
 
 const Profile = styled.div`
   display: flex;
-  flex-direction: column;
+  justifyContent: space-around;
   margin: 50px 0 0 50px;
   font-family: koverwatch;
-  font-size: 35px;
+  ${'' /* font-size: 50px; */}
 `
 
 const GradationTitle = styled.h1`
@@ -191,6 +208,44 @@ const GradationTitle = styled.h1`
   ${'' /* -webkit-text-stroke: 3px black; */}
   color: transparent;
   -webkit-background-clip: text
+`
+
+const ProfileTitle = styled.div`
+  color: white;
+  background-color: #5D6BA1CC;
+  font-size: 3rem;
+  text-align: center;
+  padding: 0 10px 0 10px;
+`
+
+const ProfileContent = styled.div`
+  color: white;
+  font-size: 2.5rem;
+  text-align: center;
+`
+
+const LobbyButtonExtra = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  &:hover {
+    background-color: white;
+  }
+`
+
+
+const BackToLobby = styled(Link)`
+  position: absolute;
+  top: 900px;
+  width: auto
+  height: auto;
+  color: white;
+  font-size: 1.9rem;
+  padding: 3px;
+  margin: 0 100px 0 0;
+  text-decoration: none;
+  &:hover {
+    background-color: white;
+  }
 `
 
 
