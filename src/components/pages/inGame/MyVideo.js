@@ -109,7 +109,6 @@ function deleteBestVideo(user_nick) {
 
 
 function recordVideo(stream, user_nick) {
-    deleteBestVideo(user_nick); // 이전 비디오 삭제 요청
     let recorder = new MediaRecorder(stream);
 
     recorder.ondataavailable = (event) => {
@@ -320,5 +319,5 @@ const MyVideo = ({ match, socket }) => {
 
 }
 
-export { initialHP };
+export { initialHP, deleteBestVideo };
 export default MyVideo;
