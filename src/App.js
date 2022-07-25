@@ -1,9 +1,10 @@
 import Main from "./components/pages/Main";
 import Room from "./components/pages/inGame/Room";
 import Lobby from "./components/pages/Lobby";
-import Images from "./components/pages/Images";
+import Images from "./components/pages/myPage/Images";
 import Universe from "./components/pages/Universe";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import MyPage from "./components/pages/myPage/MyPage"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App()  {
     return (
@@ -14,6 +15,7 @@ function App()  {
                 <Route path="/room/:roomID" element={<Room/>} />
                 <Route path="/images" element={<Images/>}/>
                 <Route path="/univ" element={<Universe/>}/>
+                <Route path="/mypage" element={<MyPage/>}></Route>
             </Routes>
         </BrowserRouter>
     );

@@ -14,6 +14,7 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     flex: 20;
+    height: 100vh;
 `
 
 const LeftContent = styled.div`
@@ -22,27 +23,26 @@ const LeftContent = styled.div`
 
 const MidleContent = styled.div`
     flex: 1.5;
-`
+    `
 
 const RightContent = styled.div`
     flex: 1;
-`
+    `
 
 const Content = styled.div`
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    justify-content: center;
     height: 100%;
 `
 
 const EachContent = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     position: relative;
-    padding: 15px;
     height: 50%;
-    text-align: center;
 `
 
 const Test = ({socket, match}) => {

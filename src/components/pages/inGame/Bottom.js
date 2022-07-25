@@ -29,26 +29,33 @@ const ButtonSize = {
     margin: "30px"
 }
 
-const InGameBottom = ({socket}) => {
+const InGameBottom = ({ socket }) => {
     const inGameState = useSelector((state) => (state.inGame));
     const chief = inGameState.chief;
+    const chiefStream = inGameState.chiefStream;
+    const myStream = inGameState.myStream;
     const gameStarted = inGameState.gameStarted;
     const gameFinished = inGameState.gameFinished;
+    const bestDone = inGameState.bestDone;
     const roomID = inGameState.roomID;
 
     function handleReady() {
-        socket.emit("ready", {roomID: roomID});
-    } 
+        socket.emit("ready", { roomID: roomID });
+    }
 
     function handleStart() {
-        socket.emit("start", {roomID: roomID});
+        socket.emit("start", { roomID: roomID });
+    }
+
+    function handleRestart() {
+        socket.emit("restart", { roomID: roomID });
     }
 
     return (
         <Bottom>
-            {(!gameStarted | gameFinished) &&
+            {!gameStarted &&
                 <div style={MyButton}>
-                    {chief?
+                    {myStream && (chief || chiefStream === myStream.id)?
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
                         :
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
@@ -58,6 +65,17 @@ const InGameBottom = ({socket}) => {
                     </Link>
                 </div>
             }
+            {(gameFinished && bestDone) &&
+                <div style={MyButton}>
+                    {chief &&
+                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
+                    }
+                    <Link to="/Lobby">
+                        <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
+                    </Link>
+                </div>
+            }
+            <div style={{ opacity: '0', height: '6.5rem' }}> </div>
         </Bottom>
     );
 }

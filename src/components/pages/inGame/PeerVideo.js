@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
-    flex: 14;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -18,7 +17,8 @@ const NickName = styled.h2`
 
 const VideoStyle = styled.video`
     flex: 9;
-    width: 270px;
+    width: 250px;
+    height: 190px;
     border-radius: 10%;
     justify-content: center;
     transform: scaleX(-1);
@@ -34,12 +34,15 @@ const FindVideo = ({stream}) => {
 
 const Video = ({index}) => {
     const partnerVideos = useSelector((state) => state.videos);
-    let nickName = [];
-    nickName = useSelector((state) => state.inGame.peerNick);
-    
+    let temp = useSelector((state) => state.inGame.peerNick);
+    let nickName = ""
+    console.log(temp);
+    if (partnerVideos[index] !== undefined && Object.keys(temp).length !== 0) {
+        nickName = temp[partnerVideos[index].id];
+    }
     return (
         <Container>
-            <NickName>{nickName[index]}</NickName>
+            <NickName>{nickName}</NickName>
             {partnerVideos[index] && <FindVideo stream={partnerVideos[index]}></FindVideo>}
         </Container>
     );

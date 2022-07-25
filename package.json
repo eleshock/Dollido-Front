@@ -5,7 +5,14 @@
   "dependencies": {
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
-    "@mui/material": "^5.9.0",
+    "@fontsource/roboto": "^4.5.7",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/lab": "^5.0.0-alpha.91",
+    "@mui/material": "^5.9.1",
+    "@mui/styled-engine-sc": "^5.8.0",
+    "@mui/x-data-grid": "^5.14.0",
+    "@mui/x-data-grid-generator": "^5.14.0",
+    "@mui/x-data-grid-pro": "^5.14.0",
     "@reduxjs/toolkit": "^1.8.3",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
@@ -30,6 +37,7 @@
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "react-scroll-to-bottom": "^4.2.0",
+    "react-spinners": "^0.13.3",
     "react-timed-image": "^1.0.8",
     "reactstrap": "^9.1.1",
     "redux": "4.1.2",
@@ -42,6 +50,7 @@
     "socket.io": "^4.5.1",
     "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5",
+    "typewriter-effect": "^2.19.0",
     "web-vitals": "^2.1.0"
   },
   "scripts": {

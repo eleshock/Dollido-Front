@@ -7,12 +7,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Container = styled.div`
     display: flex;
-    width: 75%;
+    width: 320px;
     color: white;
-    flex: 1.5;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    margin-top: 20px;
 `
 
 const Content = styled.div`
@@ -21,16 +19,18 @@ const Content = styled.div`
 
 const HP = ({ socket, index }) => {
     const partnerVideos = useSelector((state) => state.videos);
-    console.log(index);
     const peersHP = useRef(100);
     const [content, setContent] = useState(<Container>
       <Content><ProgressBar striped variant="danger" now={peersHP.current} /></Content>
           </Container>);
+    const gameFinished = useSelector((state) => state.inGame.gameFinished);
+
+
     useEffect(() => {
       socket.on("smile", (peerHP, peerID, peerStreamID) => {
         if (partnerVideos[index].id === peerStreamID) {
           peersHP.current = peerHP;
-        }
+
         if (index === 0 ) {
           setContent(
           <Container>
@@ -51,7 +51,7 @@ const HP = ({ socket, index }) => {
           setContent(
             <Container>
               <Content>
-                <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"60%", left:"8%" }}></img>
+                <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"50%", left:"8%" }}></img>
                 <ProgressBar striped variant="danger" now={peersHP.current} />
               </Content>
             </Container>
@@ -68,7 +68,7 @@ const HP = ({ socket, index }) => {
           setContent(
             <Container>
               <Content>
-                <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"60%", right:"8%" }}></img>
+                <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"50%", right:"8%" }}></img>
                 <ProgressBar striped variant="danger" now={peersHP.current} />
               </Content>
             </Container>)
@@ -81,9 +81,43 @@ const HP = ({ socket, index }) => {
             </Container>)
           }, 1000);
         }
+      }
 
       })
-    }, [socket, content])
+    }, [socket])
+
+    useEffect(() => {
+      socket.on("restart", () => {
+        peersHP.current = 100;
+        setContent(
+          <Container>
+              <Content>
+              <ProgressBar striped variant="danger" now={peersHP.current} />
+              </Content>
+            </Container>)
+    })
+    }, [socket])
+
+    useEffect(() => {
+      socket.on("finish", (hpList) => {
+        // HP [streamID, HP]
+        hpList.map((HP) => {
+          console.log(HP[1]);
+          if (partnerVideos[index].id === HP[0]){
+            if (HP[1] < 0){
+              peersHP.current = 0;
+            } else {
+              peersHP.current = HP[1];
+            }
+          }
+        })
+        setContent(<Container>
+          <Content>
+          <ProgressBar striped variant="danger" now={peersHP.current} />
+          </Content>
+        </Container>)
+      });
+    }, [socket])
 
     return content;
 }
