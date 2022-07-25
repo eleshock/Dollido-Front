@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 const Container = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    height: 70vh;
     align-items: center;
     color: white;
 `

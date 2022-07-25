@@ -18,6 +18,7 @@ const NickName = styled.h2`
 const VideoStyle = styled.video`
     flex: 9;
     width: 250px;
+    height: 190px;
     border-radius: 10%;
     justify-content: center;
     transform: scaleX(-1);

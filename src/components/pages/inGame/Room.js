@@ -13,7 +13,7 @@ const socket = io(SERVER_ADDRESS, {
 
 function Room({ match }) {
   return (
-    <div>
+    <div style={{height:"100vh"}}>
       <InGame match={match} socket={socket} />
     </div>
   );

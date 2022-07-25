@@ -14,7 +14,7 @@ const Container = styled.div`
     display: flex;
     justify-content: space-between;
     flex: 20;
-    height: 100%;
+    height: 100vh;
 `
 
 const LeftContent = styled.div`
@@ -23,11 +23,11 @@ const LeftContent = styled.div`
 
 const MidleContent = styled.div`
     flex: 1.5;
-`
+    `
 
 const RightContent = styled.div`
     flex: 1;
-`
+    `
 
 const Content = styled.div`
     display: flex;

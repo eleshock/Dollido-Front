@@ -1,8 +1,15 @@
 import { useState } from 'react'
 import axios from 'axios'
 import { ServerName } from "../../serverName";
+import { s3Domain } from "../../s3Domain";
+import styled from "styled-components";
+
 
 import './Images.css'
+
+const FlexContainer = styled.div`
+  font-family: koverwatch;
+`
 
 async function postImage({image}) {
   const formData = new FormData();
@@ -34,11 +41,13 @@ function Images() {
 
   return (
     <div className="App">
+      <FlexContainer><h2>나의 비장의 무기</h2>
+    <img src={`${s3Domain}bf46728d-46c1-4d36-b3bb-7987e61c62d720170105_011853_-1910004446.gif`}></img>
       <form onSubmit={submit} enctype = "multipart/form-data" accept-charset="UTF-8">
         <input onChange={fileSelected} type="file" accept="image/*"></input>
         <button type="submit">Submit</button>
       </form>
-
+      </FlexContainer>
     </div>
   );
 }
