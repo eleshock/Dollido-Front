@@ -1,6 +1,7 @@
 const SET_MODELS_LOADED = "inGame/SET_MODELS_LOADED";
 const SET_GAME_FINISH = "inGame/SET_GAME_FINISH";
 const SET_GAME_START = "inGame/SET_GAME_START";
+const SET_BEST_DONE = "inGame/SET_BEST_DONE";
 const SET_MY_STREAM = "inGame/SET_MY_STREAM";
 const SET_PEER_NICK = "inGame/SET_PEER_NICK";
 const CLEAR_PEER_NICK = "inGame/CLEAR_PEER_NICK";
@@ -15,6 +16,7 @@ const DELETE_READY_LIST = "inGame/DELETE_READY_LIST";
 export const setModelsLoaded = (bool) => ({type: SET_MODELS_LOADED, bool});
 export const setGameFinish = (bool) => ({type: SET_GAME_FINISH, bool});
 export const setGamestart = (bool) => ({type: SET_GAME_START, bool});
+export const setBestDone = (bool) => ({type: SET_BEST_DONE, bool});
 export const setMyStream = (stream) => ({type: SET_MY_STREAM, stream});
 export const setPeerNick = (streamID, nickName) => ({type: SET_PEER_NICK, streamID, nickName});
 export const clearPeerNick = () => ({type: CLEAR_PEER_NICK});
@@ -29,6 +31,7 @@ export const deleteReadyList = (streamID) => ({type: DELETE_READY_LIST, streamID
 const initialState = {
     gameFinished: false,
     gameStarted: false,
+    bestDone: false,
     modelsLoaded: false,
     myStream: null,
     peerNick: {}, 
@@ -46,6 +49,8 @@ export default function inGame(state = initialState, action) {
             return { ...state, gameFinished: action.bool };
         case SET_GAME_START:
             return { ...state, gameStarted: action.bool };
+        case SET_BEST_DONE:
+            return { ...state, bestDone: action.bool}
         case SET_MY_STREAM:
             return { ...state, myStream: action.stream };
         case SET_PEER_NICK:

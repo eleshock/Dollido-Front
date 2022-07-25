@@ -175,14 +175,13 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(initialHP);
-        const [interval, setModelInterval] = useState(modelInterval);
+        const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
 
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
-            if(gameFinished) setModelInterval(null);
-            if (myStream && myStream.id) {
+            if ( myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0] && gameStarted) {
                     const decrease = handleHP(detections[0].expressions.happy);

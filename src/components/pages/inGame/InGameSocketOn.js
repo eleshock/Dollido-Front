@@ -7,6 +7,7 @@ import {
     setChiefStream,
     setGameFinish,
     setGamestart,
+    setBestDone,
     setReadyList,
     setRoomID,
     clearReadyList
@@ -48,6 +49,7 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
+            dispatch(setBestDone(false));
         });
         
         return () => {
