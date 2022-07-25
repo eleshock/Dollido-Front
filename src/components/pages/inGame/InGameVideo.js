@@ -32,6 +32,7 @@ const RightContent = styled.div`
 const Content = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: center;
     height: 100%;
 `
 

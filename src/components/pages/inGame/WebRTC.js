@@ -7,6 +7,7 @@ import {
     setModelsLoaded,
     setGameFinish,
     setGamestart,
+    setBestDone,
     setMyStream,
     setPeerNick,
     clearPeerNick,
@@ -59,6 +60,7 @@ const WebRTC = ({ socket, match }) => {
             dispatch(clearVideos());
             dispatch(setGameFinish(false));
             dispatch(setGamestart(false));
+            dispatch(setBestDone(false));
         };
     }, [socket, match]);
 

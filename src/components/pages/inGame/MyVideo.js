@@ -195,7 +195,6 @@ const MyVideo = ({ match, socket }) => {
 
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
-            // if(gameFinished) setModelInterval(null);
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0] && gameStarted) {
@@ -234,27 +233,25 @@ const MyVideo = ({ match, socket }) => {
         useEffect(() => {
             socket.on("finish", (hpList) => {
               // HP [streamID, HP]
-              if (myStream && myStream.id) {
-                console.log(hpList)
-                hpList.map((HP) => {
-                    if (myStream.id === HP[0]){
-                        console.log(myStream.id)
-                        console.log(HP[0],":",HP[1])
-                        if (HP[1] < 0) {
-                            dispatch(setMineHP(0))
-                            content = <ProgressBar striped variant="danger" now={mineHP} />
-                        }else {
-                            dispatch(setMineHP(HP[1]))
-                            console.log(mineHP);
-                            content = <ProgressBar striped variant="danger" now={mineHP} />
+                if (myStream && myStream.id) {
+                    console.log(hpList)
+                    hpList.map((HP) => {
+                        if (myStream.id === HP[0]){
+                            console.log(myStream.id)
+                            console.log(HP[0],":",HP[1])
+                            if (HP[1] < 0) {
+                                dispatch(setMineHP(0))
+                                content = <ProgressBar striped variant="danger" now={mineHP} />
+                            }else {
+                                dispatch(setMineHP(HP[1]))
+                                console.log(mineHP);
+                                content = <ProgressBar striped variant="danger" now={mineHP} />
+                            }
                         }
-                    }
-                })
-              }
+                    });
+                }
             });
-          }, [socket])
-
-
+        }, [socket])
         return content;
     }
 
