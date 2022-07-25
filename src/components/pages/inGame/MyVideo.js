@@ -13,7 +13,7 @@ import { ServerName } from "../../../serverName";
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
-import { setMyStream } from "../../../modules/inGame";
+import { setMineHP, setMyStream } from "../../../modules/inGame";
 
 // face api import
 import * as faceapi from 'face-api.js';
@@ -131,6 +131,7 @@ const MyVideo = ({ match, socket }) => {
     const user_nick = useSelector((state) => state.member.member.user_nick);
     const chiefStream = inGameState.chiefStream;
     const readyList = inGameState.readyList;
+    const mineHP = inGameState.myHP;
 
     const { roomID } = useParams();
     const userVideo = useRef();
@@ -174,7 +175,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
-                return 3;
+                return 10;
             } else {
                 return 1;
             }
@@ -185,13 +186,13 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(initialHP);
-        const [interval, setModelInterval] = useState(modelInterval);
+        const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
         let decrease = 0;
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
-            if(gameFinished) setModelInterval(null);
+            // if(gameFinished) setModelInterval(null);
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0] && gameStarted) {
@@ -205,12 +206,12 @@ const MyVideo = ({ match, socket }) => {
 
                     if (decrease > 0) {
                         const newHP = myHP - decrease;
+                        socket.emit("smile", newHP, roomID, user_nick, myStream.id);
                         if (newHP <= 0) { // game over
                             socket.emit("finish", { roomID: roomID });
                             setModelInterval(null);
                         }
                         setMyHP(newHP);
-                        socket.emit("smile", newHP, roomID, user_nick, myStream.id);
                         setSmiling(true);
                     } else {
                         setSmiling(false);
@@ -229,16 +230,38 @@ const MyVideo = ({ match, socket }) => {
         } else if(interval && !smiling){
             content = <ProgressBar striped variant="danger" now={myHP} />
         } else {
-            content = <>
-            {/* <img src={gameOver} style={{position:"absolute", width:"auto", height:"auto", top:"10%", left:"2%" }}></img> */}
-            <h2> Game Over!!! </h2>
-            </>
+            console.log(mineHP);
+            content = <ProgressBar striped variant="danger" now={mineHP} />
         }
+
+        useEffect(() => {
+            socket.on("finish", (hpList) => {
+              // HP [streamID, HP]
+              if (myStream && myStream.id) {
+                console.log(hpList)
+                hpList.map((HP) => {
+                    if (myStream.id === HP[0]){
+                        console.log(myStream.id)
+                        console.log(HP[0],":",HP[1])
+                        if (HP[1] < 0) {
+                            dispatch(setMineHP(0))
+                            content = <ProgressBar striped variant="danger" now={mineHP} />
+                        }else {
+                            dispatch(setMineHP(HP[1]))
+                            console.log(mineHP);
+                            content = <ProgressBar striped variant="danger" now={mineHP} />
+                        }
+                    }
+                })
+              }
+            });
+          }, [socket])
+
 
         return content;
     }
 
-    
+
     const ShowMyReady = () => {
         const [bool, setBool] = useState(false);
         useEffect(() => {
