@@ -41,10 +41,9 @@ const Img = styled.img`
 `
 
 const InGameHeader = ({socket}) => {
-    const inGameState = useSelector((state) => state.inGame);
-    const gameFinished = inGameState.gameFinished;
-    const gameStarted = inGameState.gameStarted;
-    const roomID = inGameState.roomID;
+    const gameFinished = useSelector((state) => state.inGame.gameFinished);
+    const gameStarted = useSelector((state) => state.inGame.gameStarted);
+    const roomID = useSelector((state) => state.inGame.roomID);
 
     /** 1초 줄어든 시간을 리턴 */
     function decreaseOneSec(minutes, seconds) {

@@ -16,11 +16,13 @@ const IsReady = ({socket, index}) => {
     const chiefStream = useSelector((state) => state.inGame.chiefStream);
     const readyList = useSelector((state) => state.inGame.readyList[partnerVideos[index].id]);
     const [ready, setReady] = useState(readyList);
-
+    
     useEffect(() => {
-      const streamID = partnerVideos[index].id;
-      if (streamID) setReady(readyList);
-    }, [readyList]);
+      if (partnerVideos[index] !== undefined) {
+        const streamID = partnerVideos[index].id;
+        if (streamID) setReady(readyList);
+      }
+    }, [readyList, index, partnerVideos]);
 
     return (
         <Container>

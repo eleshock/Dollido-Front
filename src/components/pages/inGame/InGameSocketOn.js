@@ -25,6 +25,7 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("chief", ({chiefStream}) => {
+            console.log(chiefStream)
             dispatch(setChiefStream(chiefStream));
         });
 
@@ -44,6 +45,7 @@ const InGameSocketOn = ({ match, socket }) => {
         });
         
         socket.on("restart", () => {
+            dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
         });
@@ -51,7 +53,7 @@ const InGameSocketOn = ({ match, socket }) => {
         return () => {
             dispatch(clearReadyList());
         }
-    }, [match, socket]);
+    }, [match, socket, dispatch]);
 
     // socket fail on
     useEffect(() => {
