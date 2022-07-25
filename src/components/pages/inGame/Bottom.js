@@ -32,6 +32,8 @@ const ButtonSize = {
 const InGameBottom = ({socket}) => {
     const inGameState = useSelector((state) => (state.inGame));
     const chief = inGameState.chief;
+    const chiefStream = inGameState.chiefStream;
+    const myStream = inGameState.myStream;
     const gameStarted = inGameState.gameStarted;
     const gameFinished = inGameState.gameFinished;
     const roomID = inGameState.roomID;
@@ -52,7 +54,7 @@ const InGameBottom = ({socket}) => {
         <Bottom>
             {!gameStarted &&
                 <div style={MyButton}>
-                    {chief?
+                    {myStream && (chief || chiefStream === myStream.id)?
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
                         :
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>

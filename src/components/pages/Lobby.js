@@ -9,6 +9,7 @@ import { LobbyModal } from "../common/LobbyModal.tsx";
 import mainBackGround from "../../images/mainBackground.gif";
 import { Background } from "../common/Background.tsx";
 import styled from "styled-components";
+import { GlobalStyles } from "../common/Global.ts";
 
 import { ServerName } from "../../serverName";
 
@@ -316,78 +317,74 @@ const Lobby = () => {
         },
       }}
     >
-      <Background
-        background={mainBackGround}
-        element={
-          <FlexContainer>
-              <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
-                    {nickname &&
-                        <div>
-                          <span style={{ color: "white" }}>
-                            {" "}
-                            {nickname}님 Dollido에 오신걸 환영합니다
-                          </span>
-                        </div>
-                    } 
-              </header>
-              <TabList>
-                <h1 style = {{padding: "0 0 0 100px", color: "white", fontSize: "60px", fontStyle: "italic", userSelect: "none"}}>게임 대기실</h1>
-              </TabList>
-              <Content>
-                  {/* <UserInfo>
-                    <h1 style = {{color: "white"}}>유저정보 들어갈 곳</h1>
-                  </UserInfo> */}
-                  <RoomListFrame>
-                    <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
-                        <input
-                          type="text"
-                          placeholder="방이름을 입력하세요"
-                          name="roomName"
-                          value={roomName}
-                          onChange={onChangeRoomName}
-                          onKeyPress= {(e) => {
-                            e.key === "Enter" && onClickMakeRoom(e);
-                          }}
-                          ref={roomNameRef}
-                          style={sizes}
-                        />
-                        <Button2
-                          color="orange"
-                          size="medium"
-                          onClick={onClickMakeRoom}
-                        >
-                          방만들기
-                        </Button2>
-                      </div>
-                      <RoomTagList>
-                        <RoomTag1>이름</RoomTag1>
-                        <RoomTag2>방장</RoomTag2>
-                        <RoomTag3>게임모드</RoomTag3>
-                        <RoomTag4>인원</RoomTag4>
-                      </RoomTagList>
-                        {currentPosts(rooms).map((room) => {
-                          // console.log(room)
-                          return (
-                              <RoomLinkList key={room[0]} onClick = { () => selectRoom(room) }>
-                                <RoomLink1>{room[1].roomName}</RoomLink1>
-                                <RoomLink2>{room[1].members[0]? room[1].members[0].nickName : "없음" }</RoomLink2>
-                                <RoomLink3>개인전</RoomLink3>
-                                <RoomLink4>
-                                  {room[1].members.length}/4
-                                </RoomLink4>
-                              </RoomLinkList>
-                            );
-                        })};
-                        <PageControl>
-                          <LeftTriangle onClick = {prevPage}></LeftTriangle>
-                          <div style = {{display: "flex", flex:"1"}}></div>
-                          <RightTriangle onClick = {() => nextPage(roomCount)}></RightTriangle>
-                        </PageControl>
-                  </RoomListFrame>
-              </Content>
-            </FlexContainer>
-        }
-      />
+      <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
+      <FlexContainer>
+          <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
+                {nickname &&
+                    <div>
+                      <span style={{ color: "white" }}>
+                        {" "}
+                        {nickname}님 Dollido에 오신걸 환영합니다
+                      </span>
+                    </div>
+                } 
+          </header>
+          <TabList>
+            <h1 style = {{padding: "0 0 0 100px", color: "white", fontSize: "60px", fontStyle: "italic", userSelect: "none"}}>게임 대기실</h1>
+          </TabList>
+          <Content>
+              {/* <UserInfo>
+                <h1 style = {{color: "white"}}>유저정보 들어갈 곳</h1>
+              </UserInfo> */}
+              <RoomListFrame>
+                <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
+                    <input
+                      type="text"
+                      placeholder="방이름을 입력하세요"
+                      name="roomName"
+                      value={roomName}
+                      onChange={onChangeRoomName}
+                      onKeyPress= {(e) => {
+                        e.key === "Enter" && onClickMakeRoom(e);
+                      }}
+                      ref={roomNameRef}
+                      style={sizes}
+                    />
+                    <Button2
+                      color="orange"
+                      size="medium"
+                      onClick={onClickMakeRoom}
+                    >
+                      방만들기
+                    </Button2>
+                  </div>
+                  <RoomTagList>
+                    <RoomTag1>이름</RoomTag1>
+                    <RoomTag2>방장</RoomTag2>
+                    <RoomTag3>게임모드</RoomTag3>
+                    <RoomTag4>인원</RoomTag4>
+                  </RoomTagList>
+                    {currentPosts(rooms).map((room) => {
+                      // console.log(room)
+                      return (
+                          <RoomLinkList key={room[0]} onClick = { () => selectRoom(room) }>
+                            <RoomLink1>{room[1].roomName}</RoomLink1>
+                            <RoomLink2>{room[1].members[0]? room[1].members[0].nickName : "없음" }</RoomLink2>
+                            <RoomLink3>개인전</RoomLink3>
+                            <RoomLink4>
+                              {room[1].members.length}/4
+                            </RoomLink4>
+                          </RoomLinkList>
+                        );
+                    })};
+                    <PageControl>
+                      <LeftTriangle onClick = {prevPage}></LeftTriangle>
+                      <div style = {{display: "flex", flex:"1"}}></div>
+                      <RightTriangle onClick = {() => nextPage(roomCount)}></RightTriangle>
+                    </PageControl>
+              </RoomListFrame>
+          </Content>
+        </FlexContainer>
       {modal && (
           <LobbyModal
               modal={modal}

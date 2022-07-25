@@ -32,7 +32,7 @@ const NickName = styled.h2 `
 
 const VideoStyle = styled.video `
     flex: 9;
-    width: 270px;
+    width: 250px;
     border-radius: 10%;
     justify-content: center;
     transform: scaleX(-1);
@@ -42,7 +42,7 @@ const HPContainer = styled.div `
     display: flex;
     width: 75%;
     color: white;
-    flex: 1.5;
+    flex: 1;
     justify-content: center;
     align-items: center;
     text-align: center;

@@ -3,7 +3,7 @@ import Room from "./components/pages/inGame/Room";
 import Lobby from "./components/pages/Lobby";
 import Images from "./components/pages/Images";
 import Universe from "./components/pages/Universe";
-import {BrowserRouter, Routes, Route} from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App()  {
     return (
