@@ -56,6 +56,9 @@ const InGameBottom = ({socket}) => {
                     <Link to="/Lobby">
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
+                    <Button color="yellow" size="large" style={ButtonSize}>
+                     REVERSE
+                    </Button>
                 </div>
             }
         </Bottom>

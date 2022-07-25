@@ -30,8 +30,8 @@ const IsReady = ({socket, index}) => {
           {!gameStarted ?
             (partnerVideos[index].id === chiefStream ?
               <h2 style = {{color:"orange"}}>방장</h2> :
-                <h2 style = {{color: "white"}}>{ready ? "ready" : "not ready"}</h2>) :
-          <h2 style = {{color:"white"}}>Playing</h2>}
+              <h2 style = {{color: "white"}}>{ready ? "ready" : "not ready"}</h2>) :
+              <h2 style = {{color:"white"}}>Playing</h2>}
         </Container>
     )
 }
