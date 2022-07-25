@@ -45,15 +45,15 @@ const RoomTagList = styled.div`
   display: flex;
   justify-content: space-between;
   list-style: none;
-  font-size: 1.5rem;
+  font-size: 2rem;
   user-select: none;
-  background-color: #5F95C7BB;
+  background-color: #E01FFABB;
 `
 
 const RoomTag1 = styled.div`
   display: flex;
   flex: 4;
-  border-right: 2px solid #16364A79;
+  border-right: 2px solid #14073c79;
   box-sizing: border-box;
   color: white;
   padding: 10px;
@@ -61,7 +61,7 @@ const RoomTag1 = styled.div`
 const RoomTag2 = styled.div`
   display: flex;
   flex: 3;
-  border-right: 2px solid #16364A79;
+  border-right: 2px solid #14073c79;
   box-sizing: border-box;
   color: white;
   padding: 10px;
@@ -69,7 +69,7 @@ const RoomTag2 = styled.div`
 const RoomTag3 = styled.div`
   display: flex;
   flex: 2;
-  border-right: 2px solid #16364A79;
+  border-right: 2px solid #14073c79;
   box-sizing: border-box;
   color: white;
   padding: 10px;
@@ -91,13 +91,13 @@ const RoomLinkList = styled.li`
   border: 1px solid transparent;
   background-color: #16364A79;
   text-decoration: none;
-  font-size: 20px;
+  font-size: 1.6rem;
   padding: 10px;
   margin: 2px 0 2px 0;
   cursor: pointer;
   list-style: none;
   &:hover {
-    background-color: #FFD124C9;
+    background-color: #ED9C21EE;
   };
 `
 const RoomLink1 = styled.div`
@@ -322,7 +322,7 @@ const Lobby = () => {
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
                     {nickname &&
                         <div>
-                          <span style={{ color: "white", fontSize: "20px", margin: "0 10px 0 0" }}>
+                          <span style={{ color: "white", fontSize: "1.7rem", margin: "0 10px 0 0" }}>
                             {" "}
                             {nickname}님 Dollido에 오신걸 환영합니다
                           </span>
@@ -341,9 +341,6 @@ const Lobby = () => {
                 <h1 style = {{padding: "0 0 0 100px", color: "white", fontSize: "6rem", fontStyle: "italic", userSelect: "none"}}>게임 대기실</h1>
               </TabList>
               <Content>
-                  {/* <UserInfo>
-                    <h1 style = {{color: "white"}}>유저정보 들어갈 곳</h1>
-                  </UserInfo> */}
                   <RoomListFrame>
                     <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
                         <input
