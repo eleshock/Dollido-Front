@@ -7,6 +7,7 @@ import styled from "styled-components";
 import effect from "../../../images/laughEffection.webp";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import SyncLoader from "react-spinners/SyncLoader";
 
 // ServerName import
 import { ServerName } from "../../../serverName";
@@ -19,33 +20,44 @@ import { setMyStream } from "../../../modules/inGame";
 import * as faceapi from 'face-api.js';
 
 const Container = styled.div `
-    flex: 13;
     display: flex;
     align-items: center;
     flex-direction: column;
 `
-
 const NickName = styled.h2 `
     flex: 1;
     color: white;
 `
 
+const VideoContent = styled.div`
+    flex: 9;
+    width: 250px;
+    height: 190px;
+    display: relative;
+`
+
 const VideoStyle = styled.video `
     flex: 9;
     width: 250px;
+    height: 190px;
     border-radius: 10%;
     justify-content: center;
     transform: scaleX(-1);
 `
 
+const LoadingDiv = styled.div`
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+`
+
 const HPContainer = styled.div `
     display: flex;
-    width: 75%;
+    width: 320px;
     color: white;
-    flex: 1;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    margin-top: 20px;
 `
 
 const HPContent = styled.div `
@@ -127,13 +139,15 @@ const MyVideo = ({ match, socket }) => {
     const readyList = inGameState.readyList;
 
     const { roomID } = useParams();
-    const userVideo = useRef();
+    const userVideo = useRef(null);
+    const [loading, setLoading] = useState(true);
 
     let videoRecorded = false; // 녹화 여부
 
     useEffect(() => {
         if (modelsLoaded && myStream && myStream.id) {
             userVideo.current.srcObject = myStream;
+            setLoading(false);
         }
         return () => {
             async function videoOff() {
@@ -145,8 +159,7 @@ const MyVideo = ({ match, socket }) => {
             }
             videoOff();
         }
-    }, [modelsLoaded, myStream])
-
+    }, [modelsLoaded, myStream]);
 
     useEffect(() => {
         return () => {
@@ -240,12 +253,31 @@ const MyVideo = ({ match, socket }) => {
         )
     }
 
+    const Loading = () => {
+        return (
+            <SyncLoader
+                color="#e02869"
+                height={15}
+                width={10}
+                radius={2}
+                margin={2}
+            />
+        );
+    }
+
 
     return (
         <>
             <Container>
                 <NickName style={MyNickname}>{user_nick}</NickName>
-                <VideoStyle autoPlay ref={userVideo} />
+                <VideoContent>
+                    {loading &&
+                        (<LoadingDiv>
+                            <Loading></Loading>
+                        </LoadingDiv>)
+                    }
+                    <VideoStyle autoPlay ref={userVideo} />
+                </VideoContent>
             </Container>
             <HPContainer>
                 <HPContent>

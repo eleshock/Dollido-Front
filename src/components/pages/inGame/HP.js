@@ -7,12 +7,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Container = styled.div`
     display: flex;
-    width: 75%;
+    width: 320px;
     color: white;
-    flex: 1.5;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    margin-top: 20px;
 `
 
 const Content = styled.div`

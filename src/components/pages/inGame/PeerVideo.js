@@ -5,7 +5,6 @@ import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 const Container = styled.div`
-    flex: 14;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -18,7 +17,7 @@ const NickName = styled.h2`
 
 const VideoStyle = styled.video`
     flex: 9;
-    width: 270px;
+    width: 250px;
     border-radius: 10%;
     justify-content: center;
     transform: scaleX(-1);
