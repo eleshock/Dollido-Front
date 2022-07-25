@@ -8,7 +8,7 @@ import RightAlignedLink from "../../common/members/RightAlignedLink";
 import FailMessage from '../../common/members/FailMessage';
 
 import { ServerName } from '../../../serverName';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setMember } from "../../../modules/member"
 
 
@@ -19,10 +19,6 @@ const SingIn = ({ setChange }) => {
 
     const dispatch = useDispatch();
     
-    const member = useSelector(state => ({
-        member: state.member.member
-    }));
-
     const submit = async () => {
         let args = {user_id: id,  user_pw: pw};
         await axios.post(`${ServerName}/api/user/signin/`, args).then((res) => {

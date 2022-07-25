@@ -8,6 +8,7 @@ import Video from "./PeerVideo";
 import HP from "./HP";
 import IsReady from "./IsReady";
 import Bottom from "./Bottom";
+import ReverseMode from "./ReverseMode";
 
 
 const Container = styled.div`
@@ -65,6 +66,7 @@ const Test = ({socket, match}) => {
             </LeftContent>
             <MidleContent>
                 <Content>
+                    <ReverseMode socket={socket}></ReverseMode>
                     <InGameContent socket={socket}></InGameContent>
                     <Bottom socket={socket} match={match}></Bottom>
                 </Content>

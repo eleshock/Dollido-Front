@@ -38,7 +38,7 @@ const NickName = styled.h2 `
 
 const VideoStyle = styled.video `
     flex: 9;
-    width: 270px;
+    width: 250px;
     border-radius: 10%;
     justify-content: center;
     transform: scaleX(-1);
@@ -48,7 +48,7 @@ const HPContainer = styled.div `
     display: flex;
     width: 75%;
     color: white;
-    flex: 1.5;
+    flex: 1;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -61,7 +61,6 @@ const HPContent = styled.div `
 const recordTime = 3000; // 녹화 시간(ms)
 const modelInterval = 500; // 웃음 인식 간격(ms)
 const initialHP = 100;
-let videoRecorded = false; // 녹화 여부
 
 
 // 녹화가 완료된 후 서버로 비디오 데이터 post
@@ -97,6 +96,7 @@ function deleteBestVideo(user_nick) {
 
 
 function recordVideo(stream, user_nick) {
+    deleteBestVideo(user_nick); // 이전 비디오 삭제 요청
     let recorder = new MediaRecorder(stream);
 
     recorder.ondataavailable = (event) => {
@@ -130,9 +130,16 @@ const MyVideo = ({ match, socket }) => {
     const myStream = inGameState.myStream;
     const user_nick = useSelector((state) => state.member.member.user_nick);
     const chiefStream = inGameState.chiefStream;
+    const readyList = inGameState.readyList;
 
     const { roomID } = useParams();
     const userVideo = useRef();
+
+    let videoRecorded = false; // 녹화 여부
+
+    /* Reverse Mode */
+    const Reverse = useSelector((state) => state.inGame.reverse);
+
 
     useEffect(() => {
         if (modelsLoaded && myStream && myStream.id) {
@@ -155,7 +162,6 @@ const MyVideo = ({ match, socket }) => {
         return () => {
             deleteBestVideo(user_nick);
             dispatch(setMyStream(null));
-            videoRecorded = false;
             userVideo.current = null;
         }
     }, [socket, match]);
@@ -189,7 +195,7 @@ const MyVideo = ({ match, socket }) => {
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0] && gameStarted) {
-                    if (!Reversed){
+                    if (!Reverse){
                         
                         decrease = handleHP(detections[0].expressions.happy);
                     }
@@ -232,29 +238,21 @@ const MyVideo = ({ match, socket }) => {
         return content;
     }
 
+    
     const ShowMyReady = () => {
-
-        const [ready, setReady] = useState(false)
+        const [bool, setBool] = useState(false);
         useEffect(() => {
-            socket.on("ready", ({readyList}) => {
-                if (myStream && myStream.id) {
-                    readyList.map((readyUser) => {
-                        if (myStream.id === readyUser[1]) {
-                            setReady(true);
-                        }
-                    })
-                }
-            });
-        }, [socket])
+            if(myStream && myStream.id) {
+                setBool(readyList[myStream.id]);
+            }
+        }, [readyList]);
 
         return (
             !gameStarted?
-                myStream && myStream.id && myStream.id === chiefStream?
+                myStream && myStream.id === chiefStream ?
                     <h2 style = {{color:"orange"}}>방장</h2> :
-                    <h1 style = {{color: "white"}}>
-                    {ready ? "ready" : "not ready"}
-                    </h1> :
-            <h2 style = {{color:"white"}}>Playing</h2>
+                    <h2 style = {{color: "white"}}>{bool ? "ready" : "not ready"}</h2> :
+                    <h2 style = {{color:"white"}}>Playing</h2>
         )
     }
 

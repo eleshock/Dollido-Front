@@ -3,7 +3,18 @@ import { useParams } from "react-router-dom";
 
 // redux import
 import { useDispatch, useSelector } from "react-redux";
-import { setModelsLoaded, setGameFinish, setGamestart, setMyStream, setPeerNick, clearPeerNick, deletePeerNick } from "../../../modules/inGame";
+import {
+    setModelsLoaded,
+    setGameFinish,
+    setGamestart,
+    setMyStream,
+    setPeerNick,
+    clearPeerNick,
+    deletePeerNick,
+    deleteReadyList,
+    setReverse,
+    setReverseCheck
+} from "../../../modules/inGame";
 import { updateVideos, deleteVideo, clearVideos } from "../../../modules/videos";
 
 // face api import
@@ -21,6 +32,8 @@ const WebRTC = ({ socket, match }) => {
     const userStream = useRef(); // 사용자의 stream
     const peerRef = useRef(); // peer 객체 생성에 사용하는 임시 변수
     const peers = useRef([]); // 다른 유저들의 peer들을 저장
+    let nick = useSelector((state) => state.inGame.peerNick);
+
 
 
     // model 적재
@@ -50,6 +63,8 @@ const WebRTC = ({ socket, match }) => {
             dispatch(clearVideos());
             dispatch(setGameFinish(false));
             dispatch(setGamestart(false));
+            dispatch(setReverse(false));
+            dispatch(setReverseCheck(false));
         };
     }, [socket, match]);
 
@@ -67,25 +82,25 @@ const WebRTC = ({ socket, match }) => {
 
         socket.emit("wait", ({ roomID: roomID }));
 
-        socket.on("out user", ({ nickname, streamID }) => {
+        socket.on("out user", ({ streamID }) => {
             dispatch(deleteVideo(streamID));
-            dispatch(deletePeerNick(nickname));
+            dispatch(deleteReadyList(streamID));
+            dispatch(deletePeerNick(streamID));
         });
 
         // 새로 들어간 사람 입장에서 다른 사람 전부의 정보를 전해들음
         socket.on("other users", (usersID) => {
             usersID.forEach((userID) => {
                 // userID들은 이미 존재하던 사람들. 그 사람들에게 call
-                console.log(userID);
                 callUser(userID.socketID);
-                dispatch(setPeerNick(userID.nickName));
+                dispatch(setPeerNick(userID.streamID, userID.nickName));
                 otherUsers.current.push(userID);
             });
         });
 
         // 기존 사람들 입장에서 다른 유저가 들어왔음을 확인
         socket.on("user joined", (userID) => {
-            dispatch(setPeerNick(userID.nickName));
+            dispatch(setPeerNick(userID.streamID, userID.nickName));
             otherUsers.current.push(userID);
         });
 

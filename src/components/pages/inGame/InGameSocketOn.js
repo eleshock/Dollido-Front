@@ -2,7 +2,18 @@ import { useEffect } from "react";
 
 // redux import
 import { useDispatch } from "react-redux";
-import { setChief, setChiefStream, setGameFinish, setGamestart, setRoomID } from "../../../modules/inGame";
+import {
+    setChief,
+    setChiefStream,
+    setGameFinish,
+    setGamestart,
+    setReadyList,
+    setRoomID,
+    clearReadyList,
+    setReverse,
+    setReverseCheck
+} from "../../../modules/inGame";
+import { setRandom } from "../../../modules/random";
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
@@ -15,17 +26,40 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setChiefStream(chiefStream));
         });
 
-        socket.on("start", (status) => {
+        socket.on("chief", ({chiefStream}) => {
+            console.log(chiefStream)
+            dispatch(setChiefStream(chiefStream));
+        });
+
+        socket.on("start", (status, randomList) => {
             if (status) {
+                dispatch(setRandom(randomList));
                 dispatch(setGamestart(true));
             }
         });
 
         socket.on("finish", () => {
             dispatch(setGameFinish(true));
+            dispatch(setReverse(false));
+            dispatch(setReverseCheck(false));
         });
 
-    }, [match, socket]);
+        socket.on("ready", ({streamID, isReady}) => {
+            dispatch(setReadyList(streamID, isReady));
+        });
+        
+        socket.on("restart", () => {
+            dispatch(clearReadyList());
+            dispatch(setGamestart(false));
+            dispatch(setGameFinish(false));
+            dispatch(setReverse(false));
+            dispatch(setReverseCheck(false));
+        });
+        
+        return () => {
+            dispatch(clearReadyList());
+        }
+    }, [match, socket, dispatch]);
 
     // socket fail on
     useEffect(() => {

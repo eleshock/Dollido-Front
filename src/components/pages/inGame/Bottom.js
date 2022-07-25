@@ -7,6 +7,11 @@ import Button from "../../common/Button";
 // redux import
 import { useSelector } from "react-redux";
 
+
+
+// export let Reverse = false;
+// export let ReverseCheck = false;
+
 const Bottom = styled.div`
     display: flex;
     justify-content: center;
@@ -32,32 +37,39 @@ const ButtonSize = {
 const InGameBottom = ({socket}) => {
     const inGameState = useSelector((state) => (state.inGame));
     const chief = inGameState.chief;
+    const chiefStream = inGameState.chiefStream;
+    const myStream = inGameState.myStream;
     const gameStarted = inGameState.gameStarted;
     const gameFinished = inGameState.gameFinished;
     const roomID = inGameState.roomID;
-
+    const ReverseCheck = inGameState.reverseCheck;
+    const Reverse = inGameState.reverse;
+    
     function handleReady() {
         socket.emit("ready", {roomID: roomID});
     } 
 
     function handleStart() {
+        console.log(myStream);
         socket.emit("start", {roomID: roomID});
     }
 
-    function handleReverseStart() {
-        console.log(ReverseClickCount)
-        console.log(Reversed)
-        if(ReverseClickCount == 0 && Reversed == false && gameStarted){
+    function HandleReverseStart() {
+        if(ReverseCheck == false && Reverse == false && gameStarted){
+            console.log("Start")
           socket.emit("reverse", {roomID: roomID, socketID: socket.id})
         }
-    
       }
+
+    function handleRestart() {
+        socket.emit("restart", {roomID: roomID});
+    }
 
     return (
         <Bottom>
-            {(!gameStarted | gameFinished) &&
+            {!gameStarted &&
                 <div style={MyButton}>
-                    {chief?
+                    {myStream && (chief || chiefStream === myStream.id)?
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
                         :
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
@@ -65,10 +77,21 @@ const InGameBottom = ({socket}) => {
                     <Link to="/Lobby">
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverseStart}>
-                     REVERSE
-                    </Button>
+                    
                 </div>
+            }
+            {gameStarted ? <Button color="yellow" size="large" style={ButtonSize} onClick={HandleReverseStart}>
+                     REVERSE
+                    </Button> : <></>}
+            {gameFinished && 
+                <div style={MyButton}>
+                {chief &&
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
+                }
+                <Link to="/Lobby">
+                    <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
+                </Link>
+            </div>
             }
         </Bottom>
     );

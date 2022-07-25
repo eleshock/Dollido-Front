@@ -1,41 +1,40 @@
-
-
-function ReverseStart() {
-    console.log(ReverseClickCount)
-    console.log(Reversed)
-    if(ReverseClickCount == 0 && Reversed == false && gameStarted){
-      socket.emit("reverse", {roomID: roomID, socketID: socket.id})
-    }
-
-  }
-
-  async function ReverseMode(socketID) {
-    
-    if(socketID === socket.id)  
-       ReverseClickCount += 1;
-    const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
-      // dispatch(setReverse(true));
-      Reversed = true;
-      await wait(10000)
-      // dispatch(setReverse(false));
-      Reversed = false;
-    return;
-  }
-  
+import { useEffect, useState } from 'react';
+import { useSelector,  useDispatch } from "react-redux";
+import { setReverse, setReverseCheck } from "../../../modules/inGame"
+import effect from "../../../images/laughEffection.webp";
 
 
 
-const ShowingReverse = () =>  {  
+function ReverseMode({socket}) {
 
-    return <img src={reverseEffect} style={{position:"absolute", width:"auto", height:"auto", top:"7%", right:"35%"}}></img>
+  const inGameState = useSelector((state) => (state.inGame));
+  const dispatch = useDispatch();
+  const [content, setContent] = useState(<></>)
+  const myStream = inGameState.myStream;
+  const ReverseCheck = inGameState.reverseCheck;
+  const Reverse = inGameState.reverse;
 
-  }
 
-
-  useEffect(() => {
-
+useEffect(() => { 
+    console.log(ReverseCheck)
+    console.log(Reverse)
+    console.log(myStream)
     socket.on("reverse", (socketID) => {
-        ReverseMode(socketID)
-      })
+        if(socketID === socket.id){
+        dispatch(setReverseCheck(true))
+        
+      }  
+      dispatch(setReverse(true));
+      setContent(<img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"7%", right:"35%"}}></img>)
+      setTimeout(() => {
+            dispatch(setReverse(false));
+            setContent(<></>)
+        }, 10000);
+    })
 
   }, [socket])
+
+  return content;
+}
+
+export default ReverseMode;
