@@ -323,15 +323,23 @@ const Lobby = () => {
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
                     {nickname &&
                         <div>
-                          <span style={{ color: "white" }}>
+                          <span style={{ color: "white", fontSize: "20px", margin: "0 10px 0 0" }}>
                             {" "}
                             {nickname}님 Dollido에 오신걸 환영합니다
                           </span>
+                          <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
+                            <Button2
+                              color="orange"
+                              size="medium"
+                            >
+                              마이페이지
+                            </Button2>
+                          </Link>
                         </div>
                     } 
               </header>
               <TabList>
-                <h1 style = {{padding: "0 0 0 100px", color: "white", fontSize: "60px", fontStyle: "italic", userSelect: "none"}}>게임 대기실</h1>
+                <h1 style = {{padding: "0 0 0 100px", color: "white", fontSize: "6rem", fontStyle: "italic", userSelect: "none"}}>게임 대기실</h1>
               </TabList>
               <Content>
                   {/* <UserInfo>
