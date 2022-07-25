@@ -81,7 +81,7 @@ export const Modal = ({
   console.log(startVideoPromise);
 
   const stopWebcam = () => {
-    startVideoPromise.then((stream) => {
+    startVideoPromise.then((stream) => { 
         console.log("Video Stopped");
         stream.getTracks().forEach((track) => {
             track.stop();
