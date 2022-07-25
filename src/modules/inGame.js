@@ -11,6 +11,8 @@ const SET_CHIEF_STREAM = "inGame/SET_CHIEF_STREAM";
 const SET_READY_LIST = "inGame/SET_READY_LIST";
 const CLEAR_READY_LIST = "inGame/CLEAR_READY_LIST";
 const DELETE_READY_LIST = "inGame/DELETE_READY_LIST";
+const SET_MY_HP = "inGame/SET_MY_HP";
+
 
 export const setModelsLoaded = (bool) => ({type: SET_MODELS_LOADED, bool});
 export const setGameFinish = (bool) => ({type: SET_GAME_FINISH, bool});
@@ -25,17 +27,20 @@ export const setChiefStream = (streamID) => ({type: SET_CHIEF_STREAM, streamID})
 export const setReadyList = (streamID, bool) => ({type: SET_READY_LIST, streamID, bool});
 export const clearReadyList = () => ({type: CLEAR_READY_LIST});
 export const deleteReadyList = (streamID) => ({type: DELETE_READY_LIST, streamID});
+export const setMineHP = (myHP) => ({type: SET_MY_HP, myHP});
+
 
 const initialState = {
     gameFinished: false,
     gameStarted: false,
     modelsLoaded: false,
     myStream: null,
-    peerNick: {}, 
+    peerNick: {},
     roomID: null,
     chief: false,
     chiefStream: null,
-    readyList: {}
+    readyList: {},
+    myHP: null,
 }
 
 export default function inGame(state = initialState, action) {
@@ -69,7 +74,9 @@ export default function inGame(state = initialState, action) {
             delete state.readyList[action.streamID];
             return { ...state, ...state.readyList };
         case CLEAR_READY_LIST:
-            return  { ...state, readyList: {} }
+            return  { ...state, readyList: {} };
+        case SET_MY_HP:
+            return { ...state, myHP : action.myHP };
         default:
             return state;
     }
