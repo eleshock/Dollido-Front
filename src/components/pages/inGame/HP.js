@@ -25,6 +25,9 @@ const HP = ({ socket, index }) => {
     const [content, setContent] = useState(<Container>
       <Content><ProgressBar striped variant="danger" now={peersHP.current} /></Content>
           </Container>);
+    const gameFinished = useSelector((state) => state.inGame.gameFinished);
+
+
     useEffect(() => {
       socket.on("smile", (peerHP, peerID, peerStreamID) => {
         if (partnerVideos[index].id === peerStreamID) {
@@ -83,6 +86,39 @@ const HP = ({ socket, index }) => {
       }
 
       })
+    }, [socket])
+
+    useEffect(() => {
+      socket.on("restart", () => {
+        peersHP.current = 100;
+        setContent(
+          <Container>
+              <Content>
+              <ProgressBar striped variant="danger" now={peersHP.current} />
+              </Content>
+            </Container>)
+    })
+    }, [socket])
+
+    useEffect(() => {
+      socket.on("finish", (hpList) => {
+        // HP [streamID, HP]
+        hpList.map((HP) => {
+          console.log(HP[1]);
+          if (partnerVideos[index].id === HP[0]){
+            if (HP[1] < 0){
+              peersHP.current = 0;
+            } else {
+              peersHP.current = HP[1];
+            }
+          }
+        })
+        setContent(<Container>
+          <Content>
+          <ProgressBar striped variant="danger" now={peersHP.current} />
+          </Content>
+        </Container>)
+      });
     }, [socket])
 
     return content;

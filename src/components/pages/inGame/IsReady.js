@@ -2,7 +2,7 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from 'react';
 import styled from "styled-components";
 
-const Container = styled.h2`
+const Container = styled.div`
     text-align: center;
     width: 100%;
     color: white;
@@ -16,7 +16,7 @@ const IsReady = ({socket, index}) => {
     const chiefStream = useSelector((state) => state.inGame.chiefStream);
     const readyList = useSelector((state) => state.inGame.readyList[partnerVideos[index].id]);
     const [ready, setReady] = useState(readyList);
-    
+
     useEffect(() => {
       if (partnerVideos[index] !== undefined) {
         const streamID = partnerVideos[index].id;
