@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useState } from "react";
 import { ThemeProvider } from "styled-components";
-import Button2 from "../../common/Button2.js";
 import { Modal } from "../../common/Modal.tsx";
 import mainBackground from "../../../images/mainBackground.gif";
 import { Background } from "../../common/Background.tsx";
@@ -17,7 +16,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
 import Ranking from './Ranking';
-import Images from '../Images';
+import Images from './Images';
 
 
 const MyPage = () => {
@@ -172,11 +171,9 @@ const MyTab = styled(Tab)`
   font-size: 40px;
   margin: 20px;
 `
-
 const MyBox = styled(Box)`
 
 `
-
 const MyTabContext = styled(TabContext)`
   display: flex;
   justify-content: center;
@@ -207,7 +204,7 @@ const GradationTitle = styled.h1`
   background: linear-gradient(to right top, #FFFFFF, #FFFFFF);
   ${'' /* -webkit-text-stroke: 3px black; */}
   color: transparent;
-  -webkit-background-clip: text
+  -webkit-background-clip: text;
 `
 
 const ProfileTitle = styled.div`
@@ -224,19 +221,10 @@ const ProfileContent = styled.div`
   text-align: center;
 `
 
-const LobbyButtonExtra = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  &:hover {
-    background-color: white;
-  }
-`
-
-
 const BackToLobby = styled(Link)`
   position: absolute;
   top: 900px;
-  width: auto
+  width: auto;
   height: auto;
   color: white;
   font-size: 1.9rem;

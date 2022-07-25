@@ -1,7 +1,7 @@
 import Main from "./components/pages/Main";
 import Room from "./components/pages/inGame/Room";
 import Lobby from "./components/pages/Lobby";
-import Images from "./components/pages/Images";
+import Images from "./components/pages/myPage/Images";
 import Universe from "./components/pages/Universe";
 import MyPage from "./components/pages/myPage/MyPage"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
