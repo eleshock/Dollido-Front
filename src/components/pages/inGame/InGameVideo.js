@@ -23,11 +23,11 @@ const LeftContent = styled.div`
 
 const MidleContent = styled.div`
     flex: 1.5;
-    `
+`
 
 const RightContent = styled.div`
     flex: 1;
-    `
+`
 
 const Content = styled.div`
     display: flex;

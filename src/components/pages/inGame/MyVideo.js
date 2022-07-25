@@ -4,7 +4,7 @@ import axios from "axios";
 import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import styled from "styled-components";
-import effect from "../../../images/laughEffection.webp";
+import effect from "../../../images/pepe-laugh-laugh.gif";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SyncLoader from "react-spinners/SyncLoader";
@@ -32,7 +32,6 @@ const NickName = styled.h2 `
 const VideoContent = styled.div`
     flex: 9;
     width: 250px;
-    height: 190px;
     display: relative;
 `
 
@@ -62,6 +61,14 @@ const HPContainer = styled.div `
 
 const HPContent = styled.div `
     width: 80%;
+`
+
+const ShowReady = styled.div`
+    text-align: center;
+    width: 100%;
+    color: white;
+    flex: 1;
+    margin: 0;
 `
 
 const recordTime = 3000; // 녹화 시간(ms)
@@ -178,7 +185,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
-                return 10;
+                return 4;
             } else {
                 return 1;
             }
@@ -265,11 +272,14 @@ const MyVideo = ({ match, socket }) => {
         }, [readyList]);
 
         return (
-            !gameStarted?
-                myStream && myStream.id === chiefStream ?
-                    <h2 style = {{color:"orange"}}>방장</h2> :
-                    <h2 style = {{color: "white"}}>{bool ? "ready" : "not ready"}</h2> :
-                    <h2 style = {{color:"white"}}>Playing</h2>
+            <ShowReady>
+                {!gameStarted?
+                    myStream && myStream.id === chiefStream ?
+                        <h2 style = {{color:"orange"}}>방장</h2> :
+                        <h2 style = {{color: "white"}}>{bool ? "ready" : "not ready"}</h2> :
+                        <h2 style = {{color:"white"}}>Playing</h2>
+                }
+            </ShowReady>
         )
     }
 
