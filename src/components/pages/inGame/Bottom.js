@@ -44,6 +44,15 @@ const InGameBottom = ({socket}) => {
         socket.emit("start", {roomID: roomID});
     }
 
+    function handleReverseStart() {
+        console.log(ReverseClickCount)
+        console.log(Reversed)
+        if(ReverseClickCount == 0 && Reversed == false && gameStarted){
+          socket.emit("reverse", {roomID: roomID, socketID: socket.id})
+        }
+    
+      }
+
     return (
         <Bottom>
             {(!gameStarted | gameFinished) &&
@@ -56,7 +65,7 @@ const InGameBottom = ({socket}) => {
                     <Link to="/Lobby">
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
-                    <Button color="yellow" size="large" style={ButtonSize}>
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverseStart}>
                      REVERSE
                     </Button>
                 </div>

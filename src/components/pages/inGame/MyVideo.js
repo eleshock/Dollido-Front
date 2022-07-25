@@ -18,6 +18,12 @@ import { setMyStream } from "../../../modules/inGame";
 // face api import
 import * as faceapi from 'face-api.js';
 
+/* redux(Reverse Mode) */
+// import { Reversed } from "./Videos"
+// import { useDispatch, useSelector } from "react-redux";
+// import { setReverse } from "../../modules/ingame"
+
+
 const Container = styled.div `
     flex: 13;
     display: flex;
@@ -176,14 +182,20 @@ const MyVideo = ({ match, socket }) => {
         const [interval, setModelInterval] = useState(modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
-
+        let decrease = 0;
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
             if(gameFinished) setModelInterval(null);
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0] && gameStarted) {
-                    const decrease = handleHP(detections[0].expressions.happy);
+                    if (!Reversed){
+                        
+                        decrease = handleHP(detections[0].expressions.happy);
+                    }
+                    else {
+                        decrease = handleHP(1-detections[0].expressions.happy);
+                    }
 
                     if (decrease > 0) {
                         const newHP = myHP - decrease;
