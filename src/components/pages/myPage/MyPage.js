@@ -35,7 +35,7 @@ const MyPage = () => {
       <ThemeProvider
           theme={{
               palette: {
-                  yellow: "#E5B941"
+                  yellow: "#E5B941",
               }
           }}
       >
@@ -67,10 +67,10 @@ const MyPage = () => {
                               "& button.Mui-selected": {color:"#57C2F0"},
                             }}
                             onChange={handleChange}>
-                            <MyTab label="내 정보" value="1" />
-                            <MyTab label="나만의 무기" value="2" />
-                            <MyTab label="랭킹" value="3" />
-                            <MyTab label="명예의 전당" value="4" />
+                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="내 정보" value="1" />
+                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="나만의 무기" value="2" />
+                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="랭킹" value="3" />
+                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="명예의 전당" value="4" />
                           </TabList>
                         </Box>
                         <TabPanel value="1">
@@ -79,26 +79,25 @@ const MyPage = () => {
                               <img style = {{width: "100%", height: "100%", objectFit: "cover"}} src= {moai} />
                             </TierImage>
                             <Profile>
-                            <div style = {{display:"flex", flexDirection:"column"}}>
-                              <div style = {{margin: "10px"}}>
-                                <ProfileTitle>닉 네 임</ProfileTitle>
-                                <ProfileContent>나웃는거본사람</ProfileContent>
+                              <div style = {{display:"flex", flexDirection:"column"}}>
+                                <div style = {{margin: "10px 10px 0 0"}}>
+                                  <ProfileTitle>[ 유 저 정 보 ]</ProfileTitle>
+                                  <ProfileName>나웃는거본사람</ProfileName>
+                                </div>
+                                <div>
+                                  <ProfileRanking>랭킹 1위</ProfileRanking>
+                                </div>
                               </div>
-                              <div style = {{margin: "10px"}}>
-                                <ProfileTitle>전 적</ProfileTitle>
-                                <ProfileContent>WIN 103 / LOSE 10</ProfileContent>
+                              <div style = {{display:"flex", flexDirection:"row", margin: "50px 0 0 0"}}>
+                                <div style = {{marginRight:"30px"}}>
+                                    <ProfileTitle>[ 전 적 ]</ProfileTitle>
+                                    <ProfileContent>WIN 103 / LOSE 10</ProfileContent>
+                                </div>
+                                <div>
+                                  <ProfileTitle>[ 티 어 ]</ProfileTitle>
+                                  <ProfileContent>모아이</ProfileContent>
+                                </div>
                               </div>
-                            </div>
-                            <div style = {{display:"flex", flexDirection:"column", marginLeft: "30px"}}>
-                              <div style = {{margin: "10px"}}>
-                                <ProfileTitle>랭 킹</ProfileTitle>
-                                <ProfileContent>1위</ProfileContent>
-                              </div>
-                              <div style = {{margin: "10px"}}>
-                                <ProfileTitle>티 어</ProfileTitle>
-                                <ProfileContent>모아이</ProfileContent>
-                              </div>
-                            </div>
                             </Profile>
                           </div>
                         </TabPanel>
@@ -192,10 +191,9 @@ const TierImage = styled.div`
 
 const Profile = styled.div`
   display: flex;
-  justifyContent: space-around;
+  flex-direction: column;
   margin: 50px 0 0 50px;
   font-family: koverwatch;
-  ${'' /* font-size: 50px; */}
 `
 
 const GradationTitle = styled.h1`
@@ -212,39 +210,43 @@ const GradationTitle = styled.h1`
 
 const ProfileTitle = styled.div`
   color: white;
-  background-color: #5D6BA1CC;
   font-size: 3rem;
-  text-align: center;
-  padding: 0 10px 0 10px;
+  text-align: left;
 `
+
+const ProfileName = styled.div`
+  color: white;
+  font-size: 4.5rem;
+  text-align: left;
+`
+const ProfileRanking = styled.div`
+  color: white;
+  font-size: 2rem;
+  text-align: left;
+`
+
 
 const ProfileContent = styled.div`
   color: white;
   font-size: 2.5rem;
-  text-align: center;
-`
-
-const LobbyButtonExtra = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  &:hover {
-    background-color: white;
-  }
+  text-align: left;
 `
 
 
 const BackToLobby = styled(Link)`
-  position: absolute;
-  top: 900px;
-  width: auto
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  width: auto;
   height: auto;
   color: white;
-  font-size: 1.9rem;
+  font-size: 2rem;
   padding: 3px;
   margin: 0 100px 0 0;
   text-decoration: none;
   &:hover {
-    background-color: white;
+    transform: scale(1.2);
+    color: white;
   }
 `
 
