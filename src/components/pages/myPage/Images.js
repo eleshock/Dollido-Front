@@ -21,6 +21,7 @@ async function postImage({image, token}) {
     headers: {
       "Content-Type": "multipart/form-data;", 
       "ACCEPT": "*/*",
+      "Access-Control-Allow-Origin": "*",
       token: token
     },
   });

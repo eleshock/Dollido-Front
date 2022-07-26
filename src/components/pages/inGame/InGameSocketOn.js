@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // redux import
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
     setChief,
     setChiefStream,
@@ -13,9 +13,13 @@ import {
     clearReadyList
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
+import { setMyWeapon, setMyWeaponCheck, setMyWeaponImage } from '../../../modules/item';
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
+    const inGameState = useSelector((state) => (state.inGame));
+    const myStream = inGameState.myStream;
+
 
     // socket on
     useEffect(() => {
@@ -31,6 +35,7 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("start", (status, randomList) => {
+            console.log(randomList);
             if (status) {
                 dispatch(setRandom(randomList));
                 dispatch(setGamestart(true));
@@ -44,14 +49,29 @@ const InGameSocketOn = ({ match, socket }) => {
         socket.on("ready", ({streamID, isReady}) => {
             dispatch(setReadyList(streamID, isReady));
         });
-        
+
         socket.on("restart", () => {
             dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
             dispatch(setBestDone(false));
+            dispatch(setMyWeaponCheck(false));
+            dispatch(setMyWeapon(false));
+
         });
-        
+
+        socket.on('my_weapon', ({streamID, randomList, imageServer}) => {
+            console.log(imageServer);
+            if (myStream && myStream.id){
+                if (streamID === myStream.id){
+                    dispatch(setMyWeaponCheck(true));
+                    dispatch(setMyWeaponImage(imageServer));
+                }
+            }
+            dispatch(setMyWeapon(true));
+            dispatch(setRandom(randomList));
+        });
+
         return () => {
             dispatch(clearReadyList());
         }
