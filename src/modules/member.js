@@ -8,12 +8,12 @@ const initialState = {
     member: {
         user_id: null,
         user_nick: "anonymous",
-        user_gif: null,
         tokenInfo: {
             token: null,
             refreshToken: null
         }
-    }
+    },
+    user_gif: null,
 };
 
 export default function member(state = initialState, action) {
@@ -21,18 +21,7 @@ export default function member(state = initialState, action) {
         case SET_MEMBER:
             return { ...state, member: action.data };
         case SET_USER_GIF:
-            const member = {
-                member: {
-                    user_id: state.user_id,
-                    user_nick: state.user_nick,
-                    user_gif: action.data,
-                    tokenInfo: {
-                        token: state.token,
-                        refreshToken: state.refreshToken
-                    }
-                }
-            }
-            return member;
+            return {...state, user_gif: action.data };
         default:
             return state;
     }
