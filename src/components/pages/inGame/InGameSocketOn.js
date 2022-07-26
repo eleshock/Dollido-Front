@@ -69,10 +69,10 @@ const InGameSocketOn = ({ match, socket }) => {
 
         socket.on('my_weapon', async ({randomList, myGIF}) => {
             console.log(myGIF);
+            dispatch(setIsMe(false));
             await settingMyweapons(myGIF);
             dispatch(setMyWeapon(true));
             dispatch(setRandom(randomList));
-            dispatch(setIsMe(false));
         });
 
         return () => {

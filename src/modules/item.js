@@ -13,7 +13,7 @@ const initialState = {
     myWeapon : false,
     myWeaponCheck: false,
     myWeaponImage: null,
-    isMe: false,
+    isMe: true,
 }
 
 export default function item(state = initialState, action) {

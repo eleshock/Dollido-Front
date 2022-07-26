@@ -48,7 +48,7 @@ const InGameBottom = ({socket}) => {
     //id 전달
     const membersState = useSelector((state) => (state.member));
     const myID = membersState.member.user_id;
-    const myGIF = membersState.member.user_gif;
+    const myGIF = membersState.user_gif;
 
     //my weapon useState
     const myWeaponUsing = itemState.myWeapon;
@@ -97,7 +97,7 @@ const InGameBottom = ({socket}) => {
                     <Link to="/Lobby">
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
-                    
+
                 </div>
             }
             {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
