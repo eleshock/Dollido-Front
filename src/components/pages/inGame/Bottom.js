@@ -5,7 +5,8 @@ import styled from "styled-components";
 import Button from "../../common/Button";
 
 // redux import
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setGotReverse } from "../../../modules/item";
 
 const Bottom = styled.div`
     display: flex;
@@ -30,6 +31,7 @@ const ButtonSize = {
 }
 
 const InGameBottom = ({ socket }) => {
+    const dispatch = useDispatch();
     const inGameState = useSelector((state) => (state.inGame));
     const chief = inGameState.chief;
     const chiefStream = inGameState.chiefStream;
@@ -39,6 +41,7 @@ const InGameBottom = ({ socket }) => {
     const bestDone = inGameState.bestDone;
     const roomID = inGameState.roomID;
     const reverse = useSelector((state) => (state.item.reverse))
+    const gotReverse = useSelector((state) => (state.item.gotReverse))
 
     function handleReady() {
         socket.emit("ready", { roomID: roomID });
@@ -55,6 +58,7 @@ const InGameBottom = ({ socket }) => {
     function handleReverse() {
         if (!reverse) {
             socket.emit("reverse", { roomID: roomID });
+            dispatch(setGotReverse(false));
         }
     }
 
@@ -73,10 +77,10 @@ const InGameBottom = ({ socket }) => {
                 </div>
                 :
                 !gameFinished &&
-                (reverse ?
-                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }} onClick={handleReverse}>Reverse</Button>
+                (gotReverse ?
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
                     :
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>)
+                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button>)
             }
             {(gameFinished && bestDone) &&
                 <div style={MyButton}>
