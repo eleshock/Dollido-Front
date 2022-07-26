@@ -10,6 +10,7 @@ import { setMineHP } from "../../../modules/inGame";
 import { setIsMe, setMyWeapon, setMyWeaponCheck } from '../../../modules/item';
 
 
+
 const Bottom = styled.div`
     display: flex;
     justify-content: center;
@@ -35,6 +36,7 @@ const ButtonSize = {
 const InGameBottom = ({socket}) => {
     const dispatch = useDispatch();
     const inGameState = useSelector((state) => (state.inGame));
+    const itemState = useSelector((state) => state.item);
     const chief = inGameState.chief;
     const chiefStream = inGameState.chiefStream;
     const myStream = inGameState.myStream;
@@ -49,7 +51,6 @@ const InGameBottom = ({socket}) => {
     const myGIF = membersState.member.user_gif;
 
     //my weapon useState
-    const itemState = useSelector((state) => (state.item));
     const myWeaponUsing = itemState.myWeapon;
     const myWeaponUsingInThisGame = itemState.myWeaponCheck;
 
@@ -66,6 +67,8 @@ const InGameBottom = ({socket}) => {
     function handleStart() {
         socket.emit("start", { roomID: roomID });
     }
+
+
 
     function handleRestart() {
         socket.emit("restart", {roomID: roomID});
@@ -94,6 +97,7 @@ const InGameBottom = ({socket}) => {
                     <Link to="/Lobby">
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
+                    
                 </div>
             }
             {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&

@@ -12,7 +12,8 @@ import {
     setPeerNick,
     clearPeerNick,
     deletePeerNick,
-    deleteReadyList
+    deleteReadyList,
+
 } from "../../../modules/inGame";
 import { updateVideos, deleteVideo, clearVideos } from "../../../modules/videos";
 
@@ -33,6 +34,8 @@ const WebRTC = ({ socket, match }) => {
     const peers = useRef([]); // 다른 유저들의 peer들을 저장
     let nick = useSelector((state) => state.inGame.peerNick);
 
+
+
     // model 적재
     useEffect(() => {
         async function videoOn() {
@@ -51,6 +54,7 @@ const WebRTC = ({ socket, match }) => {
         ]).then(dispatch(setModelsLoaded(true)));
 
         return () => {
+            console.log("OUT ROOOOOOOOOM")
             socket.emit("out room");
             socket.off();
             userStream.current = null;

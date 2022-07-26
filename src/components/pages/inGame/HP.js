@@ -25,7 +25,7 @@ const HP = ({ socket, index }) => {
           </Container>);
     const gameFinished = useSelector((state) => state.inGame.gameFinished);
 
-
+    console.log(peersHP)
     useEffect(() => {
       socket.on("smile", (peerHP, peerID, peerStreamID) => {
         if (partnerVideos[index].id === peerStreamID) {

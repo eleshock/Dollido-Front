@@ -30,7 +30,7 @@ const MyWeapon = ({socket}) => {
     const isMeFlag = itemState.isMe;
 
     const membersState = useSelector((state) => (state.member));
-    const myGIF = membersState.member.user_gif;
+    const myGIF = membersState.user_gif;
 
     useEffect(() => {
         // socket.on('my_weapon', (streamID, randomList) => {

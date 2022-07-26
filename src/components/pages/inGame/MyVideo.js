@@ -21,6 +21,8 @@ import { setMineHP, setMyStream } from "../../../modules/inGame";
 import * as faceapi from 'face-api.js';
 import { setMyWeapon, setMyWeaponCheck } from "../../../modules/item";
 
+
+
 const Container = styled.div `
     display: flex;
     align-items: center;
@@ -111,7 +113,6 @@ function deleteBestVideo(user_nick) {
 
 
 function recordVideo(stream, user_nick) {
-    deleteBestVideo(user_nick); // 이전 비디오 삭제 요청
     let recorder = new MediaRecorder(stream);
 
     recorder.ondataavailable = (event) => {
@@ -154,6 +155,9 @@ const MyVideo = ({ match, socket }) => {
 
     let videoRecorded = false; // 녹화 여부
 
+   
+
+
     useEffect(() => {
         if (modelsLoaded && myStream && myStream.id) {
             userVideo.current.srcObject = myStream;
@@ -190,7 +194,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
-                return 4;
+                return 2;
             } else {
                 return 1;
             }
@@ -201,17 +205,19 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(initialHP);
+         /* Reverse Mode */
         const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
-
+        let decrease = 0;
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0] && gameStarted) {
-                    const decrease = handleHP(detections[0].expressions.happy);
-
+                        
+                    decrease = handleHP(detections[0].expressions.happy);
+                    
                     if (decrease > 0) {
                         const newHP = myHP - decrease;
                         socket.emit("smile", newHP, roomID, user_nick, myStream.id);
@@ -307,5 +313,5 @@ const MyVideo = ({ match, socket }) => {
     );
 }
 
-export { initialHP };
+export { initialHP, deleteBestVideo };
 export default MyVideo;
