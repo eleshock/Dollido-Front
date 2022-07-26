@@ -5,6 +5,7 @@ import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import styled from "styled-components";
 import effect from "../../../images/pepe-laugh-laugh.gif";
+import Load from "./Loading";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SyncLoader from "react-spinners/SyncLoader";
@@ -301,11 +302,7 @@ const MyVideo = ({ match, socket }) => {
             <Container>
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
-                    {loading &&
-                        (<LoadingDiv>
-                            <Loading></Loading>
-                        </LoadingDiv>)
-                    }
+                    {loading && < Load></Load>}
                     <VideoStyle autoPlay ref={userVideo} />
                 </VideoContent>
             </Container>
