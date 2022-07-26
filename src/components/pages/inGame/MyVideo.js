@@ -15,7 +15,6 @@ import { ServerName } from "../../../serverName";
 // redux import
 import { useSelector, useDispatch } from "react-redux";
 import { setMineHP, setMyStream } from "../../../modules/inGame";
-import { setReverse } from "../../../modules/item";
 
 // face api import
 import * as faceapi from 'face-api.js';
@@ -207,13 +206,6 @@ const MyVideo = ({ match, socket }) => {
         const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
-
-        useEffect(() => {
-            socket.on('reverse', () => {
-                dispatch(setReverse(true));
-                setTimeout(() => dispatch(setReverse(false)), 5000);
-            })
-        }, [])
 
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {

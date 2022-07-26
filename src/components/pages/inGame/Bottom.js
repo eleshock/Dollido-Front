@@ -38,6 +38,7 @@ const InGameBottom = ({ socket }) => {
     const gameFinished = inGameState.gameFinished;
     const bestDone = inGameState.bestDone;
     const roomID = inGameState.roomID;
+    const reverse = useSelector((state) => (state.item.reverse))
 
     function handleReady() {
         socket.emit("ready", { roomID: roomID });
@@ -52,14 +53,16 @@ const InGameBottom = ({ socket }) => {
     }
 
     function handleReverse() {
-        socket.emit("reverse", { roomID: roomID });
+        if (!reverse) {
+            socket.emit("reverse", { roomID: roomID });
+        }
     }
 
     return (
         <Bottom>
             {!gameStarted ?
                 <div style={MyButton}>
-                    {myStream && (chief || chiefStream === myStream.id)?
+                    {myStream && (chief || chiefStream === myStream.id) ?
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
                         :
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
@@ -69,7 +72,11 @@ const InGameBottom = ({ socket }) => {
                     </Link>
                 </div>
                 :
-                !gameFinished && <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
+                !gameFinished &&
+                (reverse ?
+                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }} onClick={handleReverse}>Reverse</Button>
+                    :
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>)
             }
             {(gameFinished && bestDone) &&
                 <div style={MyButton}>

@@ -13,6 +13,8 @@ import {
     clearReadyList
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
+import { setReverse } from "../../../modules/item";
+
 import { deleteBestVideo } from "./MyVideo";
 
 const InGameSocketOn = ({ match, socket }) => {
@@ -53,6 +55,11 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
             dispatch(setBestDone(false));
+        });
+
+        socket.on('reverse', () => {
+            dispatch(setReverse(true));
+            setTimeout(() => dispatch(setReverse(false)), 5000);
         });
         
         return () => {
