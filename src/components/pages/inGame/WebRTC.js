@@ -12,10 +12,10 @@ import {
     clearPeerNick,
     deletePeerNick,
     deleteReadyList,
-    setReverse,
-    setReverseCheck
+
 } from "../../../modules/inGame";
 import { updateVideos, deleteVideo, clearVideos } from "../../../modules/videos";
+import { setReverse, setReverseCheck } from "../../../modules/item";
 
 // face api import
 import * as faceapi from 'face-api.js';

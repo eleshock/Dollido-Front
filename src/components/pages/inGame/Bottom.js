@@ -8,10 +8,6 @@ import Button from "../../common/Button";
 import { useSelector } from "react-redux";
 
 
-
-// export let Reverse = false;
-// export let ReverseCheck = false;
-
 const Bottom = styled.div`
     display: flex;
     justify-content: center;
@@ -36,14 +32,15 @@ const ButtonSize = {
 
 const InGameBottom = ({socket}) => {
     const inGameState = useSelector((state) => (state.inGame));
+    const itemState = useSelector((state) => state.item);
     const chief = inGameState.chief;
     const chiefStream = inGameState.chiefStream;
     const myStream = inGameState.myStream;
     const gameStarted = inGameState.gameStarted;
     const gameFinished = inGameState.gameFinished;
     const roomID = inGameState.roomID;
-    const ReverseCheck = inGameState.reverseCheck;
-    const Reverse = inGameState.reverse;
+    const ReverseCheck = itemState.reverseCheck;
+    const Reverse = itemState.reverse;
     
     function handleReady() {
         socket.emit("ready", {roomID: roomID});

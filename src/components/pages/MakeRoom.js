@@ -264,18 +264,6 @@ function MakeRoom() {
     });
   };
 
-  const backToMakeRoomList = () => {
-    setModal(false);
-    stopWebcam();
-  };
-
-  //  const onChangeMode = useCallback((e)=>{
-  //     e.preventDefault();
-  //     localStorage.removeItem("roommode");
-  //     setRoomMode("")
-
-  // }, []);
-
   return (
     <ThemeProvider
       theme={{
@@ -323,21 +311,6 @@ function MakeRoom() {
               </Content>
             </div>
             <div style={Bottom}>
-              <Button2
-                color="yellow"
-                size="large"
-                style={{ margin: "0 100px 0 0" }}
-              >
-                방만들기
-              </Button2>
-              <Button2
-                color="yellow"
-                size="large"
-                style={{ margin: "0 0 0 100px" }}
-                onClick={onClickGoBack}
-              >
-                뒤로가기
-              </Button2>
             </div>
           </div>
         }

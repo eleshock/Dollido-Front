@@ -18,10 +18,6 @@ import { setMineHP, setMyStream } from "../../../modules/inGame";
 // face api import
 import * as faceapi from 'face-api.js';
 
-/* redux(Reverse Mode) */
-// import { Reversed } from "./Videos"
-// import { useDispatch, useSelector } from "react-redux";
-// import { setReverse } from "../../modules/ingame"
 
 
 const Container = styled.div `
@@ -138,8 +134,7 @@ const MyVideo = ({ match, socket }) => {
 
     let videoRecorded = false; // 녹화 여부
 
-    /* Reverse Mode */
-    const Reverse = useSelector((state) => state.inGame.reverse);
+   
 
 
     useEffect(() => {
@@ -175,7 +170,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
-                return 10;
+                return 2;
             } else {
                 return 1;
             }
@@ -186,10 +181,13 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(initialHP);
+         /* Reverse Mode */
+        const Reverse = useSelector((state) => state.item.reverse);
         const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
         let decrease = 0;
+        console.log(myHP)
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
             // if(gameFinished) setModelInterval(null);

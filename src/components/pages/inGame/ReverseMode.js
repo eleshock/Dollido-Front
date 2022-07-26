@@ -1,24 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useSelector,  useDispatch } from "react-redux";
-import { setReverse, setReverseCheck } from "../../../modules/inGame"
+import { setReverse, setReverseCheck } from "../../../modules/item"
 import effect from "../../../images/laughEffection.webp";
 
 
 
 function ReverseMode({socket}) {
 
-  const inGameState = useSelector((state) => (state.inGame));
+  const itemState = useSelector((state) => (state.item));
   const dispatch = useDispatch();
   const [content, setContent] = useState(<></>)
-  const myStream = inGameState.myStream;
-  const ReverseCheck = inGameState.reverseCheck;
-  const Reverse = inGameState.reverse;
+  const ReverseCheck = itemState.reverseCheck;
+  const Reverse = itemState.reverse;
 
 
 useEffect(() => { 
     console.log(ReverseCheck)
     console.log(Reverse)
-    console.log(myStream)
     socket.on("reverse", (socketID) => {
         if(socketID === socket.id){
         dispatch(setReverseCheck(true))
@@ -29,7 +27,7 @@ useEffect(() => {
       setTimeout(() => {
             dispatch(setReverse(false));
             setContent(<></>)
-        }, 10000);
+        }, 5000);
     })
 
   }, [socket])

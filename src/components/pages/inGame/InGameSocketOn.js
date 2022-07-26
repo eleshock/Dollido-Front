@@ -10,10 +10,10 @@ import {
     setReadyList,
     setRoomID,
     clearReadyList,
-    setReverse,
-    setReverseCheck
+
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
+import { setReverse, setReverseCheck } from "../../../modules/item";
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();

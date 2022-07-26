@@ -1,20 +1,20 @@
 const SET_REVERSE = "item/SET_REVERSE";
-const SET_REVERSE_CHECK = "item/SET_REVERSE";
+const SET_REVERSE_CHECK = "item/SET_REVERSE_CHECK";
 
-export const setModelsLoaded = (bool) => ({type: SET_MODELS_LOADED, bool});
-export const setGameFinish = (bool) => ({type: SET_GAME_FINISH, bool});
+export const setReverse = (bool) => ({type: SET_REVERSE, bool});
+export const setReverseCheck = (bool) => ({type: SET_REVERSE_CHECK, bool});
 
 const initialState = {
-    gameFinished: false,
-    gameStarted: false,
+    reverse: false,
+    reverseCheck: false,
 }
 
 export default function item(state = initialState, action) {
     switch(action.type) {
-        case SET_MODELS_LOADED:
-            return { ...state, modelsLoaded: action.bool };
-        case SET_GAME_FINISH:
-            return { ...state, gameFinished: action.bool };
+        case SET_REVERSE:
+            return { ...state, reverse: action.bool};
+        case SET_REVERSE_CHECK:
+            return { ...state, reverseCheck: action.bool};
         default:
             return state;
     }

@@ -11,8 +11,6 @@ const SET_CHIEF_STREAM = "inGame/SET_CHIEF_STREAM";
 const SET_READY_LIST = "inGame/SET_READY_LIST";
 const CLEAR_READY_LIST = "inGame/CLEAR_READY_LIST";
 const DELETE_READY_LIST = "inGame/DELETE_READY_LIST";
-const SET_REVERSE = "inGame/SET_REVERSE";
-const SET_REVERSE_CHECK = "inGame/SET_REVERSE_CHECK";
 const SET_MY_HP = "inGame/SET_MY_HP";
 
 
@@ -29,8 +27,6 @@ export const setChiefStream = (streamID) => ({type: SET_CHIEF_STREAM, streamID})
 export const setReadyList = (streamID, bool) => ({type: SET_READY_LIST, streamID, bool});
 export const clearReadyList = () => ({type: CLEAR_READY_LIST});
 export const deleteReadyList = (streamID) => ({type: DELETE_READY_LIST, streamID});
-export const setReverse = (bool) => ({type: SET_REVERSE, bool});
-export const setReverseCheck = (bool) => ({type: SET_REVERSE_CHECK, bool});
 export const setMineHP = (myHP) => ({type: SET_MY_HP, myHP});
 
 
@@ -44,8 +40,6 @@ const initialState = {
     chief: false,
     chiefStream: null,
     readyList: {},
-    reverse: false,
-    reverseCheck: false,
     myHP: null,
 }
 
@@ -81,11 +75,6 @@ export default function inGame(state = initialState, action) {
             return { ...state, ...state.readyList };
         case CLEAR_READY_LIST:
             return  { ...state, readyList: {} }
-        case SET_REVERSE:
-            return { ...state, reverse: action.bool};
-        case SET_REVERSE_CHECK:
-            return { ...state, reverseCheck: action.bool};
-            return  { ...state, readyList: {} };
         case SET_MY_HP:
             return { ...state, myHP : action.myHP };
         default:
