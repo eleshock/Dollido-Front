@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import io from "socket.io-client";
 import { ThemeProvider } from "styled-components";
@@ -10,6 +10,9 @@ import mainBackGround from "../../images/mainBackground.gif";
 import { Background } from "../common/Background.tsx";
 import styled from "styled-components";
 import { GlobalStyles } from "../common/Global.ts";
+
+import useSound from 'use-sound';
+import {select, enterRoom, click, exit} from './Sound'
 
 import { ServerName } from "../../serverName";
 
@@ -171,6 +174,26 @@ const RightTriangle = styled.button`
 let startVideoPromise;
 
 const Lobby = () => {
+
+  // game sound
+  const [clickSound] = useSound(
+    click,
+    { volume: 0.5 }
+  );
+  const [enterGame] = useSound(
+    enterRoom,
+    { volume: 0.5 }
+  );
+  const [selectSound] = useSound(
+    select,
+    { volume: 0.5 }
+  );
+  const [exitSound] = useSound(
+    exit,
+  );
+  
+
+
   // 임시
   const nickname = useSelector((state) => state.member.member.user_nick);
 
@@ -318,7 +341,9 @@ const Lobby = () => {
       }}
     >
       <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
-          <FlexContainer>
+          <FlexContainer
+          onMouseDown = {clickSound}
+          >
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
                     {nickname &&
                         <div>
@@ -372,7 +397,12 @@ const Lobby = () => {
                         {currentPosts(rooms).map((room) => {
                           // console.log(room)
                           return (
-                              <RoomLinkList key={room[0]} onClick = { () => selectRoom(room) }>
+                              <RoomLinkList key={room[0]}
+                                onClick = { () => selectRoom(room)}
+                                onMouseEnter = {() => {
+                                  selectSound();
+                                }}
+                                >
                                 <RoomLink1>{room[1].roomName}</RoomLink1>
                                 <RoomLink2>{room[1].members[0]? room[1].members[0].nickName : "없음" }</RoomLink2>
                                 <RoomLink3>개인전</RoomLink3>
@@ -405,6 +435,7 @@ const Lobby = () => {
                           <Link to = {`/room/${localStorage.roomLink}`} name = {localStorage.roomName} style = {{textDecoration:"none"}}>
                             <div style = {{margin: "30px"}}>
                               <Button2
+                                onMouseUp = {enterGame}
                                 color="yellow"
                               >
                                 입장하기
@@ -414,7 +445,8 @@ const Lobby = () => {
                         </div>
                         <div style = {{margin: "30px"}}>
                               <Button2
-                                color="yellow" onClick={backToLoomList}
+                                color="yellow"
+                                onClick={backToLoomList}
                               >
                                 나가기
                               </Button2>

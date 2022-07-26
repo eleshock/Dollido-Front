@@ -34,7 +34,7 @@ function Chat({ socket, username, room }) {
     <div style={{display: "flex", justifyContent: "center"}}>
         <div className="chat-window">
           <div className="chat-header">
-            <p style={{textAlign: "center"}}>Live Chat</p>
+            <p style={{textAlign: "center"}}>Live  Chat</p>
           </div>
           <div className="chat-body">
             <ScrollToBottom className="message-container">

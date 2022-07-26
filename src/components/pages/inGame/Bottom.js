@@ -60,7 +60,7 @@ const InGameBottom = ({ socket }) => {
                         :
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
                     }
-                    <Link to="/Lobby">
+                    <Link to="/Lobby" style = {{textDecoration:"none"}}>
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
                 </div>
@@ -70,7 +70,7 @@ const InGameBottom = ({ socket }) => {
                     {chief &&
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
                     }
-                    <Link to="/Lobby">
+                    <Link to="/Lobby" style = {{textDecoration:"none"}}>
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
                 </div>
