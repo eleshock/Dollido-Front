@@ -59,7 +59,7 @@ const InGameSocketOn = ({ match, socket }) => {
 
         socket.on('reverse', () => {
             dispatch(setReverse(true));
-            setTimeout(() => dispatch(setReverse(false)), 5000);
+            setTimeout(() => dispatch(setReverse(false)), 8000);
         });
         
         return () => {
