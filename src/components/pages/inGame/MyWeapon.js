@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { s3Domain } from "../../../s3Domain";
 import { setMyWeapon } from '../../../modules/item';
 import effect from "../../../images/reverse.gif";
@@ -26,6 +26,8 @@ object-fit: contain;
 const MyWeapon = ({socket}) => {
     const dispatch = useDispatch();
     const [content, setContent] = useState(<></>)
+    const itemState = useSelector((state) => (state.item));
+    const myWeaponImage = itemState.myWeaponImage;
 
 
     useEffect(() => {
@@ -39,10 +41,15 @@ const MyWeapon = ({socket}) => {
                 </Container>
                 )
             setTimeout(() => {
-                dispatch(setMyWeapon(false));
-                setContent(<></>);
+                setContent(<Container>
+                    <BackgroundSizeStyle src={`${s3Domain}${myWeaponImage}`} ></BackgroundSizeStyle>
+                    </Container>);
             }, 2400);
-        // })
+            setTimeout(() => {
+                dispatch(setMyWeapon(false));
+
+            }, 5000)
+
     }, [])
     console.log(content)
     return content;

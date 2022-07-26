@@ -12,7 +12,7 @@ import {
     clearReadyList
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
-import { setMyWeapon, setMyWeaponCheck } from '../../../modules/item';
+import { setMyWeapon, setMyWeaponCheck, setMyWeaponImage } from '../../../modules/item';
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
@@ -52,11 +52,17 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
+            dispatch(setMyWeaponCheck(false));
+            dispatch(setMyWeapon(false));
+
         });
 
-        socket.on('my_weapon', (streamID, randomList) => {
-            if (streamID === myStream.id){
-                dispatch(setMyWeaponCheck(true));
+        socket.on('my_weapon', (streamID, randomList, imageServer) => {
+            if (myStream && myStream.id){
+                if (streamID === myStream.id){
+                    dispatch(setMyWeaponCheck(true));
+                    dispatch(setMyWeaponImage(imageServer));
+                }
             }
             dispatch(setMyWeapon(true));
             dispatch(setRandom(randomList));

@@ -17,6 +17,7 @@ import { setMineHP, setMyStream } from "../../../modules/inGame";
 
 // face api import
 import * as faceapi from 'face-api.js';
+import { setMyWeapon, setMyWeaponCheck } from "../../../modules/item";
 
 const Container = styled.div `
     flex: 13;
@@ -154,6 +155,8 @@ const MyVideo = ({ match, socket }) => {
             deleteBestVideo(user_nick);
             dispatch(setMyStream(null));
             dispatch(setMineHP(null));
+            dispatch(setMyWeapon(false));
+            dispatch(setMyWeaponCheck(false));
             userVideo.current = null;
         }
     }, [socket, match]);
