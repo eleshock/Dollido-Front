@@ -10,15 +10,18 @@ import {
     setBestDone,
     setReadyList,
     setRoomID,
-    clearReadyList
+    clearReadyList,
+
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
 import { setMyWeapon, setMyWeaponCheck, setMyWeaponImage } from '../../../modules/item';
+import { deleteBestVideo } from "./MyVideo";
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
     const inGameState = useSelector((state) => (state.inGame));
     const myStream = inGameState.myStream;
+    const userNick = useSelector((state) => state.member.member.user_nick);
 
 
     // socket on
@@ -44,6 +47,7 @@ const InGameSocketOn = ({ match, socket }) => {
 
         socket.on("finish", () => {
             dispatch(setGameFinish(true));
+
         });
 
         socket.on("ready", ({streamID, isReady}) => {
@@ -51,6 +55,7 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("restart", () => {
+            deleteBestVideo(userNick); // 이전 비디오 삭제 요청
             dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
@@ -106,7 +111,7 @@ const InGameSocketOn = ({ match, socket }) => {
                 alert(handle.msg);
             }
         });
-    });
+    }, [match, socket, dispatch]);
 
     return <div></div>;
 }
