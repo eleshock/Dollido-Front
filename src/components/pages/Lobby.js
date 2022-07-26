@@ -218,34 +218,10 @@ const Lobby = () => {
     setRoomName(e.target.value);
   }, []);
 
-  const onClickMakeRoom = useCallback(
-    (e) => {
-      e.preventDefault();
-      // 2-1. 방제 없을 시, 생성 불가
-      if (roomName === "") {
-        alert("방 이름을 입력하세요");
-        return;
-      }
-      // 2-2. 방 중복 시, 생성 불가
-      let roomNameCheck = false;
-      Object.entries(rooms).map((room) => {
-        if (room[1].roomName === roomName) {
-          alert("이미 있는 방 이름입니다 !");
-          roomNameRef.current.value = "";
-          roomNameCheck = true;
-          return;
-        }
-      });
-      // 2-3. 방 생성, 방이름과 방ID 서버에 전달
-      if (!roomNameCheck) {
-        socket.current.emit("make room", { roomName, roomID: uuid() });
-        alert(`${roomName} 방이 생성되었습니다`);
-        setRoomName("");
-        roomNameRef.current.value = "";
-      }
-    },
-    [roomName, rooms]
-  );
+  const onClickMakeRoom = () => {
+      window.location.href = "/makeRoom"
+  }  
+  
 
   const nextPage = (roomCount) => {
     if (currentPage < Math.ceil(roomCount / postsPerPage)) {
@@ -338,18 +314,7 @@ const Lobby = () => {
               </UserInfo> */}
               <RoomListFrame>
                 <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
-                    <input
-                      type="text"
-                      placeholder="방이름을 입력하세요"
-                      name="roomName"
-                      value={roomName}
-                      onChange={onChangeRoomName}
-                      onKeyPress= {(e) => {
-                        e.key === "Enter" && onClickMakeRoom(e);
-                      }}
-                      ref={roomNameRef}
-                      style={sizes}
-                    />
+          
                     <Button2
                       color="orange"
                       size="medium"

@@ -224,7 +224,7 @@ function MakeRoom() {
       localStorage.roomLink = roomID;
       // 2-3. 방 생성, 방이름과 방ID 서버에 전달
       socket.current.emit("make room", { roomName, roomID });
-      //    alert(`${roomName} 방이 생성되었습니다`);
+      alert(`${roomName} 방이 생성되었습니다`);
       setRoomName("");
       console.log("hihi4");
       roomNameRef.current.value = "";
