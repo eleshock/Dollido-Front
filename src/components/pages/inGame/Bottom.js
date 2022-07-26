@@ -51,9 +51,13 @@ const InGameBottom = ({ socket }) => {
         socket.emit("restart", { roomID: roomID });
     }
 
+    function handleReverse() {
+        socket.emit("reverse", { roomID: roomID });
+    }
+
     return (
         <Bottom>
-            {!gameStarted &&
+            {!gameStarted ?
                 <div style={MyButton}>
                     {myStream && (chief || chiefStream === myStream.id)?
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
@@ -64,6 +68,8 @@ const InGameBottom = ({ socket }) => {
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
                 </div>
+                :
+                !gameFinished && <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
             }
             {(gameFinished && bestDone) &&
                 <div style={MyButton}>

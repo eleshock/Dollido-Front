@@ -9,7 +9,7 @@ import { LobbyModal } from "../common/LobbyModal.tsx";
 import mainBackGround from "../../images/mainBackground.gif";
 import { Background } from "../common/Background.tsx";
 import styled from "styled-components";
-import { GlobalStyles } from "../common/Global.ts";
+import { GlobalStyles } from "../common/Global.tsx";
 
 import { ServerName } from "../../serverName";
 

@@ -8,7 +8,7 @@ import InGameHeader from "./Header";
 import InGameSocketOn from "./InGameSocketOn";
 import InGameVideo from "./InGameVideo";
 import WebRTC from "./WebRTC";
-import { GlobalStyles } from "../../common/Global.ts"
+import { GlobalStyles, GlobalTest } from "../../common/Global.tsx"
 
 
 const FlexContainer = styled.div`
@@ -21,7 +21,7 @@ const FlexContainer = styled.div`
 const InGame = ({ match, socket}) => {
     return (
         <div>
-            <GlobalStyles bgImage={mainBackground}></GlobalStyles>
+            <GlobalTest bgImage={mainBackground}></GlobalTest>
             <FlexContainer>
                 <InGameSocketOn socket={socket} match={match}></InGameSocketOn>
                 <WebRTC socket={socket} match={match}></WebRTC>
