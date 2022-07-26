@@ -6,7 +6,6 @@ import ModeOne from "../../images/ModeOne.jpeg";
 import ModeTwo from "../../images/ModeTwo.png";
 import ModeThree from "../../images/ModeThree.webp";
 import styled from "styled-components";
-import { darken, lighten } from "polished";
 
 import Button2 from "../common/Button2.js";
 import { ThemeProvider } from "styled-components";
@@ -14,6 +13,8 @@ import { Modal } from "../common/Modal.tsx";
 import io from "socket.io-client";
 import { v4 as uuid } from "uuid";
 import { ServerName } from "../../serverName";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const FlexContainer = {
   display: "flex",
@@ -73,15 +74,6 @@ const Video = styled.video`
   height: 340px;
 `;
 
-const pagetitle = {
-  padding: "25px 0 0 0",
-  color: "white",
-  fontSize: "6rem",
-  fontStyle: "italic",
-  userSelect: "none",
-  // textAlign: "center"
-};
-
 const modename = {
   // color: "black",
   // backgroundColor: "white",
@@ -138,29 +130,36 @@ const sizes = {
   margin: "0 50px 0 0",
 };
 
+const BackToLobby = styled(Link)`
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  width: auto;
+  height: auto;
+  color: white;
+  font-size: 2rem;
+  padding: 3px;
+  margin: 0 100px 0 0;
+  text-decoration: none;
+  &:hover {
+    transform: scale(1.2);
+    color: white;
+  }
+`;
+
 let startVideoPromise;
 
 function MakeRoom() {
   const SERVER_ADDRESS = useRef(ServerName);
   const [modal, setModal] = useState(false);
-  const [modeone, setModeOne] = useState(false);
-  const [modetwo, setModeTwo] = useState(false);
-  const [modethree, setModeThree] = useState(false);
   const [roommode, setRoomMode] = useState("");
   const [roomName, setRoomName] = useState("");
-  const [rooms, setRooms] = useState({});
   const [change, setChange] = useState(true);
 
   const socket = useRef();
   const roomNameRef = useRef(null);
 
-  const onClickGoBack = useCallback((e) => {
-    e.preventDefault();
-    window.location.href = "/lobby";
-  }, []);
-
   const onClickMode = (params, e) => {
-    console.log(params);
     e.preventDefault();
     switch (params) {
       case "One":
@@ -181,10 +180,13 @@ function MakeRoom() {
         setModal(true);
         startVideo();
         return;
+      default:
+        return;
+      
     }
   };
 
-  // 1. 방 리스트 받아오기
+  // 소켓 연결
   useEffect(() => {
     socket.current = io(SERVER_ADDRESS.current, {
       withCredentials: false,
@@ -192,31 +194,23 @@ function MakeRoom() {
         "dollido-header": "dollido",
       },
     });
-    socket.current.emit("get room list");
-    return () => {
-      stopWebcam();
-    };
+
   }, []);
-  useEffect(() => {
-    socket.current.on("give room list", (rooms) => {
-      setRooms(rooms);
-    });
-  }, [rooms]);
 
   // 2. 방 생성 절차
-
+  
   const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
   }, []);
-
+  
+  const navigate = useNavigate();
   const onClickMakeRoom = useCallback(
     (e) => {
       e.preventDefault();
       // 2-1. 방제 없을 시, 생성 불가
       if (roomName === "") {
         alert("방 이름을 입력하세요");
-        console.log("hihi3");
         return;
       }
       const roomID = uuid();
@@ -226,11 +220,10 @@ function MakeRoom() {
       socket.current.emit("make room", { roomName, roomID });
       alert(`${roomName} 방이 생성되었습니다`);
       setRoomName("");
-      console.log("hihi4");
       roomNameRef.current.value = "";
-      window.location.href = "/room/" + roomID;
+      navigate(`/room/${roomID}`);
     },
-    [roomName, rooms]
+    [roomName]
   );
 
   // 비디오 가져오기
@@ -247,22 +240,12 @@ function MakeRoom() {
         let video = videoRef.current;
         video.srcObject = stream;
         video.play();
-        console.log(typeof stream);
-        console.log(startVideoPromise);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
-  const stopWebcam = () => {
-    startVideoPromise.then((stream) => {
-      console.log("Video Stopped");
-      stream.getTracks().forEach((track) => {
-        track.stop();
-      });
-    });
-  };
 
   return (
     <ThemeProvider
@@ -277,7 +260,6 @@ function MakeRoom() {
         element={
           <div style={FlexContainer}>
             <div style={Header}>
-              {/* <h1 style={pagetitle}>Mode</h1>           */}
             </div>
             <div style={Middle}>
               <Content
@@ -311,6 +293,7 @@ function MakeRoom() {
               </Content>
             </div>
             <div style={Bottom}>
+              <BackToLobby to={"/lobby"}>&lt; 뒤로가기</BackToLobby>
             </div>
           </div>
         }

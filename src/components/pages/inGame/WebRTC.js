@@ -7,6 +7,7 @@ import {
     setModelsLoaded,
     setGameFinish,
     setGamestart,
+    setBestDone,
     setMyStream,
     setPeerNick,
     clearPeerNick,
@@ -15,7 +16,6 @@ import {
 
 } from "../../../modules/inGame";
 import { updateVideos, deleteVideo, clearVideos } from "../../../modules/videos";
-import { setReverse, setReverseCheck } from "../../../modules/item";
 
 // face api import
 import * as faceapi from 'face-api.js';
@@ -54,6 +54,7 @@ const WebRTC = ({ socket, match }) => {
         ]).then(dispatch(setModelsLoaded(true)));
 
         return () => {
+            console.log("OUT ROOOOOOOOOM")
             socket.emit("out room");
             socket.off();
             userStream.current = null;
@@ -63,8 +64,7 @@ const WebRTC = ({ socket, match }) => {
             dispatch(clearVideos());
             dispatch(setGameFinish(false));
             dispatch(setGamestart(false));
-            dispatch(setReverse(false));
-            dispatch(setReverseCheck(false));
+            dispatch(setBestDone(false));
         };
     }, [socket, match]);
 

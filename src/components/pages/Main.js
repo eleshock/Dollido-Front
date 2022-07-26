@@ -18,7 +18,7 @@ const Main = () => {
     const [change, setChange] = useState(true);
 
     return (
-        <div>
+        <div style={{height: "100vh"}}>
             <GlobalStyles bgImage={mainBackground}></GlobalStyles>
             <Button style={ { position: "absolute", bottom: "10%", left: "50%", transform: "translate(-50%, -50%)", width: "300px", height: "100px"} } onClick = {() => { setModal(true); }} >
                 <p style={ {fontSize: "40px", fontWeight: "900", fontFamily: "Black Han Sans", backgroundColor: "transparent", margin: 0, lineHeight: "104px"} }> Game Start </p> 

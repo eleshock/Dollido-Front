@@ -30,7 +30,7 @@ const ButtonSize = {
     margin: "30px"
 }
 
-const InGameBottom = ({socket}) => {
+const InGameBottom = ({ socket }) => {
     const inGameState = useSelector((state) => (state.inGame));
     const itemState = useSelector((state) => state.item);
     const chief = inGameState.chief;
@@ -38,28 +38,21 @@ const InGameBottom = ({socket}) => {
     const myStream = inGameState.myStream;
     const gameStarted = inGameState.gameStarted;
     const gameFinished = inGameState.gameFinished;
+    const bestDone = inGameState.bestDone;
     const roomID = inGameState.roomID;
-    const ReverseCheck = itemState.reverseCheck;
-    const Reverse = itemState.reverse;
     
     function handleReady() {
-        socket.emit("ready", {roomID: roomID});
-    } 
-
-    function handleStart() {
-        console.log(myStream);
-        socket.emit("start", {roomID: roomID});
+        socket.emit("ready", { roomID: roomID });
     }
 
-    function HandleReverseStart() {
-        if(ReverseCheck == false && Reverse == false && gameStarted){
-            console.log("Start")
-          socket.emit("reverse", {roomID: roomID, socketID: socket.id})
-        }
-      }
+    function handleStart() {
+        socket.emit("start", { roomID: roomID });
+    }
+
+
 
     function handleRestart() {
-        socket.emit("restart", {roomID: roomID});
+        socket.emit("restart", { roomID: roomID });
     }
 
     return (
@@ -77,19 +70,18 @@ const InGameBottom = ({socket}) => {
                     
                 </div>
             }
-            {gameStarted ? <Button color="yellow" size="large" style={ButtonSize} onClick={HandleReverseStart}>
-                     REVERSE
-                    </Button> : <></>}
-            {gameFinished && 
+
+            {(gameFinished && bestDone) &&
                 <div style={MyButton}>
-                {chief &&
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
-                }
-                <Link to="/Lobby">
-                    <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
-                </Link>
-            </div>
+                    {chief &&
+                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
+                    }
+                    <Link to="/Lobby">
+                        <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
+                    </Link>
+                </div>
             }
+            <div style={{ opacity: '0', height: '6.5rem' }}> </div>
         </Bottom>
     );
 }

@@ -1,18 +1,16 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector } from "react-redux";
-import effect from "../../../images/laughEffection.webp";
+import effect from "../../../images/pepe-laugh-laugh.gif";
 import styled from "styled-components";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Container = styled.div`
     display: flex;
-    width: 75%;
+    width: 320px;
     color: white;
-    flex: 1.5;
     justify-content: center;
-    align-items: center;
-    text-align: center;
+    margin-top: 20px;
 `
 
 const Content = styled.div`

@@ -17,14 +17,14 @@ import {PreventReload, PreventGoBack} from "../../common/usefulFuntions.js";
 const FlexContainer = styled.div`
     display: flex;
     flex-direction: column;
-    height: 100%;
+    height: 100vh;
     font-family: koverwatch;
 `
 
 
 const InGame = ({ match, socket}) => {
     // PreventGoBack(); // 뒤로가기 방지
-    PreventReload(); // 새로고침 방지
+    // PreventReload(); // 새로고침 방지
     return (
         <div>
             <GlobalStyles bgImage={mainBackground}></GlobalStyles>

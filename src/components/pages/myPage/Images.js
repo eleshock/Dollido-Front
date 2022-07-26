@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { ServerName } from "../../serverName";
-import { s3Domain } from "../../s3Domain";
+import { ServerName } from "../../../serverName";
+import { s3Domain } from "../../../s3Domain";
 import styled from "styled-components";
 
 

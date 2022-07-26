@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 const Header = styled.div`
     display: flex;
-    flex: 1;
+    flex: 3;
     font-family: koverwatch;
 `
 const HeaderStyle = styled.div`
@@ -99,7 +99,7 @@ const InGameHeader = ({socket}) => {
                     }
                 </HeaderMiddle>
                 <HeaderRight>
-                    <h1> Mode </h1>
+                <h1>{localStorage.roommode}</h1>
                 </HeaderRight>
             </HeaderStyle>
         </Header>

@@ -8,13 +8,13 @@ import Video from "./PeerVideo";
 import HP from "./HP";
 import IsReady from "./IsReady";
 import Bottom from "./Bottom";
-import ReverseMode from "./ReverseMode";
 
 
 const Container = styled.div`
     display: flex;
     justify-content: space-between;
     flex: 20;
+    height: 100vh;
 `
 
 const LeftContent = styled.div`
@@ -31,19 +31,18 @@ const RightContent = styled.div`
 
 const Content = styled.div`
     display: flex;
-    justify-content: center;
     flex-direction: column;
+    justify-content: center;
     height: 100%;
 `
 
 const EachContent = styled.div`
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
     position: relative;
-    padding: 15px;
     height: 50%;
-    text-align: center;
 `
 
 const Test = ({socket, match}) => {
@@ -66,7 +65,6 @@ const Test = ({socket, match}) => {
             </LeftContent>
             <MidleContent>
                 <Content>
-                    <ReverseMode socket={socket}></ReverseMode>
                     <InGameContent socket={socket}></InGameContent>
                     <Bottom socket={socket} match={match}></Bottom>
                 </Content>
