@@ -5,7 +5,10 @@ import styled from "styled-components";
 import Button from "../../common/Button";
 
 // redux import
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setMineHP } from "../../../modules/inGame";
+import { setMyWeapon } from '../../../modules/item';
+
 
 const Bottom = styled.div`
     display: flex;
@@ -30,15 +33,23 @@ const ButtonSize = {
 }
 
 const InGameBottom = ({socket}) => {
+    const dispatch = useDispatch();
     const inGameState = useSelector((state) => (state.inGame));
     const chief = inGameState.chief;
     const gameStarted = inGameState.gameStarted;
     const gameFinished = inGameState.gameFinished;
     const roomID = inGameState.roomID;
+    const myStream = inGameState.myStream;
+    const mineHP = inGameState.myHP;
+
+    //id 전달
+    const membersState = useSelector((state) => (state.member));
+    const myID = membersState.member.user_id;
+
 
     function handleReady() {
         socket.emit("ready", {roomID: roomID});
-    } 
+    }
 
     function handleStart() {
         socket.emit("start", {roomID: roomID});
@@ -46,6 +57,17 @@ const InGameBottom = ({socket}) => {
 
     function handleRestart() {
         socket.emit("restart", {roomID: roomID});
+        dispatch(setMineHP(null));
+    }
+
+    function handleNamanmoo() {
+
+        if (myStream && myStream.id){
+            console.log(myID);
+            socket.emit("my_weapon", roomID, myID, myStream.id);
+        }
+        dispatch(setMyWeapon(true));
+
     }
 
     return (
@@ -62,7 +84,10 @@ const InGameBottom = ({socket}) => {
                     </Link>
                 </div>
             }
-            {gameFinished && 
+            {gameStarted ?
+                <div style={MyButton}>
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기</Button> </div> : <div style={MyButton}></div>}
+            {gameFinished &&
                 <div style={MyButton}>
                 {chief &&
                     <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>

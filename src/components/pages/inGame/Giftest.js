@@ -5,6 +5,7 @@ import {ServerName} from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
 import { useSelector } from "react-redux";
 
+
 const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -25,9 +26,10 @@ const BackgroundSizeStyle = styled.img`
     background-color: gray;
 `;
 
+
+
 const Giftest = () => {
     const [name, setName] = useState(['0.gif'])
-
     const tempGIF = useRef();
 
     const randomGIF = useSelector((state) => state.random);

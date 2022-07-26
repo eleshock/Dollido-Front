@@ -4,7 +4,7 @@ import axios from "axios";
 import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import styled from "styled-components";
-import effect from "../../../images/laughEffection.webp";
+import effect from "../../../images/pepe-laugh-laugh.gif";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -153,6 +153,7 @@ const MyVideo = ({ match, socket }) => {
         return () => {
             deleteBestVideo(user_nick);
             dispatch(setMyStream(null));
+            dispatch(setMineHP(null));
             userVideo.current = null;
         }
     }, [socket, match]);
@@ -263,7 +264,6 @@ const MyVideo = ({ match, socket }) => {
         )
     }
 
-
     return (
         <>
             <Container>
@@ -278,7 +278,6 @@ const MyVideo = ({ match, socket }) => {
             <ShowMyReady></ShowMyReady>
         </>
     );
-
 }
 
 export { initialHP };

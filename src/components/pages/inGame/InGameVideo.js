@@ -10,6 +10,7 @@ import IsReady from "./IsReady";
 import Bottom from "./Bottom";
 
 
+
 const Container = styled.div`
     display: flex;
     justify-content: space-between;

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // redux import
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
     setChief,
     setChiefStream,
@@ -12,9 +12,13 @@ import {
     clearReadyList
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
+import { setMyWeapon, setMyWeaponCheck } from '../../../modules/item';
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
+    const inGameState = useSelector((state) => (state.inGame));
+    const myStream = inGameState.myStream;
+
 
     // socket on
     useEffect(() => {
@@ -43,13 +47,21 @@ const InGameSocketOn = ({ match, socket }) => {
         socket.on("ready", ({streamID, isReady}) => {
             dispatch(setReadyList(streamID, isReady));
         });
-        
+
         socket.on("restart", () => {
             dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
         });
-        
+
+        socket.on('my_weapon', (streamID, randomList) => {
+            if (streamID === myStream.id){
+                dispatch(setMyWeaponCheck(true));
+            }
+            dispatch(setMyWeapon(true));
+            dispatch(setRandom(randomList));
+        });
+
         return () => {
             dispatch(clearReadyList());
         }
