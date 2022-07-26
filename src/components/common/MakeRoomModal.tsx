@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
-import { Media } from "reactstrap";
-import styled from "styled-components";
+import styled  from "styled-components";
+
 interface Props {
   width: string;
   height: string;
@@ -8,6 +8,7 @@ interface Props {
   modal: boolean;
   setModal: Dispatch<SetStateAction<boolean>>;
   setChange: Dispatch<SetStateAction<boolean>>;
+  setStop: Dispatch<SetStateAction<boolean>>;
   video: Promise<unknown>;
 }
 
@@ -68,20 +69,14 @@ export const MakeRoomModal = ({
   video,
   setModal,
   setChange,
+  setStop,
 }: Props) => {
   const startVideoPromise = video;
+
   const modalOff = () => {
     setModal(false);
     setChange(true);
-    stopWebcam();
-  };
-
-  const stopWebcam = () => {
-    startVideoPromise.then((stream) => { 
-        stream.getTracks().forEach((track) => {
-            track.stop();
-        });
-    });
+    setStop(true);
   };
 
   return (

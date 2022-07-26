@@ -5,6 +5,7 @@ import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import styled from "styled-components";
 import effect from "../../../images/pepe-laugh-laugh.gif";
+import Load from "./Loading";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SyncLoader from "react-spinners/SyncLoader";
@@ -18,6 +19,7 @@ import { setMineHP, setMyStream } from "../../../modules/inGame";
 
 // face api import
 import * as faceapi from 'face-api.js';
+import { setMyWeapon, setMyWeaponCheck } from "../../../modules/item";
 
 
 
@@ -177,6 +179,9 @@ const MyVideo = ({ match, socket }) => {
         return () => {
             deleteBestVideo(user_nick);
             dispatch(setMyStream(null));
+            dispatch(setMineHP(null));
+            dispatch(setMyWeapon(false));
+            dispatch(setMyWeaponCheck(false));
             userVideo.current = null;
         }
     }, [socket, match]);
@@ -289,29 +294,12 @@ const MyVideo = ({ match, socket }) => {
         )
     }
 
-    const Loading = () => {
-        return (
-            <SyncLoader
-                color="#e02869"
-                height={15}
-                width={10}
-                radius={2}
-                margin={2}
-            />
-        );
-    }
-
-
     return (
         <>
             <Container>
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
-                    {loading &&
-                        (<LoadingDiv>
-                            <Loading></Loading>
-                        </LoadingDiv>)
-                    }
+                    {loading && < Load></Load>}
                     <VideoStyle autoPlay ref={userVideo} />
                 </VideoContent>
             </Container>
@@ -323,7 +311,6 @@ const MyVideo = ({ match, socket }) => {
             <ShowMyReady></ShowMyReady>
         </>
     );
-
 }
 
 export { initialHP, deleteBestVideo };

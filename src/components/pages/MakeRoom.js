@@ -155,10 +155,12 @@ function MakeRoom() {
   const [roommode, setRoomMode] = useState("");
   const [roomName, setRoomName] = useState("");
   const [change, setChange] = useState(true);
+  const [stop, setStop] = useState(false);
 
   const socket = useRef();
   const roomNameRef = useRef(null);
 
+  
   const onClickMode = (params, e) => {
     e.preventDefault();
     switch (params) {
@@ -182,11 +184,16 @@ function MakeRoom() {
         return;
       default:
         return;
-      
+        
+      }
+    };
+  useEffect(() => {
+    if (stop) {
+      stopWebcam();
     }
-  };
+  }, [stop])
 
-  // 소켓 연결
+    // 소켓 연결
   useEffect(() => {
     socket.current = io(SERVER_ADDRESS.current, {
       withCredentials: false,
@@ -194,7 +201,9 @@ function MakeRoom() {
         "dollido-header": "dollido",
       },
     });
-
+    return () => {
+      stopWebcam();
+    }
   }, []);
 
   // 2. 방 생성 절차
@@ -226,6 +235,17 @@ function MakeRoom() {
     [roomName]
   );
 
+  const stopWebcam = () => {
+    if (startVideoPromise) {
+      startVideoPromise.then((stream) => {
+        stream.getTracks().forEach((track) => {
+          console.log(track)
+          track.stop();
+        });
+      });
+    }
+  };
+
   // 비디오 가져오기
   const videoRef = useRef();
 
@@ -236,14 +256,15 @@ function MakeRoom() {
     });
     console.log("camera loaded");
     startVideoPromise
-      .then((stream) => {
-        let video = videoRef.current;
+    .then((stream) => {
+      let video = videoRef.current;
         video.srcObject = stream;
         video.play();
       })
       .catch((err) => {
         console.log(err);
       });
+    setStop(false);
   };
 
 
@@ -304,6 +325,7 @@ function MakeRoom() {
           modal={modal}
           setModal={setModal}
           setChange={setChange}
+          setStop={setStop}
           width="700"
           height="600"
           video={startVideoPromise}

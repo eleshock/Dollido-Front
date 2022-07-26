@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // redux import
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
     setChief,
     setChiefStream,
@@ -14,11 +14,15 @@ import {
 
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
+import { setMyWeapon, setMyWeaponCheck, setMyWeaponImage } from '../../../modules/item';
 import { deleteBestVideo } from "./MyVideo";
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
+    const inGameState = useSelector((state) => (state.inGame));
+    const myStream = inGameState.myStream;
     const userNick = useSelector((state) => state.member.member.user_nick);
+
 
     // socket on
     useEffect(() => {
@@ -34,6 +38,7 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("start", (status, randomList) => {
+            console.log(randomList);
             if (status) {
                 dispatch(setRandom(randomList));
                 dispatch(setGamestart(true));
@@ -48,15 +53,30 @@ const InGameSocketOn = ({ match, socket }) => {
         socket.on("ready", ({streamID, isReady}) => {
             dispatch(setReadyList(streamID, isReady));
         });
-        
+
         socket.on("restart", () => {
             deleteBestVideo(userNick); // 이전 비디오 삭제 요청
             dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
             dispatch(setBestDone(false));
+            dispatch(setMyWeaponCheck(false));
+            dispatch(setMyWeapon(false));
+
         });
-        
+
+        socket.on('my_weapon', ({streamID, randomList, imageServer}) => {
+            console.log(imageServer);
+            if (myStream && myStream.id){
+                if (streamID === myStream.id){
+                    dispatch(setMyWeaponCheck(true));
+                    dispatch(setMyWeaponImage(imageServer));
+                }
+            }
+            dispatch(setMyWeapon(true));
+            dispatch(setRandom(randomList));
+        });
+
         return () => {
             dispatch(clearReadyList());
         }

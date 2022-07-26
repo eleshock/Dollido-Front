@@ -194,6 +194,7 @@ const Lobby = () => {
       stopWebcam();
     }
   }, []);
+
   useEffect(() => {
     socket.current.on("give room list", (rooms) => {
       setRooms(rooms);
@@ -210,8 +211,6 @@ const Lobby = () => {
   };
 
 
-
-  
 
   const nextPage = (roomCount) => {
     if (currentPage < Math.ceil(roomCount / postsPerPage)) {
