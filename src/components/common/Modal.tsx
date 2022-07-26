@@ -8,6 +8,7 @@ interface Props {
   modal: boolean;
   setModal: Dispatch<SetStateAction<boolean>>;
   setChange: Dispatch<SetStateAction<boolean>>;
+  setStop: Dispatch<SetStateAction<boolean>>;
   video: Promise<unknown>;
 }
 
@@ -68,20 +69,14 @@ export const Modal = ({
   video,
   setModal,
   setChange,
+  setStop,
 }: Props) => {
   const startVideoPromise = video;
+
   const modalOff = () => {
     setModal(false);
     setChange(true);
-    stopWebcam();
-  };
-
-  const stopWebcam = () => {
-    startVideoPromise.then((stream) => { 
-        stream.getTracks().forEach((track) => {
-            track.stop();
-        });
-    });
+    setStop(true);
   };
 
   return (
