@@ -11,7 +11,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-size: cover;
   overflow-x: hidden;
-  cursor: url(./cursor/cursor.png), auto;
 }
 
 code {
