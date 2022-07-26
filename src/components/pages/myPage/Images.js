@@ -3,7 +3,8 @@ import axios from 'axios'
 import { ServerName } from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
 import styled from "styled-components";
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUserGif } from "../../../modules/member";
 
 
 import './Images.css'
@@ -22,6 +23,7 @@ async function postImage({image, token}) {
       "Content-Type": "multipart/form-data;", 
       "ACCEPT": "*/*",
       "Access-Control-Allow-Origin": "*",
+      "Access-Control-Max-Age": "8000",
       token: token
     },
   });
@@ -31,6 +33,8 @@ async function postImage({image, token}) {
 
 
 function Images() {
+  const dispatch = useDispatch();
+
   const token = useSelector((state) => ({
     token: state.member.member.tokenInfo.token
   }));
@@ -39,7 +43,9 @@ function Images() {
 
   const submit = async event => {
     event.preventDefault()
-    const result = await postImage({image: file, token: token.token})
+    const result = await postImage({image: file, token: token.token});
+    console.log(result.imagePath);
+    dispatch(setUserGif(result.imagePath));
     setImages([result.image, ...images])
   }
 
