@@ -9,7 +9,7 @@ import styled from "styled-components";
 
 import Button2 from "../common/Button2.js";
 import { ThemeProvider } from "styled-components";
-import { Modal } from "../common/Modal.tsx";
+import { MakeRoomModal } from "../common/MakeRoomModal.tsx";
 import io from "socket.io-client";
 import { v4 as uuid } from "uuid";
 import { ServerName } from "../../serverName";
@@ -300,7 +300,7 @@ function MakeRoom() {
       />
 
       {modal && (
-        <Modal
+        <MakeRoomModal
           modal={modal}
           setModal={setModal}
           setChange={setChange}

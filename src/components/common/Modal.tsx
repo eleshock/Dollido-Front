@@ -1,15 +1,15 @@
 import { Dispatch, SetStateAction } from "react";
-import { Media } from "reactstrap";
-import styled from "styled-components";
+import styled  from "styled-components";
+
 interface Props {
-  width: string;
-  height: string;
-  element: JSX.Element;
-  modal: boolean;
-  setModal: Dispatch<SetStateAction<boolean>>;
-  setChange: Dispatch<SetStateAction<boolean>>;
-  video: Promise<unknown>;
-}
+    width: string;
+    height: string;
+    element: JSX.Element;
+    modal: boolean;
+    setModal: Dispatch <SetStateAction<boolean>> ;
+    setChange: Dispatch <SetStateAction<boolean>> ;
+    video: void;
+};
 
 const View = styled.div<{ width: string; height: string }>`
     @keyframes switchModalOn {
@@ -28,22 +28,24 @@ const View = styled.div<{ width: string; height: string }>`
     top: calc(50vh - ${(props) => props.height}px / 2);
     width: ${(props) => props.width}px;
     height: ${(props) => props.height}px;
-    padding: 8px;
-    background-color: #182330E5;
+    background-color: white;
     animation-name: switchModalOn;
     animation-duration: 0.5s;
     z-index: 2000;
-    font-family: koverwatch;
+    border-radius: 8px;
     
     .exit-wrapper {
         position: absolute;
-        top: 4px;
-        right: 4px;
+        top: -10px;
+        right: -10px;
         font-size: 32px;
         width: 32px;
         height: 32px;
-        line-height: 26px;
-        background-color: transparent;
+        line-height: 22px;
+        border: 1px solid black;
+        border-radius: 100%;
+        text-align: center;
+        background-color: white;
         cursor: pointer;
     }
 `;
@@ -60,39 +62,22 @@ const Canvas = styled.div`
     animation-duration: 0.5s;
 `;
 
-export const Modal = ({
-  width,
-  height,
-  element,
-  modal,
-  video,
-  setModal,
-  setChange,
-}: Props) => {
-  const startVideoPromise = video;
-  const modalOff = () => {
-    setModal(false);
-    setChange(true);
-    stopWebcam();
-  };
+export const Modal = ({ width, height, element, modal, setModal, setChange}: Props) => {
+    
+    const modalOff = () => {
+        setModal(false);
+        setChange(true);
+    };
 
-  const stopWebcam = () => {
-    startVideoPromise.then((stream) => { 
-        stream.getTracks().forEach((track) => {
-            track.stop();
-        });
-    });
-  };
-
-  return (
-    <>
-      <View width={width} height={height}>
-        <div className="exit-wrapper" onClick={modalOff}>
-          &times;
-        </div>
-        {element}
-      </View>
-      <Canvas onClick={modalOff} />
-    </>
-  );
+    return (
+        <>
+            <View width={width} height={height}>
+                <div className="exit-wrapper" onClick={modalOff}>
+                    &times;
+                </div>
+                {element}
+            </View>
+            <Canvas onClick={modalOff} />
+        </>
+    );
 };
