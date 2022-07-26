@@ -7,7 +7,7 @@ import Button2 from "../common/Button2.js";
 import { LobbyModal } from "../common/LobbyModal.tsx";
 import mainBackGround from "../../images/mainBackground.gif";
 import styled from "styled-components";
-import { GlobalStyles } from "../common/Global.ts";
+import { GlobalStyles } from "../common/Global.tsx";
 
 import { ServerName } from "../../serverName";
 

@@ -2,11 +2,15 @@ const SET_MY_WEAPON = "item/SET_MY_WEAPON";
 const SET_MY_WEAPON_CHECK = "item/SET_MY_WEAPON_CHECK";
 const SET_MY_WEAPON_IMAGE = "item/SET_MY_WEAPON_IMAGE";
 const SET_IS_ME = "item/SET_IS_ME";
+const SET_REVERSE = "item/SET_REVERSE";
+const SET_GOT_REVERSE = "item/SET_GOT_REVERSE";
 
 export const setMyWeapon = (bool) => ({type: SET_MY_WEAPON, bool});
 export const setMyWeaponCheck = (bool) => ({type: SET_MY_WEAPON_CHECK, bool});
 export const setMyWeaponImage = (image) => ({type: SET_MY_WEAPON_IMAGE, image});
 export const setIsMe = (bool) => ({type: SET_IS_ME, bool});
+export const setReverse = (bool) => ({type: SET_REVERSE, bool});
+export const setGotReverse = (bool) => ({type: SET_GOT_REVERSE, bool});
 
 
 const initialState = {
@@ -14,6 +18,8 @@ const initialState = {
     myWeaponCheck: false,
     myWeaponImage: null,
     isMe: true,
+    reverse : false,
+    gotReverse : false,
 }
 
 export default function item(state = initialState, action) {
@@ -26,6 +32,10 @@ export default function item(state = initialState, action) {
             return { ...state, myWeaponImage: action.image };
         case SET_IS_ME:
             return { ...state, isMe: action.bool };
+        case SET_REVERSE:
+            return { ...state, reverse: action.bool };
+        case SET_GOT_REVERSE:
+            return { ...state, gotReverse: action.bool };
         default:
             return state;
     }

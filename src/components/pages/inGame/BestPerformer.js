@@ -56,7 +56,7 @@ function BestPerformer(props) {
             if (bestVideoName === undefined) {
                 content =
                     <>
-                        <h1> {bestPerformerNick} </h1>
+                        <h1> {bestPerformerNick}! </h1>
                         <h1> 비디오가 기록되지 않았습니다 😢 </h1>
                     </>
             } else {
@@ -88,7 +88,7 @@ function BestPerformer(props) {
                             setTypeDone(true)
                             setTimeout(() => {
                                 dispatch(setBestDone(true));
-                            }, 5000)
+                            }, 3000)
                         })
                         .start();
                 }} /> :
