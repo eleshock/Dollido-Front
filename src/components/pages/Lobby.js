@@ -1,13 +1,11 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import io from "socket.io-client";
 import { ThemeProvider } from "styled-components";
-import { v4 as uuid } from "uuid";
 
 import Button2 from "../common/Button2.js";
 import { LobbyModal } from "../common/LobbyModal.tsx";
 import mainBackGround from "../../images/mainBackground.gif";
-import { Background } from "../common/Background.tsx";
 import styled from "styled-components";
 import { GlobalStyles } from "../common/Global.ts";
 
@@ -200,9 +198,7 @@ const Lobby = () => {
   /* 방 만들기 & 입장 */
   const SERVER_ADDRESS = useRef(ServerName);
   const socket = useRef();
-  const roomNameRef = useRef(null);
   const [rooms, setRooms] = useState({});
-  const [roomName, setRoomName] = useState("");
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 7;
@@ -221,6 +217,7 @@ const Lobby = () => {
       stopWebcam();
     }
   }, []);
+
   useEffect(() => {
     socket.current.on("give room list", (rooms) => {
       setRooms(rooms);
@@ -236,39 +233,7 @@ const Lobby = () => {
     return currentPosts;
   };
 
-  // 방 생성 절차
-  const onChangeRoomName = useCallback((e) => {
-    setRoomName(e.target.value);
-  }, []);
 
-  const onClickMakeRoom = useCallback(
-    (e) => {
-      e.preventDefault();
-      // 2-1. 방제 없을 시, 생성 불가
-      if (roomName === "") {
-        alert("방 이름을 입력하세요");
-        return;
-      }
-      // 2-2. 방 중복 시, 생성 불가
-      let roomNameCheck = false;
-      Object.entries(rooms).map((room) => {
-        if (room[1].roomName === roomName) {
-          alert("이미 있는 방 이름입니다 !");
-          roomNameRef.current.value = "";
-          roomNameCheck = true;
-          return;
-        }
-      });
-      // 2-3. 방 생성, 방이름과 방ID 서버에 전달
-      if (!roomNameCheck) {
-        socket.current.emit("make room", { roomName, roomID: uuid() });
-        alert(`${roomName} 방이 생성되었습니다`);
-        setRoomName("");
-        roomNameRef.current.value = "";
-      }
-    },
-    [roomName, rooms]
-  );
 
   const nextPage = (roomCount) => {
     if (currentPage < Math.ceil(roomCount / postsPerPage)) {
@@ -323,14 +288,6 @@ const Lobby = () => {
     stopWebcam();
   };
 
-  const sizes = {
-    height: "36px",
-    fontSize: "1rem",
-    border: "1px solid transparent",
-    margin: "0 2px 0 0"
-  };
-
-
   return (
     <ThemeProvider
       theme={{
@@ -368,25 +325,15 @@ const Lobby = () => {
               <Content>
                   <RoomListFrame>
                     <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
-                        <input
-                          type="text"
-                          placeholder="방이름을 입력하세요"
-                          name="roomName"
-                          value={roomName}
-                          onChange={onChangeRoomName}
-                          onKeyPress= {(e) => {
-                            e.key === "Enter" && onClickMakeRoom(e);
-                          }}
-                          ref={roomNameRef}
-                          style={sizes}
-                        />
-                        <Button2
-                          color="orange"
-                          size="medium"
-                          onClick={onClickMakeRoom}
-                        >
-                          방만들기
-                        </Button2>
+                      <Link to = {`/makeRoom`} style = {{textDecoration:"none"}}>
+                            <div style = {{margin: "30px"}}>
+                              <Button2
+                                color="yellow"
+                              >
+                                방만들기
+                              </Button2>
+                            </div>
+                          </Link>
                       </div>
                       <RoomTagList>
                         <RoomTag1>이름</RoomTag1>

@@ -12,7 +12,8 @@ import {
     setPeerNick,
     clearPeerNick,
     deletePeerNick,
-    deleteReadyList
+    deleteReadyList,
+
 } from "../../../modules/inGame";
 import { updateVideos, deleteVideo, clearVideos } from "../../../modules/videos";
 
@@ -33,6 +34,8 @@ const WebRTC = ({ socket, match }) => {
     const peers = useRef([]); // 다른 유저들의 peer들을 저장
     let nick = useSelector((state) => state.inGame.peerNick);
 
+
+
     // model 적재
     useEffect(() => {
         async function videoOn() {
@@ -51,6 +54,7 @@ const WebRTC = ({ socket, match }) => {
         ]).then(dispatch(setModelsLoaded(true)));
 
         return () => {
+            console.log("OUT ROOOOOOOOOM")
             socket.emit("out room");
             socket.off();
             userStream.current = null;
@@ -131,7 +135,28 @@ const WebRTC = ({ socket, match }) => {
         const peer = new RTCPeerConnection({
             iceServers: [
                 {
-                    urls: "stun:stun.stunprotocol.org", // stun 서버
+                    urls: [
+                        "stun:stun.stunprotocol.org",
+                        "stun:stun.l.google.com:19302",
+                        "stun:stun1.l.google.com:19302",
+                        "stun:stun2.l.google.com:19302",
+                        "stun:stun3.l.google.com:19302",
+                        "stun:stun4.l.google.com:19302",
+                        "stun:stun01.sipphone.com",
+                        "stun:stun.ekiga.net",
+                        "stun:stun.fwdnet.net",
+                        "stun:stun.ideasip.com",
+                        "stun:stun.iptel.org",
+                        "stun:stun.rixtelecom.se",
+                        "stun:stun.schlund.de",
+                        "stun:stunserver.org",
+                        "stun:stun.softjoys.com",
+                        "stun:stun.voiparound.com",
+                        "stun:stun.voipbuster.com",
+                        "stun:stun.voipstunt.com",
+                        "stun:stun.voxgratia.org",
+                        "stun:stun.xten.com"
+                    ], // stun 서버
                 },
                 {
                     urls: "turn:numb.viagenie.ca", // turn 서버

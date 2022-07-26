@@ -99,7 +99,7 @@ const InGameHeader = ({socket}) => {
                     }
                 </HeaderMiddle>
                 <HeaderRight>
-                    <h1> Mode </h1>
+                <h1>{localStorage.roommode}</h1>
                 </HeaderRight>
             </HeaderStyle>
         </Header>

@@ -4,7 +4,8 @@ import axios from "axios";
 import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import styled from "styled-components";
-import effect from "../../../images/laughEffection.webp";
+import effect from "../../../images/pepe-laugh-laugh.gif";
+import Load from "./Loading";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import SyncLoader from "react-spinners/SyncLoader";
@@ -18,6 +19,9 @@ import { setMineHP, setMyStream } from "../../../modules/inGame";
 
 // face api import
 import * as faceapi from 'face-api.js';
+import { setMyWeapon, setMyWeaponCheck } from "../../../modules/item";
+
+
 
 const Container = styled.div `
     display: flex;
@@ -32,7 +36,6 @@ const NickName = styled.h2 `
 const VideoContent = styled.div`
     flex: 9;
     width: 250px;
-    height: 190px;
     display: relative;
 `
 
@@ -62,6 +65,14 @@ const HPContainer = styled.div `
 
 const HPContent = styled.div `
     width: 80%;
+`
+
+const ShowReady = styled.div`
+    text-align: center;
+    width: 100%;
+    color: white;
+    flex: 1;
+    margin: 0;
 `
 
 const recordTime = 3000; // 녹화 시간(ms)
@@ -102,7 +113,6 @@ function deleteBestVideo(user_nick) {
 
 
 function recordVideo(stream, user_nick) {
-    deleteBestVideo(user_nick); // 이전 비디오 삭제 요청
     let recorder = new MediaRecorder(stream);
 
     recorder.ondataavailable = (event) => {
@@ -145,6 +155,9 @@ const MyVideo = ({ match, socket }) => {
 
     let videoRecorded = false; // 녹화 여부
 
+   
+
+
     useEffect(() => {
         if (modelsLoaded && myStream && myStream.id) {
             userVideo.current.srcObject = myStream;
@@ -166,6 +179,9 @@ const MyVideo = ({ match, socket }) => {
         return () => {
             deleteBestVideo(user_nick);
             dispatch(setMyStream(null));
+            dispatch(setMineHP(null));
+            dispatch(setMyWeapon(false));
+            dispatch(setMyWeaponCheck(false));
             userVideo.current = null;
         }
     }, [socket, match]);
@@ -178,7 +194,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
-                return 10;
+                return 2;
             } else {
                 return 1;
             }
@@ -189,17 +205,19 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = () => {
         const [myHP, setMyHP] = useState(initialHP);
+         /* Reverse Mode */
         const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
-
+        let decrease = 0;
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0] && gameStarted) {
-                    const decrease = handleHP(detections[0].expressions.happy);
-
+                        
+                    decrease = handleHP(detections[0].expressions.happy);
+                    
                     if (decrease > 0) {
                         const newHP = myHP - decrease;
                         socket.emit("smile", newHP, roomID, user_nick, myStream.id);
@@ -265,37 +283,23 @@ const MyVideo = ({ match, socket }) => {
         }, [readyList]);
 
         return (
-            !gameStarted?
-                myStream && myStream.id === chiefStream ?
-                    <h2 style = {{color:"orange"}}>방장</h2> :
-                    <h2 style = {{color: "white"}}>{bool ? "ready" : "not ready"}</h2> :
-                    <h2 style = {{color:"white"}}>Playing</h2>
+            <ShowReady>
+                {!gameStarted?
+                    myStream && myStream.id === chiefStream ?
+                        <h2 style = {{color:"orange"}}>방장</h2> :
+                        <h2 style = {{color: "white"}}>{bool ? "ready" : "not ready"}</h2> :
+                        <h2 style = {{color:"white"}}>Playing</h2>
+                }
+            </ShowReady>
         )
     }
-
-    const Loading = () => {
-        return (
-            <SyncLoader
-                color="#e02869"
-                height={15}
-                width={10}
-                radius={2}
-                margin={2}
-            />
-        );
-    }
-
 
     return (
         <>
             <Container>
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
-                    {loading &&
-                        (<LoadingDiv>
-                            <Loading></Loading>
-                        </LoadingDiv>)
-                    }
+                    {loading && < Load></Load>}
                     <VideoStyle autoPlay ref={userVideo} />
                 </VideoContent>
             </Container>
@@ -307,8 +311,7 @@ const MyVideo = ({ match, socket }) => {
             <ShowMyReady></ShowMyReady>
         </>
     );
-
 }
 
-export { initialHP };
+export { initialHP, deleteBestVideo };
 export default MyVideo;

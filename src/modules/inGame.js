@@ -79,7 +79,7 @@ export default function inGame(state = initialState, action) {
             delete state.readyList[action.streamID];
             return { ...state, ...state.readyList };
         case CLEAR_READY_LIST:
-            return  { ...state, readyList: {} };
+            return  { ...state, readyList: {} }
         case SET_MY_HP:
             return { ...state, myHP : action.myHP };
         default:

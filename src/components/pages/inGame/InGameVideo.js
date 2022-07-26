@@ -10,6 +10,7 @@ import IsReady from "./IsReady";
 import Bottom from "./Bottom";
 
 
+
 const Container = styled.div`
     display: flex;
     justify-content: space-between;
@@ -23,11 +24,11 @@ const LeftContent = styled.div`
 
 const MidleContent = styled.div`
     flex: 1.5;
-    `
+`
 
 const RightContent = styled.div`
     flex: 1;
-    `
+`
 
 const Content = styled.div`
     display: flex;

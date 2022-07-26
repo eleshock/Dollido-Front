@@ -25,7 +25,7 @@ const VideoStyle = styled.video`
 `
 
 const FindVideo = ({stream}) => {
-    const ref = useRef();
+    const ref = useRef(null);
     useEffect(() => {
         if(stream.id) ref.current.srcObject = stream;
     }, [stream]);

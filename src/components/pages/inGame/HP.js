@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useSelector } from "react-redux";
-import effect from "../../../images/laughEffection.webp";
+import effect from "../../../images/pepe-laugh-laugh.gif";
 import styled from "styled-components";
 import ProgressBar from 'react-bootstrap/ProgressBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -25,7 +25,7 @@ const HP = ({ socket, index }) => {
           </Container>);
     const gameFinished = useSelector((state) => state.inGame.gameFinished);
 
-
+    console.log(peersHP)
     useEffect(() => {
       socket.on("smile", (peerHP, peerID, peerStreamID) => {
         if (partnerVideos[index].id === peerStreamID) {

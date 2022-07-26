@@ -5,7 +5,11 @@ import styled from "styled-components";
 import Button from "../../common/Button";
 
 // redux import
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setMineHP } from "../../../modules/inGame";
+import { setMyWeapon, setMyWeaponCheck } from '../../../modules/item';
+
+
 
 const Bottom = styled.div`
     display: flex;
@@ -29,8 +33,10 @@ const ButtonSize = {
     margin: "30px"
 }
 
-const InGameBottom = ({ socket }) => {
+const InGameBottom = ({socket}) => {
+    const dispatch = useDispatch();
     const inGameState = useSelector((state) => (state.inGame));
+    const itemState = useSelector((state) => state.item);
     const chief = inGameState.chief;
     const chiefStream = inGameState.chiefStream;
     const myStream = inGameState.myStream;
@@ -38,6 +44,18 @@ const InGameBottom = ({ socket }) => {
     const gameFinished = inGameState.gameFinished;
     const bestDone = inGameState.bestDone;
     const roomID = inGameState.roomID;
+
+    //id 전달
+    const membersState = useSelector((state) => (state.member));
+    const myID = membersState.member.user_id;
+
+    //my weapon useState
+    const myWeaponUsing = itemState.myWeapon;
+    const myWeaponUsingInThisGame = itemState.myWeaponCheck;
+
+
+
+
 
     function handleReady() {
         socket.emit("ready", { roomID: roomID });
@@ -47,8 +65,24 @@ const InGameBottom = ({ socket }) => {
         socket.emit("start", { roomID: roomID });
     }
 
+
+
     function handleRestart() {
-        socket.emit("restart", { roomID: roomID });
+        socket.emit("restart", {roomID: roomID});
+        dispatch(setMineHP(null));
+    }
+
+    function handleNamanmoo() {
+        if (!myWeaponUsingInThisGame && !myWeaponUsing) {
+            if (myStream && myStream.id){
+                console.log(myID);
+                socket.emit("my_weapon", roomID, myID, myStream.id);
+                // socket.emit("my_weapon", roomID, myStream.id);
+
+            }
+            dispatch(setMyWeapon(true));
+            dispatch(setMyWeaponCheck(true));
+        }
     }
 
     return (
@@ -63,8 +97,15 @@ const InGameBottom = ({ socket }) => {
                     <Link to="/Lobby" style = {{textDecoration:"none"}}>
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
+                    
                 </div>
             }
+            {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
+                <div style={MyButton}>
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기!</Button> </div> }
+            {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
+                <div style={MyButton}>
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기 사용완료!</Button> </div> }
             {(gameFinished && bestDone) &&
                 <div style={MyButton}>
                     {chief &&
