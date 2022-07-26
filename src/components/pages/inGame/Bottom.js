@@ -7,7 +7,7 @@ import Button from "../../common/Button";
 // redux import
 import { useSelector, useDispatch } from "react-redux";
 import { setMineHP } from "../../../modules/inGame";
-import { setMyWeapon, setMyWeaponCheck } from '../../../modules/item';
+import { setIsMe, setMyWeapon, setMyWeaponCheck } from '../../../modules/item';
 
 
 const Bottom = styled.div`
@@ -46,11 +46,14 @@ const InGameBottom = ({socket}) => {
     //id 전달
     const membersState = useSelector((state) => (state.member));
     const myID = membersState.member.user_id;
+    const myGIF = membersState.member.user_gif;
 
     //my weapon useState
     const itemState = useSelector((state) => (state.item));
     const myWeaponUsing = itemState.myWeapon;
     const myWeaponUsingInThisGame = itemState.myWeaponCheck;
+
+
 
 
 
@@ -71,14 +74,11 @@ const InGameBottom = ({socket}) => {
 
     function handleNamanmoo() {
         if (!myWeaponUsingInThisGame && !myWeaponUsing) {
-            if (myStream && myStream.id){
                 console.log(myID);
-                socket.emit("my_weapon", roomID, myID, myStream.id);
-                // socket.emit("my_weapon", roomID, myStream.id);
-
-            }
-            dispatch(setMyWeapon(true));
-            dispatch(setMyWeaponCheck(true));
+                socket.emit("my_weapon", roomID, myGIF);
+                dispatch(setIsMe(true));
+                dispatch(setMyWeapon(true));
+                dispatch(setMyWeaponCheck(true));
         }
     }
 

@@ -246,17 +246,17 @@ const MyVideo = ({ match, socket }) => {
             socket.on("finish", (hpList) => {
               // HP [streamID, HP]
                 if (myStream && myStream.id) {
-                    console.log(hpList)
+                    // console.log(hpList)
                     hpList.map((HP) => {
                         if (myStream.id === HP[0]){
-                            console.log(myStream.id)
-                            console.log(HP[0],":",HP[1])
+                            // console.log(myStream.id)
+                            // console.log(HP[0],":",HP[1])
                             if (HP[1] < 0) {
                                 dispatch(setMineHP(0))
                                 content = <ProgressBar striped variant="danger" now={mineHP} />
                             }else {
                                 dispatch(setMineHP(HP[1]))
-                                console.log(mineHP);
+                                // console.log(mineHP);
                                 content = <ProgressBar striped variant="danger" now={mineHP} />
                             }
                         }

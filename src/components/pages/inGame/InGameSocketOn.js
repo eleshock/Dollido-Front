@@ -13,12 +13,15 @@ import {
     clearReadyList
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
-import { setMyWeapon, setMyWeaponCheck, setMyWeaponImage } from '../../../modules/item';
+import { setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage } from '../../../modules/item';
+
+
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
-    const inGameState = useSelector((state) => (state.inGame));
-    const myStream = inGameState.myStream;
+    async function settingMyweapons (myGIF) {
+        dispatch(setMyWeaponImage(myGIF));
+    }
 
 
     // socket on
@@ -57,19 +60,14 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setBestDone(false));
             dispatch(setMyWeaponCheck(false));
             dispatch(setMyWeapon(false));
-
         });
 
-        socket.on('my_weapon', ({streamID, randomList, imageServer}) => {
-            console.log(imageServer);
-            if (myStream && myStream.id){
-                if (streamID === myStream.id){
-                    dispatch(setMyWeaponCheck(true));
-                    dispatch(setMyWeaponImage(imageServer));
-                }
-            }
+        socket.on('my_weapon', async ({randomList, myGIF}) => {
+            console.log(myGIF);
+            await settingMyweapons(myGIF);
             dispatch(setMyWeapon(true));
             dispatch(setRandom(randomList));
+            dispatch(setIsMe(false));
         });
 
         return () => {
