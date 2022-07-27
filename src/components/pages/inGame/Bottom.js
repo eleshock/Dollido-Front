@@ -4,6 +4,8 @@ import styled from "styled-components";
 // commponent import
 import Button from "../../common/Button";
 import Button3 from "../../common/Button3";
+import Button4 from "../../common/Button4";
+
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
@@ -100,6 +102,8 @@ const InGameBottom = ({socket}) => {
                     }
                     <Link to="/Lobby" style={{textDecoration:"none"}}>
                         <Button3 style={ButtonSize}>Quit</Button3>
+                        <Button4 style={ButtonSize}>Quit</Button4>
+
                     </Link>
                     
                 </div>
