@@ -7,7 +7,7 @@ import Button2 from "../common/Button2.js";
 import { LobbyModal } from "../common/LobbyModal.tsx";
 import mainBackGround from "../../images/mainBackground.gif";
 import styled from "styled-components";
-import { GlobalStyles } from "../common/Global.ts";
+import { GlobalStyles } from "../common/Global.tsx";
 
 import { ServerName } from "../../serverName";
 
@@ -237,6 +237,7 @@ const Lobby = () => {
   const selectRoom = (room) => {
     localStorage.roomLink = room[0];
     localStorage.roomName = room[1].roomName;
+    localStorage.roommode = room[1].roommode;
     setModal(true);
     startVideo();
   };

@@ -14,13 +14,16 @@ import {
 
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
-import { setMyWeapon, setMyWeaponCheck, setMyWeaponImage } from '../../../modules/item';
+import { setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse } from '../../../modules/item';
 import { deleteBestVideo } from "./MyVideo";
+
+
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
-    const inGameState = useSelector((state) => (state.inGame));
-    const myStream = inGameState.myStream;
+    async function settingMyweapons (myGIF) {
+        dispatch(setMyWeaponImage(myGIF));
+    }
     const userNick = useSelector((state) => state.member.member.user_nick);
 
 
@@ -62,23 +65,29 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setBestDone(false));
             dispatch(setMyWeaponCheck(false));
             dispatch(setMyWeapon(false));
-
+            dispatch(setGotReverse(false));
         });
 
-        socket.on('my_weapon', ({streamID, randomList, imageServer}) => {
-            console.log(imageServer);
-            if (myStream && myStream.id){
-                if (streamID === myStream.id){
-                    dispatch(setMyWeaponCheck(true));
-                    dispatch(setMyWeaponImage(imageServer));
-                }
-            }
+        socket.on('my_weapon', async ({randomList, myGIF}) => {
+            console.log(myGIF);
+            dispatch(setIsMe(false));
+            await settingMyweapons(myGIF);
             dispatch(setMyWeapon(true));
             dispatch(setRandom(randomList));
         });
 
+        socket.on('reverse', () => {
+            dispatch(setReverse(true));
+            setTimeout(() => dispatch(setReverse(false)), 8000);
+        });
+
+        socket.on("send-reverse", () => {
+            dispatch(setGotReverse(true));
+        })
+        
         return () => {
             dispatch(clearReadyList());
+            dispatch(setGotReverse(false));
         }
     }, [match, socket, dispatch]);
 

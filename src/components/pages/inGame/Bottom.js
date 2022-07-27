@@ -4,15 +4,10 @@ import styled from "styled-components";
 // commponent import
 import Button from "../../common/Button";
 import Button3 from "../../common/Button3";
-import Button4 from "../../common/Button4";
-
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
-import { setMineHP } from "../../../modules/inGame";
-import { setMyWeapon, setMyWeaponCheck } from '../../../modules/item';
-
-
+import { setGotReverse } from "../../../modules/item";
 
 const Bottom = styled.div`
     display: flex;
@@ -23,7 +18,8 @@ const Bottom = styled.div`
 const MyButton = {
     flex: '3',
     display: "flex",
-    justifyContent: 'space-around',
+    justifyContent: 'center',
+    textAlign: "center",
     alignItems: 'center'
 }
 
@@ -32,15 +28,12 @@ const ButtonSize = {
     lineHeight: "45px",
     width: "150px",
     height: "45px",
-    margin: "30px",
-    textDecoration:"none"
-
+    margin: "30px"
 }
 
-const InGameBottom = ({socket}) => {
+const InGameBottom = ({ socket }) => {
     const dispatch = useDispatch();
     const inGameState = useSelector((state) => (state.inGame));
-    const itemState = useSelector((state) => state.item);
     const chief = inGameState.chief;
     const chiefStream = inGameState.chiefStream;
     const myStream = inGameState.myStream;
@@ -48,18 +41,8 @@ const InGameBottom = ({socket}) => {
     const gameFinished = inGameState.gameFinished;
     const bestDone = inGameState.bestDone;
     const roomID = inGameState.roomID;
-
-    //id 전달
-    const membersState = useSelector((state) => (state.member));
-    const myID = membersState.member.user_id;
-
-    //my weapon useState
-    const myWeaponUsing = itemState.myWeapon;
-    const myWeaponUsingInThisGame = itemState.myWeaponCheck;
-
-
-
-
+    const reverse = useSelector((state) => (state.item.reverse))
+    const gotReverse = useSelector((state) => (state.item.gotReverse))
 
     function handleReady() {
         socket.emit("ready", { roomID: roomID });
@@ -69,51 +52,37 @@ const InGameBottom = ({socket}) => {
         socket.emit("start", { roomID: roomID });
     }
 
-
-
     function handleRestart() {
-        socket.emit("restart", {roomID: roomID});
-        dispatch(setMineHP(null));
+        socket.emit("restart", { roomID: roomID });
     }
 
-    function handleNamanmoo() {
-        if (!myWeaponUsingInThisGame && !myWeaponUsing) {
-            if (myStream && myStream.id){
-                console.log(myID);
-                socket.emit("my_weapon", roomID, myID, myStream.id);
-                // socket.emit("my_weapon", roomID, myStream.id);
-
-            }
-            dispatch(setMyWeapon(true));
-            dispatch(setMyWeaponCheck(true));
+    function handleReverse() {
+        if (!reverse) {
+            socket.emit("reverse", { roomID: roomID });
+            dispatch(setGotReverse(false));
         }
     }
 
     return (
         <Bottom>
-            {!gameStarted &&
+            {!gameStarted ?
                 <div style={MyButton}>
-                    {myStream && (chief || chiefStream === myStream.id)?
-                        <div>
-                        <Button3 style={ButtonSize} onClick={handleStart}>START</Button3>
-                        </div>
+                    {myStream && (chief || chiefStream === myStream.id) ?
+                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
                         :
-                        <Button3 style={ButtonSize} onClick={handleReady}>Ready</Button3>
+                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
                     }
-                    <Link to="/Lobby" style={{textDecoration:"none"}}>
-                        <Button3 style={ButtonSize}>Quit</Button3>
-                        <Button4 style={ButtonSize}>Quit</Button4>
-
+                    <Link to="/Lobby">
+                        <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
-                    
                 </div>
+                :
+                !gameFinished &&
+                (gotReverse ?
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
+                    :
+                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button>)
             }
-            {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
-                <div style={MyButton}>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기!</Button> </div> }
-            {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
-                <div style={MyButton}>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기 사용완료!</Button> </div> }
             {(gameFinished && bestDone) &&
                 <div style={MyButton}>
                     {chief &&

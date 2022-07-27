@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { s3Domain } from "../../../s3Domain";
 import { setMyWeapon } from '../../../modules/item';
 import effect from "../../../images/reverse.gif";
-import { setRandom } from "../../../modules/random";
 
 
 
@@ -28,7 +27,10 @@ const MyWeapon = ({socket}) => {
     const [content, setContent] = useState(<></>)
     const itemState = useSelector((state) => (state.item));
     const myWeaponImage = itemState.myWeaponImage;
+    const isMeFlag = itemState.isMe;
 
+    const membersState = useSelector((state) => (state.member));
+    const myGIF = membersState.user_gif;
 
     useEffect(() => {
         // socket.on('my_weapon', (streamID, randomList) => {
@@ -41,17 +43,21 @@ const MyWeapon = ({socket}) => {
                 </Container>
                 )
             setTimeout(() => {
-                setContent(<Container>
-                    <BackgroundSizeStyle src={`${s3Domain}${myWeaponImage}`} ></BackgroundSizeStyle>
-                    </Container>);
+                if(isMeFlag) {
+                    setContent(<Container>
+                        <BackgroundSizeStyle src={`${s3Domain}${myGIF}`} ></BackgroundSizeStyle>
+                        </Container>);
+                } else {
+                    setContent(<Container>
+                        <BackgroundSizeStyle src={`${s3Domain}${myWeaponImage}`} ></BackgroundSizeStyle>
+                        </Container>);
+                }
             }, 2400);
             setTimeout(() => {
                 dispatch(setMyWeapon(false));
-
-            }, 5000)
+            }, 6000)
 
     }, [])
-    console.log(content)
     return content;
 }
 
