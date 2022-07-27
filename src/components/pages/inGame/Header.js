@@ -20,20 +20,19 @@ const HeaderStyle = styled.div`
 const HeaderLeft = styled.div`
     flex: 2.5;
     text-align: center;
-    color: gray;
+    color: white;
 `
 const HeaderMiddle = styled.div`
     flex: 5;
     text-align: center;
     color: gray;
     width: 100%;
-    padding: 10px 0 0 0;
 `
 
 const HeaderRight = styled.div`
     flex: 2.5;
     text-align: center;
-    color: gray;
+    color: white;
 `
 
 const Img = styled.img`

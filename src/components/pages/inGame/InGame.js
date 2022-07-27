@@ -23,8 +23,8 @@ const FlexContainer = styled.div`
 
 
 const InGame = ({ match, socket}) => {
-    // PreventGoBack(); // 뒤로가기 방지
-    // PreventReload(); // 새로고침 방지
+    PreventGoBack(); // 뒤로가기 방지
+    PreventReload(); // 새로고침 방지 
     return (
         <div>
             <GlobalStyles bgImage={mainBackground}></GlobalStyles>

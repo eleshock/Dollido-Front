@@ -72,6 +72,7 @@ const Video = styled.video`
   margin: 0 auto;
   width: 450px;
   height: 340px;
+  transform: scaleX(-1);
 `;
 
 const modename = {
@@ -104,7 +105,9 @@ const RoomModalHeader1 = {
 const RoomModalHeader2 = {
   margin: "0 0 0 0",
   flex: "1",
-  textAlign: "center",
+  alignItems: "center",
+  display: "flex",
+  justifyContent: "center",
   color: "white",
 };
 
@@ -123,7 +126,7 @@ const RoomModalBottom = {
 };
 
 const sizes = {
-  width: "60%",
+  width: "48%",
   height: "36px",
   fontSize: "1rem",
   border: "1px solid transparent",
@@ -273,6 +276,7 @@ function MakeRoom() {
       theme={{
         palette: {
           yellow: "#E5B941",
+          orange: "#F0A82BEE"
         },
       }}
     >
@@ -349,7 +353,7 @@ function MakeRoom() {
                   ref={roomNameRef}
                   style={sizes}
                 />
-                <Button2 color="yellow" size="medium" onClick={onClickMakeRoom}>
+                <Button2 color="orange" size="medium" onClick={onClickMakeRoom}>
                   방만들기
                 </Button2>
               </div>

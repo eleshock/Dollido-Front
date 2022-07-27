@@ -13,6 +13,7 @@ import { ServerName } from "../../serverName";
 
 // 임시
 import { useSelector } from "react-redux";
+import { MakeRoomModal } from "../common/MakeRoomModal.tsx";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -178,7 +179,15 @@ const Lobby = () => {
   const [rooms, setRooms] = useState({});
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
+  const [change, setChange] = useState(true);
+  const [stop, setStop] = useState(false);
   const postsPerPage = 7;
+
+  useEffect(() => {
+    if (stop) {
+      stopWebcam();
+    }
+  }, [stop])
 
   // 1. 방 리스트 받아오기
   useEffect(() => {
@@ -247,6 +256,8 @@ const Lobby = () => {
     .catch ((err) => {
         console.log(err);
     });
+    setStop(false);
+
   };
 
   const stopWebcam = async () => {
@@ -301,9 +312,10 @@ const Lobby = () => {
                   <RoomListFrame>
                     <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
                       <Link to = {`/makeRoom`} style = {{textDecoration:"none"}}>
-                            <div style = {{margin: "30px"}}>
+                            <div >
                               <Button2
-                                color="yellow"
+                                color="orange"
+                                style = {{margin: "0 0 20px 0", height: "4rem", fontSize:"2rem", width: "8.9rem", textAlign:"center"}}
                               >
                                 방만들기
                               </Button2>
@@ -338,11 +350,14 @@ const Lobby = () => {
               </Content>
             </FlexContainer>
       {modal && (
-          <LobbyModal
+          <MakeRoomModal
               modal={modal}
+              setModal={setModal}
+              setChange={setChange}
+              setStop={setStop}
+              video={startVideoPromise}
               width="550"
               height="550"
-              video="true"
               element={
                   <div>
                       <div style={{ fontSize: "30px", color: "white", margin: "30px", display: "flex", justifyContent: "center"}}>웃어보세요^_^</div>
@@ -352,7 +367,8 @@ const Lobby = () => {
                           <Link to = {`/room/${localStorage.roomLink}`} name = {localStorage.roomName} style = {{textDecoration:"none"}}>
                             <div style = {{margin: "30px"}}>
                               <Button2
-                                color="yellow"
+                                color="orange"
+                                style={{width:"11rem", height:"100%"}}
                               >
                                 입장하기
                               </Button2>
@@ -361,7 +377,8 @@ const Lobby = () => {
                         </div>
                         <div style = {{margin: "30px"}}>
                               <Button2
-                                color="yellow" onClick={backToLoomList}
+                                color="orange" onClick={backToLoomList}
+                                style={{width:"11rem", height:"100%"}}
                               >
                                 나가기
                               </Button2>

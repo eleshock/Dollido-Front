@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 // commponent import
 import Button from "../../common/Button";
+import Button3 from "../../common/Button3";
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
@@ -20,8 +21,7 @@ const Bottom = styled.div`
 const MyButton = {
     flex: '3',
     display: "flex",
-    justifyContent: 'center',
-    textAlign: "center",
+    justifyContent: 'space-around',
     alignItems: 'center'
 }
 
@@ -30,7 +30,9 @@ const ButtonSize = {
     lineHeight: "45px",
     width: "150px",
     height: "45px",
-    margin: "30px"
+    margin: "30px",
+    textDecoration:"none"
+
 }
 
 const InGameBottom = ({socket}) => {
@@ -90,12 +92,14 @@ const InGameBottom = ({socket}) => {
             {!gameStarted &&
                 <div style={MyButton}>
                     {myStream && (chief || chiefStream === myStream.id)?
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
+                        <div>
+                        <Button3 style={ButtonSize} onClick={handleStart}>START</Button3>
+                        </div>
                         :
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
+                        <Button3 style={ButtonSize} onClick={handleReady}>Ready</Button3>
                     }
-                    <Link to="/Lobby">
-                        <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
+                    <Link to="/Lobby" style={{textDecoration:"none"}}>
+                        <Button3 style={ButtonSize}>Quit</Button3>
                     </Link>
                     
                 </div>
