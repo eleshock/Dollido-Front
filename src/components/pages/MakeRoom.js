@@ -16,6 +16,9 @@ import { ServerName } from "../../serverName";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import useSound from 'use-sound';
+import {select, enterRoom, click, exit} from './Sound'
+
 const FlexContainer = {
   display: "flex",
   flexDirection: "column",
@@ -160,7 +163,23 @@ function MakeRoom() {
   const socket = useRef();
   const roomNameRef = useRef(null);
 
-  
+  // game sound
+  const [clickSound] = useSound(
+    click,
+    { volume: 0.5 }
+  );
+  const [enterGame] = useSound(
+    enterRoom,
+    { volume: 0.5 }
+  );
+  const [selectSound] = useSound(
+    select,
+    { volume: 0.5 }
+  );
+  const [exitSound] = useSound(
+    exit,
+  );
+
   const onClickMode = (params, e) => {
     e.preventDefault();
     switch (params) {
@@ -284,6 +303,7 @@ function MakeRoom() {
             </div>
             <div style={Middle}>
               <Content
+                onMouseDown = {clickSound}
                 onClick={(e) => {
                   onClickMode("One", e);
                 }}
@@ -349,7 +369,10 @@ function MakeRoom() {
                   ref={roomNameRef}
                   style={sizes}
                 />
-                <Button2 color="yellow" size="medium" onClick={onClickMakeRoom}>
+                <Button2 color="yellow" size="medium"
+                  onMouseUp = {enterGame}
+                  onClick={onClickMakeRoom}
+                >
                   방만들기
                 </Button2>
               </div>

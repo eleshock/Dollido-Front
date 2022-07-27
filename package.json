@@ -26,6 +26,7 @@
     "bootstrap": "^5.2.0",
     "core-js": "^3.23.4",
     "face-api.js": "^0.22.2",
+    "howler": "^2.2.3",
     "http-proxy-middleware": "^2.0.6",
     "immutable": "^4.1.0",
     "open-color": "^1.9.1",

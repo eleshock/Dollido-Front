@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import dollidoLogo from "../../../images/DollidoLogo2.png";
 import { useInterval } from "../../common/usefulFuntions";
 
 // redux import
 import { useSelector } from "react-redux";
+
+// sound
+import {playingBGM} from "../Sound";
 
 const Header = styled.div`
     display: flex;
@@ -44,6 +47,15 @@ const InGameHeader = ({socket}) => {
     const gameFinished = useSelector((state) => state.inGame.gameFinished);
     const gameStarted = useSelector((state) => state.inGame.gameStarted);
     const roomID = useSelector((state) => state.inGame.roomID);
+
+    useEffect(() => {
+        if (gameStarted) {
+            playingBGM.play()
+        }
+        else{
+            playingBGM.pause()
+        }
+    }, [gameStarted])
 
     /** 1초 줄어든 시간을 리턴 */
     function decreaseOneSec(minutes, seconds) {
