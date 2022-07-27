@@ -189,7 +189,7 @@ const Lobby = () => {
       },
     });
     socket.current.emit("get room list");
-    
+
     return () => {
       stopWebcam();
     }
@@ -228,6 +228,7 @@ const Lobby = () => {
   const selectRoom = (room) => {
     localStorage.roomLink = room[0];
     localStorage.roomName = room[1].roomName;
+    localStorage.roommode = room[1].roommode;
     setModal(true);
     startVideo();
   };
@@ -292,7 +293,7 @@ const Lobby = () => {
                             </Button2>
                           </Link>
                         </div>
-                    } 
+                    }
               </header>
               <TabList>
                 <h1 style = {{padding: "0 0 0 100px", color: "white", fontSize: "6rem", fontStyle: "italic", userSelect: "none"}}>게임 대기실</h1>

@@ -160,7 +160,7 @@ function MakeRoom() {
   const socket = useRef();
   const roomNameRef = useRef(null);
 
-  
+
   const onClickMode = (params, e) => {
     e.preventDefault();
     switch (params) {
@@ -184,7 +184,7 @@ function MakeRoom() {
         return;
       default:
         return;
-        
+
       }
     };
   useEffect(() => {
@@ -207,12 +207,12 @@ function MakeRoom() {
   }, []);
 
   // 2. 방 생성 절차
-  
+
   const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
   }, []);
-  
+
   const navigate = useNavigate();
   const onClickMakeRoom = useCallback(
     (e) => {
@@ -225,8 +225,9 @@ function MakeRoom() {
       const roomID = uuid();
       console.log(roomID);
       localStorage.roomLink = roomID;
+      localStorage.roommode = roommode;
       // 2-3. 방 생성, 방이름과 방ID 서버에 전달
-      socket.current.emit("make room", { roomName, roomID });
+      socket.current.emit("make room", { roomName, roomID, roommode });
       alert(`${roomName} 방이 생성되었습니다`);
       setRoomName("");
       roomNameRef.current.value = "";

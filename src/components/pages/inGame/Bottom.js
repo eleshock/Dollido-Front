@@ -49,12 +49,13 @@ const InGameBottom = ({ socket }) => {
 
     //id 전달
     const membersState = useSelector((state) => (state.member));
-    const myID = membersState.member.user_id;
+    const MyNickname = membersState.member.user_nick;
     const myGIF = membersState.user_gif;
 
     //my weapon useState
     const myWeaponUsing = itemState.myWeapon;
     const myWeaponUsingInThisGame = itemState.myWeaponCheck;
+
 
 
 
@@ -79,8 +80,7 @@ const InGameBottom = ({ socket }) => {
 
     function handleNamanmoo() {
         if (!myWeaponUsingInThisGame && !myWeaponUsing) {
-                console.log(myID);
-                socket.emit("my_weapon", roomID, myGIF);
+                socket.emit("my_weapon", roomID, myGIF, MyNickname);
                 dispatch(setIsMe(true));
                 dispatch(setMyWeapon(true));
                 dispatch(setMyWeaponCheck(true));
