@@ -5,6 +5,7 @@ import {ServerName} from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
 import { useSelector } from "react-redux";
 import reverseMode from "../../../images/reverseMode.gif";
+import gifList from "../../../images/gifList";
 
 
 const Container = styled.div`
@@ -75,17 +76,18 @@ const Giftest = () => {
 
 
     // get gifs file subjects from server
-    const nameFunction = () => {
-        axios.get(`${ServerName}/api/gifs/list`)
-            .then((response) => {
-                setName(response.data);
-            });
-    }
-    tempGIF.current = nameFunction;
+    // const nameFunction = () => {
+    //     axios.get(`${ServerName}/api/gifs/list`)
+    //         .then((response) => {
+    //             setName(response.data);
+    //         });
+    // }
+    // tempGIF.current = nameFunction;
 
     useEffect(() => {
-        tempGIF.current()
+        // tempGIF.current()
             // eslint-disable-next-line react-hooks/exhaustive-deps
+            setName(gifList);
         }, []);
 
     Ticktock();

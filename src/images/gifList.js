@@ -1,0 +1,50 @@
+const gifList = [
+    "20150621_190336_-348888428.gif",
+    "20150811_004242_-2050579452.gif",
+    "20161205_231400_-1114686906.gif",
+    "22407944535ED8A41A.gif",
+    "2528463F50D9ED700F.gif",
+    "2531ED3B54ACF6493C.gif",
+    "37.gif",
+    "4.gif",
+    "4f0a7ca4-63c7-42e7-b1f8-5d139ccb1677áá¨áá²á«áá®áá©ááµá¼áá¡ááµá«.png",
+    "7.gif",
+    "AdorableUnkemptLarva-size_restricted.gif",
+    "BlondDifferentHog.webp",
+    "FrequentSoulfulCuttlefish.webp",
+    "FzEU.gif",
+    "I_made_a_lipstick_robot.gif",
+    "R474x0.gif",
+    "ShadowyDiligentHuemul.webp",
+    "baby.gif",
+    "balling.gif",
+    "banggu.gif",
+    "banggu2.gif",
+    "cat_and_man.gif",
+    "dog.gif",
+    "dokchim.gif",
+    "dongsuk.gif",
+    "e0e9a35a-5afa-4611-aedb-385b21797c15bad_cat.gif",
+    "hongcheol.gif",
+    "hq720.webp",
+    "i.gif",
+    "i].gif",
+    "kkosoonnae.gif",
+    "monkey.gif",
+    "nohoncheol.gif",
+    "panda_ball.gif",
+    "pool.gif",
+    "sejong.gif",
+    "shoot.gif",
+    "slipery.gif",
+    "water_cat.gif",
+    "yonghee.gif",
+    "zzz.gif",
+    "zzzzz시밬ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ.gif",
+    "개덤블링.gif",
+    "요리왕.gif",
+    "다운로드 (2).gif",
+    "다운로드ng.gif"
+];
+
+export default gifList;
