@@ -8,7 +8,6 @@ import effect from "../../../images/pepe-laugh-laugh.gif";
 import Load from "./Loading";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import SyncLoader from "react-spinners/SyncLoader";
 
 // ServerName import
 import { ServerName } from "../../../serverName";
@@ -187,10 +186,17 @@ const MyVideo = ({ match, socket }) => {
     }, [socket, match]);
 
 
-    function handleHP(happiness) {
+    function handleHP(happiness, reverse) {
+        if (reverse) {
+            happiness = 1 - happiness;
+            if (!videoRecorded && happiness < 0.4) {
+                videoRecorded = true;
+                    recordVideo(userVideo.current.srcObject, user_nick);
+            }
+        }
         if (happiness > 0.2) { // 피를 깎아야 하는 경우
             if (happiness > 0.6) {
-                if (!videoRecorded) { // 딱 한 번만 record
+                if (!videoRecorded && !reverse) { // 딱 한 번만 record
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
@@ -204,6 +210,7 @@ const MyVideo = ({ match, socket }) => {
 
 
     const ShowStatus = () => {
+        const reverse = useSelector((state) => state.item.reverse);
         const [myHP, setMyHP] = useState(initialHP);
          /* Reverse Mode */
         const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
@@ -215,9 +222,8 @@ const MyVideo = ({ match, socket }) => {
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 if (detections[0] && gameStarted) {
-                        
-                    decrease = handleHP(detections[0].expressions.happy);
-                    
+                    const decrease = handleHP(detections[0].expressions.happy, reverse);
+
                     if (decrease > 0) {
                         const newHP = myHP - decrease;
                         socket.emit("smile", newHP, roomID, user_nick, myStream.id);
@@ -252,17 +258,17 @@ const MyVideo = ({ match, socket }) => {
             socket.on("finish", (hpList) => {
               // HP [streamID, HP]
                 if (myStream && myStream.id) {
-                    console.log(hpList)
+                    // console.log(hpList)
                     hpList.map((HP) => {
                         if (myStream.id === HP[0]){
-                            console.log(myStream.id)
-                            console.log(HP[0],":",HP[1])
+                            // console.log(myStream.id)
+                            // console.log(HP[0],":",HP[1])
                             if (HP[1] < 0) {
                                 dispatch(setMineHP(0))
                                 content = <ProgressBar striped variant="danger" now={mineHP} />
                             }else {
                                 dispatch(setMineHP(HP[1]))
-                                console.log(mineHP);
+                                // console.log(mineHP);
                                 content = <ProgressBar striped variant="danger" now={mineHP} />
                             }
                         }

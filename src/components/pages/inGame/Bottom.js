@@ -7,7 +7,7 @@ import Button from "../../common/Button";
 // redux import
 import { useSelector, useDispatch } from "react-redux";
 import { setMineHP } from "../../../modules/inGame";
-import { setMyWeapon, setMyWeaponCheck } from '../../../modules/item';
+import { setIsMe, setMyWeapon, setMyWeaponCheck, setGotReverse } from '../../../modules/item';
 
 
 
@@ -33,7 +33,7 @@ const ButtonSize = {
     margin: "30px"
 }
 
-const InGameBottom = ({socket}) => {
+const InGameBottom = ({ socket }) => {
     const dispatch = useDispatch();
     const inGameState = useSelector((state) => (state.inGame));
     const itemState = useSelector((state) => state.item);
@@ -44,14 +44,20 @@ const InGameBottom = ({socket}) => {
     const gameFinished = inGameState.gameFinished;
     const bestDone = inGameState.bestDone;
     const roomID = inGameState.roomID;
+    const reverse = useSelector((state) => (state.item.reverse))
+    const gotReverse = useSelector((state) => (state.item.gotReverse))
 
     //id 전달
     const membersState = useSelector((state) => (state.member));
-    const myID = membersState.member.user_id;
+    const MyNickname = membersState.member.user_nick;
+    const myGIF = membersState.user_gif;
 
     //my weapon useState
     const myWeaponUsing = itemState.myWeapon;
     const myWeaponUsingInThisGame = itemState.myWeaponCheck;
+
+
+
 
 
 
@@ -74,22 +80,25 @@ const InGameBottom = ({socket}) => {
 
     function handleNamanmoo() {
         if (!myWeaponUsingInThisGame && !myWeaponUsing) {
-            if (myStream && myStream.id){
-                console.log(myID);
-                socket.emit("my_weapon", roomID, myID, myStream.id);
-                // socket.emit("my_weapon", roomID, myStream.id);
+                socket.emit("my_weapon", roomID, myGIF, MyNickname);
+                dispatch(setIsMe(true));
+                dispatch(setMyWeapon(true));
+                dispatch(setMyWeaponCheck(true));
+        }
+    }
 
-            }
-            dispatch(setMyWeapon(true));
-            dispatch(setMyWeaponCheck(true));
+    function handleReverse() {
+        if (!reverse) {
+            socket.emit("reverse", { roomID: roomID });
+            dispatch(setGotReverse(false));
         }
     }
 
     return (
         <Bottom>
-            {!gameStarted &&
+            {!gameStarted ?
                 <div style={MyButton}>
-                    {myStream && (chief || chiefStream === myStream.id)?
+                    {myStream && (chief || chiefStream === myStream.id) ?
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
                         :
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
@@ -97,8 +106,14 @@ const InGameBottom = ({socket}) => {
                     <Link to="/Lobby" style = {{textDecoration:"none"}}>
                         <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
                     </Link>
-                    
+
                 </div>
+                :
+                !gameFinished &&
+                (gotReverse ?
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
+                    :
+                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button>)
             }
             {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
                 <div style={MyButton}>

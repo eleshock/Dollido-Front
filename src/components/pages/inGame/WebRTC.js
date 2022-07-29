@@ -77,7 +77,7 @@ const WebRTC = ({ socket, match }) => {
             roomID: roomID,
             streamID: stream.id,
             nickName: nickName,
-            initialHP : initialHP,
+            initialHP: initialHP,
         });
 
         socket.emit("wait", ({ roomID: roomID }));
@@ -266,14 +266,18 @@ const WebRTC = ({ socket, match }) => {
 
     // Ice Cnadidate 이벤트가 발생해서 상대방이 해당 정보를 전송하면, 그 정보를 받음
     const handleNewICECandidateMsg = useCallback((incoming) => {
-        const candidate = new RTCIceCandidate(incoming.candidate);
-        const index = otherUsers.current.findIndex((otherUser) =>
-            otherUser.socketID === incoming.caller
-        );
-        const thePeer = peers.current[index];
-        thePeer
-            .addIceCandidate(candidate)
-            .catch((e) => console.log("ICE 에러\n" + e));
+        if (incoming && otherUsers.current && peers.current) {
+            const candidate = new RTCIceCandidate(incoming.candidate);
+            const index = otherUsers.current.findIndex((otherUser) =>
+                otherUser.socketID === incoming.caller
+            );
+            const thePeer = peers.current[index];
+            if(candidate){
+                thePeer
+                    .addIceCandidate(candidate)
+                    .catch((e) => console.log("ICE 에러\n" + e));
+            }
+        }
 
     }, [socket, match]);
 

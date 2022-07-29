@@ -103,8 +103,8 @@ const InGameHeader = ({socket}) => {
                 <HeaderMiddle>
                     {!gameFinished?
                         !gameStarted ?
-                            <Img src={dollidoLogo}/> 
-                            : 
+                            <Img src={dollidoLogo}/>
+                            :
                             <Timer></Timer>
                         :
                         <h1>Game Over !</h1>

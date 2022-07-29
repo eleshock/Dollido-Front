@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { s3Domain } from "../../../s3Domain";
 import { setMyWeapon } from '../../../modules/item';
 import effect from "../../../images/reverse.gif";
-import { setRandom } from "../../../modules/random";
 
 
 
@@ -28,30 +27,48 @@ const MyWeapon = ({socket}) => {
     const [content, setContent] = useState(<></>)
     const itemState = useSelector((state) => (state.item));
     const myWeaponImage = itemState.myWeaponImage;
+    const isMeFlag = itemState.isMe;
+    const isWho = itemState.isWho;
 
+    const membersState = useSelector((state) => (state.member));
+    const myGIF = membersState.user_gif;
+    const myID = membersState.member.user_nick;
 
     useEffect(() => {
         // socket.on('my_weapon', (streamID, randomList) => {
             // dispatch(setRandom(randomList));
             console.log(myWeaponImage);
-
-            setContent(
-                <Container>
-                        <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
-                </Container>
-                )
+            if(isMeFlag) {
+                setContent(
+                    <Container>
+                        <h2> {myID} 발동!!</h2>
+                            <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
+                    </Container>
+                    )
+                } else {
+                    setContent(
+                        <Container>
+                            <h2> {isWho} 발동!!</h2>
+                                <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
+                        </Container>
+                        )
+                }
             setTimeout(() => {
-                setContent(<Container>
-                    <BackgroundSizeStyle src={`${s3Domain}${myWeaponImage}`} ></BackgroundSizeStyle>
-                    </Container>);
+                if(isMeFlag) {
+                    setContent(<Container>
+                        <BackgroundSizeStyle src={`${s3Domain}${myGIF}`} ></BackgroundSizeStyle>
+                        </Container>);
+                } else {
+                    setContent(<Container>
+                        <BackgroundSizeStyle src={`${s3Domain}${myWeaponImage}`} ></BackgroundSizeStyle>
+                        </Container>);
+                }
             }, 2400);
             setTimeout(() => {
                 dispatch(setMyWeapon(false));
-
-            }, 5000)
+            }, 7400)
 
     }, [])
-    console.log(content)
     return content;
 }
 

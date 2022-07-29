@@ -6,7 +6,7 @@ import styled from "styled-components";
 import moai from "../../../images/moai.png";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { GlobalStyles } from "../../common/Global.ts";
+import { GlobalStyles } from "../../common/Global.tsx";
 
 /* MUI */
 import Box from '@mui/material/Box';

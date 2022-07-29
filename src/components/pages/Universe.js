@@ -1,7 +1,7 @@
 import univBackground from '../../images/DollidoUniverse.gif';
 import { Link } from "react-router-dom";
 import Button from '../common/Button';
-import { GlobalStyles } from '../common/Global.ts';
+import { GlobalStyles } from '../common/Global.tsx';
 
 const Universe = () => {
     return (
