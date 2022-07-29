@@ -28,27 +28,27 @@ const ButtonSize = {
     left: "25%"
 }
 
-const downloadVideo = (videoUrl, bestPerformerNick) => {
-    fetch(videoUrl, { method: 'GET' })
-        .then((res) => {
-            return res.blob();
-        })
-        .then((blob) => {
-            const videoUrl = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = videoUrl;
-            a.download = bestPerformerNick;
-            document.body.appendChild(a);
-            a.click();
-            setTimeout((_) => {
-                window.URL.revokeObjectURL(videoUrl);
-            }, 60000);
-            a.remove();
-        })
-        .catch((err) => {
-            console.error('err: ', err);
-        });
-};
+// const downloadVideo = (videoUrl, bestPerformerNick) => {
+//     fetch(videoUrl, { method: 'GET' })
+//         .then((res) => {
+//             return res.blob();
+//         })
+//         .then((blob) => {
+//             const videoUrl = window.URL.createObjectURL(blob);
+//             const a = document.createElement('a');
+//             a.href = videoUrl;
+//             a.download = bestPerformerNick;
+//             document.body.appendChild(a);
+//             a.click();
+//             setTimeout((_) => {
+//                 window.URL.revokeObjectURL(videoUrl);
+//             }, 60000);
+//             a.remove();
+//         })
+//         .catch((err) => {
+//             console.error('err: ', err);
+//         });
+// };
 
 
 // Blob(Binary Large Object) : JS에서 이미지, 사운드, 비디오 같은 멀티미디어 데이터를 다룰 때 사용
@@ -101,7 +101,7 @@ function BestPerformer(props) {
                     <div> {bestPerformerNick}! </div>
                     <video src={videoUrl} autoPlay loop
                         style={{ margin: '40 0 0 0', borderRadius: '10px', width: "90%", transform: 'scaleX(-1)' }} />
-                    <Button color="yellow" size="large" onClick={() => { downloadVideo(videoUrl, bestPerformerNick) }} style={ButtonSize}>DOWNLOAD</Button>
+                    {/* <Button color="yellow" size="large" onClick={() => { downloadVideo(videoUrl, bestPerformerNick) }} style={ButtonSize}>DOWNLOAD</Button> */}
                     <img src={firework} style={{ position: "absolute", width: "auto", height: "auto", top: "0%", left: "15%" }}></img>
                     <img src={firework} style={{ position: "absolute", width: "auto", height: "auto", top: "0%", right: "15%", transform: "scaleX(-1)" }}></img>
                 </>
