@@ -5,6 +5,7 @@ import {ServerName} from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
 import { useSelector } from "react-redux";
 import reverseMode from "../../../images/reverseMode.gif";
+import gifList from "../../../images/gifList";
 
 
 const Container = styled.div`
@@ -86,6 +87,7 @@ const Giftest = () => {
     useEffect(() => {
         tempGIF.current()
             // eslint-disable-next-line react-hooks/exhaustive-deps
+            // setName(gifList);
         }, []);
 
     Ticktock();
