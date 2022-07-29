@@ -7,7 +7,6 @@ const gifList = [
     "2531ED3B54ACF6493C.gif",
     "37.gif",
     "4.gif",
-    "4f0a7ca4-63c7-42e7-b1f8-5d139ccb1677áá¨áá²á«áá®áá©ááµá¼áá¡ááµá«.png",
     "7.gif",
     "AdorableUnkemptLarva-size_restricted.gif",
     "BlondDifferentHog.webp",

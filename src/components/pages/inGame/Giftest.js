@@ -76,18 +76,18 @@ const Giftest = () => {
 
 
     // get gifs file subjects from server
-    // const nameFunction = () => {
-    //     axios.get(`${ServerName}/api/gifs/list`)
-    //         .then((response) => {
-    //             setName(response.data);
-    //         });
-    // }
-    // tempGIF.current = nameFunction;
+    const nameFunction = () => {
+        axios.get(`${ServerName}/api/gifs/list`)
+            .then((response) => {
+                setName(response.data);
+            });
+    }
+    tempGIF.current = nameFunction;
 
     useEffect(() => {
-        // tempGIF.current()
+        tempGIF.current()
             // eslint-disable-next-line react-hooks/exhaustive-deps
-            setName(gifList);
+            // setName(gifList);
         }, []);
 
     Ticktock();
