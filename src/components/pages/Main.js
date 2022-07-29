@@ -8,7 +8,7 @@ import { Modal } from "../common/Modal.tsx";
 import SignIn from "./members/SignIn.js";
 import SignUp from "./members/SignUp.js";
 import Header from "../common/members/Header";
-import { GlobalStyles } from "../common/Global.ts";
+import { GlobalStyles } from "../common/Global.tsx";
 
 // images import
 import mainBackground from '../../images/main_Back.gif';

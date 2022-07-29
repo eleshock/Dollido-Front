@@ -25,7 +25,7 @@ const HP = ({ socket, index }) => {
           </Container>);
     const gameFinished = useSelector((state) => state.inGame.gameFinished);
 
-
+    console.log(peersHP)
     useEffect(() => {
       socket.on("smile", (peerHP, peerID, peerStreamID) => {
         if (partnerVideos[index].id === peerStreamID) {
@@ -35,7 +35,7 @@ const HP = ({ socket, index }) => {
           setContent(
           <Container>
             <Content>
-              <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"10%", right:"8%" }}></img>
+              <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"10%", right:"8%", transform:"scaleX(-1)" }}></img>
               <ProgressBar striped variant="danger" now={peersHP.current} />
             </Content>
           </Container>)
@@ -68,7 +68,7 @@ const HP = ({ socket, index }) => {
           setContent(
             <Container>
               <Content>
-                <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"50%", right:"8%" }}></img>
+                <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"50%", right:"8%", transform:"scaleX(-1)" }}></img>
                 <ProgressBar striped variant="danger" now={peersHP.current} />
               </Content>
             </Container>)

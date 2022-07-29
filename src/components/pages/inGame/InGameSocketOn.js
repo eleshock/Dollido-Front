@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 // redux import
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import {
     setChief,
     setChiefStream,
@@ -10,14 +10,22 @@ import {
     setBestDone,
     setReadyList,
     setRoomID,
-    clearReadyList
+    clearReadyList,
+
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
+import { setIsWho, setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse } from '../../../modules/item';
 import { deleteBestVideo } from "./MyVideo";
+
+
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
+    async function settingMyweapons (myGIF) {
+        dispatch(setMyWeaponImage(myGIF));
+    }
     const userNick = useSelector((state) => state.member.member.user_nick);
+
 
     // socket on
     useEffect(() => {
@@ -33,6 +41,7 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("start", (status, randomList) => {
+            console.log(randomList);
             if (status) {
                 dispatch(setRandom(randomList));
                 dispatch(setGamestart(true));
@@ -41,22 +50,44 @@ const InGameSocketOn = ({ match, socket }) => {
 
         socket.on("finish", () => {
             dispatch(setGameFinish(true));
+
         });
 
         socket.on("ready", ({streamID, isReady}) => {
             dispatch(setReadyList(streamID, isReady));
         });
-        
+
         socket.on("restart", () => {
             deleteBestVideo(userNick); // 이전 비디오 삭제 요청
             dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
             dispatch(setBestDone(false));
+            dispatch(setMyWeaponCheck(false));
+            dispatch(setMyWeapon(false));
+            dispatch(setGotReverse(false));
         });
-        
+
+        socket.on('my_weapon', async ({randomList, myGIF, myNickname}) => {
+            dispatch(setIsMe(false));
+            dispatch(setIsWho(myNickname));
+            await settingMyweapons(myGIF);
+            dispatch(setMyWeapon(true));
+            dispatch(setRandom(randomList));
+        });
+
+        socket.on('reverse', () => {
+            dispatch(setReverse(true));
+            setTimeout(() => dispatch(setReverse(false)), 8000);
+        });
+
+        socket.on("send-reverse", () => {
+            dispatch(setGotReverse(true));
+        })
+
         return () => {
             dispatch(clearReadyList());
+            dispatch(setGotReverse(false));
         }
     }, [match, socket, dispatch]);
 
