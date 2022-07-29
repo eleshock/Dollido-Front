@@ -10,6 +10,7 @@ import {
     setBestDone,
     setMyStream,
     setPeerNick,
+    setReadyList,
     clearPeerNick,
     deletePeerNick,
     deleteReadyList,
@@ -57,6 +58,7 @@ const WebRTC = ({ socket, match }) => {
             console.log("OUT ROOOOOOOOOM")
             socket.emit("out room");
             socket.off();
+            socket.disconnect();
             userStream.current = null;
             otherUsers.current = null;
             peers.current = null;
@@ -77,7 +79,7 @@ const WebRTC = ({ socket, match }) => {
             roomID: roomID,
             streamID: stream.id,
             nickName: nickName,
-            initialHP : initialHP,
+            initialHP: initialHP,
         });
 
         socket.emit("wait", ({ roomID: roomID }));
@@ -94,6 +96,7 @@ const WebRTC = ({ socket, match }) => {
                 // userID들은 이미 존재하던 사람들. 그 사람들에게 call
                 callUser(userID.socketID);
                 dispatch(setPeerNick(userID.streamID, userID.nickName));
+                dispatch(setReadyList(userID.streamID, userID.isReady));
                 otherUsers.current.push(userID);
             });
         });
@@ -118,11 +121,7 @@ const WebRTC = ({ socket, match }) => {
         try {
             peerRef.current = null; // 임시 변수 초기화
             peerRef.current = createPeer(userID); // 상대방의 userID를 파라미터로 넘기며(협상 위해) peer 객체를 생성
-            userStream.current // 상대방에게 offer하기 위해서 stream 정보를 peer의 track에 추가
-                .getTracks()
-                .forEach((track) =>
-                    peerRef.current.addTrack(track, userStream.current)
-                );
+            userStream.current.getTracks().forEach((track) => peerRef.current.addTrack(track, userStream.current));
             peers.current.push(peerRef.current);
         } catch (err) {
             console.error(err);
@@ -158,78 +157,61 @@ const WebRTC = ({ socket, match }) => {
                         "stun:stun.xten.com"
                     ], // stun 서버
                 },
-                {
-                    urls: "turn:numb.viagenie.ca", // turn 서버
-                    credential: "muazkh",
-                    username: "webrtc@live.com",
-                },
             ],
         });
 
         peer.onicecandidate = handleICECandidateEvent; // Ice Candidate 이벤트 발생시 정보 전송
         peer.ontrack = handleTrackEvent; // 상대방의 stream을 track에 추가
         peer.onnegotiationneeded = () => handleNegotiationNeededEvent(userID); // offer과 answer 작업
-
         return peer;
     }, [socket, match]);
 
-
-    // Caller 입장에서 Offer을 제공(offer 이벤트를 emit)
     const handleNegotiationNeededEvent = useCallback((userID) => {
-        const index = otherUsers.current.findIndex(
-            (otherUser) => otherUser.socketID === userID
-        );
+        try {
+            const index = otherUsers.current.findIndex((otherUser) => otherUser.socketID === userID);
+            const thePeer = peers.current[index];
+            const offer = await thePeer.createOffer()
+            thePeer.setLocalDescription(offer);
+            
+            const payload = {
+                target: userID,
+                caller: socket.id,
+                sdp: thePeer.localDescription,
+            };
 
-        const thePeer = peers.current[index];
-        thePeer
-            .createOffer()
-            .then((offer) => {
-                return thePeer.setLocalDescription(offer); // offer을 생성하고 해당 offer을 local description으로 설정
-            })
-            .then(() => {
-                const payload = {
-                    target: userID,
-                    caller: socket.id,
-                    sdp: thePeer.localDescription,
-                };
-
-                socket.emit("offer", payload);
-            })
-            .catch((err) => console.error(err));
+            socket.emit("offer", payload);
+        } catch(e) {
+            console.log(e);
+        } 
     }, [socket, match]);
 
 
     // Callee 입장에서 'offer' 이벤트를 listen했을 때
     const handleRecieveCall = useCallback((incoming) => {
-        peerRef.current = null;
-        peerRef.current = createPeer(); // negotiate을 하는 Caller의 입장이 아니므로 상대방 userID를 보낼 필요 없음
-        peers.current.push(peerRef.current);
-        const maxNum = peers.current.length;
-        const thePeer = peers.current[maxNum - 1];
-        const desc = new RTCSessionDescription(incoming.sdp);
-        thePeer
-            .setRemoteDescription(desc)
-            .then(() => {
-                userStream.current.getTracks().forEach((track) =>
-                    thePeer.addTrack(track, userStream.current) // 상대방에게 나의 stream 정보를 answer하기 위해 peer에 track 정보추가
-                );
-            })
-            .then(() => {
-                return thePeer.createAnswer();
-            })
-            .then((answer) => {
-                return thePeer.setLocalDescription(answer); // offer와 유사하게 sdp 정보를 가지고 있음
-            })
-            .then(() => {
-                const payload = {
-                    target: incoming.caller,
-                    caller: socket.id,
-                    sdp: thePeer.localDescription,
-                };
-
-                socket.emit("answer", payload);
-            })
-            .catch((err) => console.error(err));
+        try {
+            peerRef.current = null;
+            peerRef.current = createPeer(); // negotiate을 하는 Caller의 입장이 아니므로 상대방 userID를 보낼 필요 없음
+            peers.current.push(peerRef.current);
+            
+            const maxNum = peers.current.length;
+            const thePeer = peers.current[maxNum - 1];
+            const desc = new RTCSessionDescription(incoming.sdp);
+            
+            thePeer.setRemoteDescription(desc)
+            userStream.current.getTracks().forEach((track) => thePeer.addTrack(track, userStream.current));
+            const answer = await thePeer.createAnswer();
+            thePeer.setLocalDescription(answer); // offer와 유사하게 sdp 정보를 가지고 있음
+            
+            const payload = {
+                target: incoming.caller,
+                caller: socket.id,
+                sdp: thePeer.localDescription,
+            };
+    
+            socket.emit("answer", payload);
+        } catch(e) {
+            console.log(e)
+        }
     }, [socket, match]);
 
 
@@ -237,11 +219,9 @@ const WebRTC = ({ socket, match }) => {
     const handleAnswer = useCallback((message) => {
         try {
             const desc = new RTCSessionDescription(message.sdp);
-            const index = otherUsers.current.findIndex((otherUser) =>
-                otherUser.socketID === message.caller
-            );
+            const index = otherUsers.current.findIndex((otherUser) => otherUser.socketID === message.caller);
             const thePeer = peers.current[index];
-            thePeer.setRemoteDescription(desc).catch((e) => console.log(e));
+            thePeer.setRemoteDescription(desc);
         } catch (err) {
             console.error(err);
         }
@@ -251,14 +231,12 @@ const WebRTC = ({ socket, match }) => {
     // Ice Candidate 정보는 서로 주고 받음
     // Ice Candidate 이벤트가 발생하면 상대방에게 해당 정보를 전송
     const handleICECandidateEvent = useCallback((e) => {
-
         if (e.candidate) {
             const payload = {
                 caller: socket.id,
                 candidate: e.candidate,
                 roomID: roomID,
             };
-
             socket.emit("ice-candidate", payload);
         }
     }, [socket, match]);
@@ -266,20 +244,19 @@ const WebRTC = ({ socket, match }) => {
 
     // Ice Cnadidate 이벤트가 발생해서 상대방이 해당 정보를 전송하면, 그 정보를 받음
     const handleNewICECandidateMsg = useCallback((incoming) => {
-        const candidate = new RTCIceCandidate(incoming.candidate);
-        const index = otherUsers.current.findIndex((otherUser) =>
-            otherUser.socketID === incoming.caller
-        );
-        const thePeer = peers.current[index];
-        thePeer
-            .addIceCandidate(candidate)
-            .catch((e) => console.log("ICE 에러\n" + e));
-
-    }, [socket, match]);
+        try {
+            const candidate = new RTCIceCandidate(incoming.candidate);
+            const index = otherUsers.current.findIndex((otherUser) => otherUser.socketID === incoming.caller);
+            const thePeer = peers.current[index];
+            thePeer.addIceCandidate(candidate)
+        } catch(e) {
+            console.log(e);
+        }
+    }, [socket]);
 
     const handleTrackEvent = useCallback((e) => {
         dispatch(updateVideos(e.streams[0])); // redux에 새로운 유저 video stream state를 update하는 함수 dispatch
-    }, [socket, match]);
+    }, [socket]);
 
 }
 
