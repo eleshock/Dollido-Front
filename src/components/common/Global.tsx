@@ -1,7 +1,7 @@
 import React from "react";
 import { createGlobalStyle } from "styled-components";
 import { useSelector } from "react-redux";
-import reverseBackground from "../../images/reverseBackground.gif";
+import reverseBackground from "../../images/reverseBackground.jpg";
 
 interface Props {
     bgImage: string;

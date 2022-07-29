@@ -14,7 +14,7 @@ import {
 
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
-import { setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse } from '../../../modules/item';
+import { setIsWho, setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse } from '../../../modules/item';
 import { deleteBestVideo } from "./MyVideo";
 
 
@@ -68,9 +68,9 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setGotReverse(false));
         });
 
-        socket.on('my_weapon', async ({randomList, myGIF}) => {
-            console.log(myGIF);
+        socket.on('my_weapon', async ({randomList, myGIF, myNickname}) => {
             dispatch(setIsMe(false));
+            dispatch(setIsWho(myNickname));
             await settingMyweapons(myGIF);
             dispatch(setMyWeapon(true));
             dispatch(setRandom(randomList));
@@ -84,7 +84,7 @@ const InGameSocketOn = ({ match, socket }) => {
         socket.on("send-reverse", () => {
             dispatch(setGotReverse(true));
         })
-        
+
         return () => {
             dispatch(clearReadyList());
             dispatch(setGotReverse(false));

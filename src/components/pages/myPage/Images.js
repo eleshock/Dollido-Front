@@ -57,6 +57,10 @@ function Images() {
     setFile(file)
 	}
 
+  const alertSubmit = () => {
+    alert("제출 완료!");
+  }
+
   return (
     <div className="App">
       <FlexContainer>
@@ -64,7 +68,7 @@ function Images() {
         <img src={`${s3Domain}${myGIF}`}></img>
         <form onSubmit={submit}>
           <input onChange={fileSelected} type="file" accept="image/*"/>
-          <button type="submit">Submit</button>
+          <button type="submit" onClick={alertSubmit}>Submit</button>
         </form>
       </FlexContainer>
     </div>

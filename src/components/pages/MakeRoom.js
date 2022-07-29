@@ -163,7 +163,7 @@ function MakeRoom() {
   const socket = useRef();
   const roomNameRef = useRef(null);
 
-  
+
   const onClickMode = (params, e) => {
     e.preventDefault();
     switch (params) {
@@ -187,7 +187,7 @@ function MakeRoom() {
         return;
       default:
         return;
-        
+
       }
     };
   useEffect(() => {
@@ -210,12 +210,12 @@ function MakeRoom() {
   }, []);
 
   // 2. 방 생성 절차
-  
+
   const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
   }, []);
-  
+
   const navigate = useNavigate();
   const onClickMakeRoom = useCallback(
     (e) => {

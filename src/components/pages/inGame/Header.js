@@ -25,7 +25,7 @@ const HeaderLeft = styled.div`
 const HeaderMiddle = styled.div`
     flex: 5;
     text-align: center;
-    color: gray;
+    color: white;
     width: 100%;
 `
 
@@ -90,8 +90,8 @@ const InGameHeader = ({socket}) => {
                 <HeaderMiddle>
                     {!gameFinished?
                         !gameStarted ?
-                            <Img src={dollidoLogo}/> 
-                            : 
+                            <Img src={dollidoLogo}/>
+                            :
                             <Timer></Timer>
                         :
                         <h1>Game Over !</h1>
