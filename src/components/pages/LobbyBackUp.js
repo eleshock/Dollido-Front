@@ -10,7 +10,6 @@ import styled from "styled-components";
 import { GlobalStyles } from "../common/Global.tsx";
 
 import useSound from 'use-sound';
-
 import {select, enterRoom, click, exit} from './Sound'
 
 import { ServerName } from "../../serverName";

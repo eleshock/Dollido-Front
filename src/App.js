@@ -7,7 +7,13 @@ import MakeRoom from "./components/pages/MakeRoom";
 import MyPage from "./components/pages/myPage/MyPage";
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 
+import useSound2 from './components/pages/useSound2'
+import mainTheme from './sounds/BGM/main_theme.mp3'
+
 function App()  {
+
+    // useSound2(mainTheme, 1, 2000);
+
     return (
         <BrowserRouter>
             <Routes>
