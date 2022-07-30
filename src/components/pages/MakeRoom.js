@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 import useSound from 'use-sound';
-import {select, enterRoom, click, exit} from './Sound'
+import { select, enterRoom, exit, celebrateSF, playingSF } from './Sound'
 
 const FlexContainer = {
   display: "flex",
@@ -164,10 +164,9 @@ function MakeRoom() {
   const roomNameRef = useRef(null);
 
   // game sound
-  const [clickSound] = useSound(
-    click,
-    { volume: 0.5 }
-  );
+  celebrateSF.pause();
+  playingSF.pause();
+
   const [enterGame] = useSound(
     enterRoom,
     { volume: 0.5 }
@@ -304,10 +303,10 @@ function MakeRoom() {
             </div>
             <div style={Middle}>
               <Content
-                onMouseDown = {clickSound}
                 onClick={(e) => {
                   onClickMode("One", e);
                 }}
+                onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>혼자하기</GradationTitle>
                 <Modeimage src={ModeOne} />
@@ -317,6 +316,7 @@ function MakeRoom() {
                 onClick={(e) => {
                   onClickMode("Two", e);
                 }}
+                onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>개인전</GradationTitle>
                 <Modeimage src={ModeThree} />
@@ -328,6 +328,7 @@ function MakeRoom() {
                 onClick={(e) => {
                   onClickMode("Three", e);
                 }}
+                onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>팀전</GradationTitle>
                 <Modeimage src={ModeTwo} />
@@ -335,7 +336,7 @@ function MakeRoom() {
               </Content>
             </div>
             <div style={Bottom}>
-              <BackToLobby to={"/lobby"}>&lt; 뒤로가기</BackToLobby>
+              <BackToLobby to = {'/lobby'} onMouseDown={exitSound} >&lt; 뒤로가기</BackToLobby>
             </div>
           </div>
         }

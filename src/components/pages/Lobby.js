@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { ThemeProvider } from "styled-components";
 
@@ -11,7 +11,7 @@ import { GlobalStyles } from "../common/Global.tsx";
 
 import useSound from 'use-sound';
 
-import {select, enterRoom, click, exit} from './Sound'
+import {select, enterRoom, exit, playingSF, celebrateSF} from './Sound'
 
 import { ServerName } from "../../serverName";
 
@@ -174,11 +174,12 @@ let startVideoPromise;
 
 const Lobby = () => {
 
+  const navigate = useNavigate();
+  
   // game sound
-  const [clickSound] = useSound(
-    click,
-    { volume: 0.5 }
-  );
+  celebrateSF.pause();
+  playingSF.pause();
+
   const [enterGame] = useSound(
     enterRoom,
     { volume: 0.5 }
@@ -284,6 +285,9 @@ const Lobby = () => {
     }
   }
 
+  const handleMakeRoom = () => {
+    navigate('/makeroom');
+  }
 
   const backToLoomList = () => {
     setModal(false);
@@ -301,7 +305,6 @@ const Lobby = () => {
     >
       <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
           <FlexContainer
-          onMouseDown = {clickSound}
           >
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
                     {nickname &&
@@ -314,6 +317,9 @@ const Lobby = () => {
                             <Button2
                               color="orange"
                               size="medium"
+                              onMouseEnter = {() => {
+                                  selectSound();
+                              }}
                             >
                               마이페이지
                             </Button2>
@@ -327,15 +333,17 @@ const Lobby = () => {
               <Content>
                   <RoomListFrame>
                     <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
-                      <Link to = {`/makeRoom`} style = {{textDecoration:"none"}}>
                             <div style = {{margin: "30px"}}>
                               <Button2
                                 color="yellow"
+                                onClick={handleMakeRoom}
+                                onMouseEnter = {() => {
+                                  selectSound();
+                                }}
                               >
                                 방만들기
                               </Button2>
                             </div>
-                          </Link>
                       </div>
                       <RoomTagList>
                         <RoomTag1>이름</RoomTag1>

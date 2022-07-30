@@ -18,8 +18,20 @@ import TabPanel from '@mui/lab/TabPanel';
 import Ranking from './Ranking';
 import Images from './Images';
 
+import useSound from 'use-sound';
+import { select, exit, mode } from '../Sound';
+
+
 
 const MyPage = () => {
+
+  const [selectSound] = useSound(
+    select,
+    { volume: 0.5 }
+  );
+  const [exitSound] = useSound(
+    exit,
+  );
 
   const nickname = useSelector((state) => state.member.member.user_nick);
   const [value, setValue] = React.useState('1');
@@ -58,10 +70,26 @@ const MyPage = () => {
                               "& button.Mui-selected": {color:"#57C2F0"},
                             }}
                             onChange={handleChange}>
-                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="내 정보" value="1" />
-                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="나만의 무기" value="2" />
-                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="랭킹" value="3" />
-                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="명예의 전당" value="4" />
+                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="내 정보" value="1" 
+                              onMouseEnter = {() => {
+                                selectSound();
+                              }}
+                            />
+                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="나만의 무기" value="2"
+                              onMouseEnter = {() => {
+                                selectSound();
+                            }}                              
+                            />
+                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="랭킹" value="3"
+                              onMouseEnter = {() => {
+                                selectSound();
+                            }}
+                            />
+                            <MyTab sx = {{"&:hover": {transform: "scale(1.3)"}}} label="명예의 전당" value="4"
+                              onMouseEnter = {() => {
+                                selectSound();
+                            }}                              
+                            />
                           </TabList>
                         </Box>
                         <TabPanel value="1">
@@ -112,7 +140,7 @@ const MyPage = () => {
                       </MyTabContext>
                     </MyBox>
                   </Content>
-                    <BackToLobby to = {'/lobby'}>
+                    <BackToLobby to = {'/lobby'} onMouseDown={exitSound}>
                     &lt; 뒤로가기
                     </BackToLobby>
                 </FlexContainer>

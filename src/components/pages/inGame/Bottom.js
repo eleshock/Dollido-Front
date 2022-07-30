@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 // commponent import
@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setMineHP } from "../../../modules/inGame";
 import { setIsMe, setMyWeapon, setMyWeaponCheck, setGotReverse } from '../../../modules/item';
 
-
+import {celebrateSF} from "../Sound";
 
 const Bottom = styled.div`
     display: flex;
@@ -57,9 +57,7 @@ const InGameBottom = ({ socket }) => {
     const myWeaponUsingInThisGame = itemState.myWeaponCheck;
 
 
-
-
-
+    const navigate = useNavigate();
 
 
 
@@ -76,6 +74,11 @@ const InGameBottom = ({ socket }) => {
     function handleRestart() {
         socket.emit("restart", {roomID: roomID});
         dispatch(setMineHP(null));
+    }
+
+    function handleQuit() {
+        celebrateSF.pause();
+        navigate('/lobby');
     }
 
     function handleNamanmoo() {
@@ -126,9 +129,7 @@ const InGameBottom = ({ socket }) => {
                     {chief &&
                         <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
                     }
-                    <Link to="/Lobby" style = {{textDecoration:"none"}}>
-                        <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
-                    </Link>
+                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleQuit}>QUIT</Button>
                 </div>
             }
             <div style={{ opacity: '0', height: '6.5rem' }}> </div>

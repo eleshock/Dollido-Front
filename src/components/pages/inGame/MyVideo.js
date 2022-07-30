@@ -21,7 +21,6 @@ import * as faceapi from 'face-api.js';
 import { setMyWeapon, setMyWeaponCheck } from "../../../modules/item";
 
 
-
 const Container = styled.div `
     display: flex;
     align-items: center;
@@ -154,7 +153,7 @@ const MyVideo = ({ match, socket }) => {
 
     let videoRecorded = false; // 녹화 여부
 
-   
+    
 
 
     useEffect(() => {
