@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { setBestDone } from "../../../modules/inGame";
 import firework from "../../../images/fireworks/firework_7.gif";
 import Button from "../../common/Button";
+import { s3Domain } from "../../../s3Domain";
 
 let response;
 
@@ -58,7 +59,6 @@ function BestPerformer(props) {
     const [gotVideo, setGotVideo] = useState(false);
     const [typedone, setTypeDone] = useState(false);
     let content = '';
-    console.log("Show Best Performer");
 
     useEffect(() => {
         // Best Performer Nick과 비디오 얻어오기
@@ -95,8 +95,8 @@ function BestPerformer(props) {
                         <h1> 비디오가 기록되지 않았습니다 😢 </h1>
                     </>
             } else {
-                const videoUrl = ServerName + '/' + bestVideoName;
-
+                const videoUrl = s3Domain + bestVideoName;
+                
                 content = <>
                     <div> {bestPerformerNick}! </div>
                     <video src={videoUrl} autoPlay loop
