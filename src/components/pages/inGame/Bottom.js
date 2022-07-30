@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 // commponent import
 import Button from "../../common/Button";
+import Button4 from "../../common/Button4";
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
@@ -111,9 +112,9 @@ const InGameBottom = ({ socket }) => {
                 :
                 !gameFinished &&
                 (gotReverse ?
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
+                    <Button4 color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button4>
                     :
-                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button>)
+                    <Button4 color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button4>)
             }
             {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
                 <div style={MyButton}>

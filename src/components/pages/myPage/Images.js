@@ -16,8 +16,8 @@ const FlexContainer = styled.div`
 async function postImage({image, token}) {
   const formData = new FormData();
   formData.append("image", image);
-  console.log(image)
-  console.log(formData)
+  // console.log(image)
+  // console.log(formData)
   const result = await axios.post(`${ServerName}/api/gifs/images`, formData, {
     headers: {
       "Content-Type": "multipart/form-data;",
@@ -27,7 +27,7 @@ async function postImage({image, token}) {
       token: token
     },
   });
-  console.log(result)
+  // console.log(result)
   return result.data
 }
 
@@ -46,14 +46,14 @@ function Images() {
   const submit = async event => {
     event.preventDefault()
     const result = await postImage({image: file, token: token.token});
-    console.log(result.imagePath);
+    // console.log(result.imagePath);
     dispatch(setUserGif(result.imagePath));
     setImages([result.image, ...images])
   }
 
   const fileSelected = event => {
     const file = event.target.files[0]
-    console.log(file)
+    // console.log(file)
     setFile(file)
 	}
 

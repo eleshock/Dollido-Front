@@ -120,11 +120,11 @@ function recordVideo(stream, user_nick) {
         });
         postVideo(recordedBlob, user_nick);
     };
-    console.log("Recording Start...");
+    // console.log("Recording Start...");
     recorder.start();
     setTimeout(() => {
         recorder.stop();
-        console.log("Recording Finished!");
+        // console.log("Recording Finished!");
     }, recordTime);
 }
 
@@ -155,7 +155,6 @@ const MyVideo = ({ match, socket }) => {
     let videoRecorded = false; // 녹화 여부
 
    
-
 
     useEffect(() => {
         if (modelsLoaded && myStream && myStream.id) {
@@ -250,7 +249,7 @@ const MyVideo = ({ match, socket }) => {
         } else if(interval && !smiling){
             content = <ProgressBar striped variant="danger" now={myHP} />
         } else {
-            console.log(mineHP);
+            // console.log(mineHP);
             content = <ProgressBar striped variant="danger" now={mineHP} />
         }
 
@@ -302,7 +301,9 @@ const MyVideo = ({ match, socket }) => {
 
     return (
         <>
-            <Container>
+            <Container>    
+                {myStream ? <p style = {{color:"white"}}>{myStream.id}</p> : null}
+
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
                     {loading && < Load></Load>}

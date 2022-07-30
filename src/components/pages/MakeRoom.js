@@ -226,7 +226,7 @@ function MakeRoom() {
         return;
       }
       const roomID = uuid();
-      console.log(roomID);
+      // console.log(roomID);
       localStorage.roomLink = roomID;
       localStorage.roommode = roommode;
       // 2-3. 방 생성, 방이름과 방ID 서버에 전달
@@ -243,7 +243,7 @@ function MakeRoom() {
     if (startVideoPromise) {
       startVideoPromise.then((stream) => {
         stream.getTracks().forEach((track) => {
-          console.log(track)
+          // console.log(track)
           track.stop();
         });
       });
@@ -258,7 +258,7 @@ function MakeRoom() {
       audio: false,
       video: deviceId ? { deviceId } : true,
     });
-    console.log("camera loaded");
+    // console.log("camera loaded");
     startVideoPromise
     .then((stream) => {
       let video = videoRef.current;

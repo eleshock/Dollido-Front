@@ -58,7 +58,7 @@ function BestPerformer(props) {
     const [gotVideo, setGotVideo] = useState(false);
     const [typedone, setTypeDone] = useState(false);
     let content = '';
-    console.log("Show Best Performer");
+    // console.log("Show Best Performer");
 
     useEffect(() => {
         // Best Performer Nick과 비디오 얻어오기
@@ -70,7 +70,7 @@ function BestPerformer(props) {
                     console.log(err);
                     return null;
                 });
-            console.log("response : ", response);
+            // console.log("response : ", response);
             setGotVideo(true);
         }
         getLoserVideo();
@@ -85,8 +85,8 @@ function BestPerformer(props) {
             const bestPerformerNick = response.data.bestPerformerNick;
             const bestVideoName = response.data.bestVideoName;
 
-            console.log("Best Performer Nick :", bestPerformerNick);
-            console.log("Best Video Name :", bestVideoName);
+            // console.log("Best Performer Nick :", bestPerformerNick);
+            // console.log("Best Video Name :", bestVideoName);
 
             if (bestVideoName === undefined) {
                 content =
