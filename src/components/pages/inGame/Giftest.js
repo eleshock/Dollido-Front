@@ -5,6 +5,7 @@ import {ServerName} from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
 import { useSelector } from "react-redux";
 import reverseMode from "../../../images/reverseMode.gif";
+import gifList from "../../../images/gifList";
 
 
 const Container = styled.div`
@@ -26,7 +27,7 @@ const BackgroundSizeStyle = styled.img`
     width: 900px;
     height: 500px;
     object-fit: contain;
-    background-color: gray;
+    background-color: transparent;
 `;
 
 const ReverseModeStyle = styled.img`
@@ -65,7 +66,7 @@ const Giftest = () => {
                         setSeconds(3)
                         setCount(value => value+1);
                         setCountDown(true);
-                    }, 4000);
+                    }, 6000);
                     return () => clearInterval(timer);
                 }
             // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -86,6 +87,7 @@ const Giftest = () => {
     useEffect(() => {
         tempGIF.current()
             // eslint-disable-next-line react-hooks/exhaustive-deps
+            // setName(gifList);
         }, []);
 
     Ticktock();
@@ -103,7 +105,7 @@ const Giftest = () => {
     return (
         <Container>
             { (reverse && reverse1stGIF) ?
-                <ReverseModeStyle src={reverseMode}></ReverseModeStyle> 
+                <ReverseModeStyle src={reverseMode}></ReverseModeStyle>
                 :
                 !countDown ?
                     <BackgroundSizeStyle src={`${s3Domain}${name[randomGIF[0][count]]}`}></BackgroundSizeStyle>

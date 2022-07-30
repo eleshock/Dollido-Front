@@ -28,20 +28,31 @@ const MyWeapon = ({socket}) => {
     const itemState = useSelector((state) => (state.item));
     const myWeaponImage = itemState.myWeaponImage;
     const isMeFlag = itemState.isMe;
+    const isWho = itemState.isWho;
 
     const membersState = useSelector((state) => (state.member));
     const myGIF = membersState.user_gif;
+    const myID = membersState.member.user_nick;
 
     useEffect(() => {
         // socket.on('my_weapon', (streamID, randomList) => {
             // dispatch(setRandom(randomList));
             console.log(myWeaponImage);
-
-            setContent(
-                <Container>
-                        <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
-                </Container>
-                )
+            if(isMeFlag) {
+                setContent(
+                    <Container>
+                        <h2> {myID} 발동!!</h2>
+                            <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
+                    </Container>
+                    )
+                } else {
+                    setContent(
+                        <Container>
+                            <h2> {isWho} 발동!!</h2>
+                                <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
+                        </Container>
+                        )
+                }
             setTimeout(() => {
                 if(isMeFlag) {
                     setContent(<Container>
@@ -55,7 +66,7 @@ const MyWeapon = ({socket}) => {
             }, 2400);
             setTimeout(() => {
                 dispatch(setMyWeapon(false));
-            }, 6000)
+            }, 7400)
 
     }, [])
     return content;
