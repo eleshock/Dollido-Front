@@ -19,7 +19,7 @@ import Ranking from './Ranking';
 import Images from './Images';
 
 import useSound from 'use-sound';
-import { select, exit, mode } from '../Sound';
+import { select, exit } from '../Sound';
 
 
 
