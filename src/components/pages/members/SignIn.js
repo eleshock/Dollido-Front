@@ -39,8 +39,31 @@ const SingIn = ({ setChange }) => {
 
     return (
         <Content title="로그인">
-            <InputWithLabel label="아이디" name="id" placeholder="아이디" onChange={(event) => setId(event.target.value)} />
-            <InputWithLabel label="비밀번호" name="pw" placeholder="비밀번호" type="password" onChange={(event) => setPw(event.target.value)} />
+            <InputWithLabel 
+                label = "아이디"
+                name = "id"
+                placeholder = "아이디"
+                onChange = {
+                    (event) => setId(event.target.value)
+                }
+                onKeyPress = {
+                    (e) => {
+                        e.key === "Enter" && submit();
+                    }
+                }
+            />
+            <InputWithLabel 
+                label="비밀번호" 
+                name="pw" 
+                placeholder="비밀번호" 
+                type="password" 
+                onChange={(event) => setPw(event.target.value)} 
+                onKeyPress = {
+                    (e) => {
+                        e.key === "Enter" && submit();
+                    }
+                }
+                />
             <FailMessage msg={fail}></FailMessage>
             <Button onClick={submit}>로그인</Button>
             <RightAlignedLink onClick={onChange}>회원가입</RightAlignedLink>

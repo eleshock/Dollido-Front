@@ -43,10 +43,56 @@ const SingUp = ({ setChange }) => {
     return (
         <Content title = "회원가입">
             <>
-                <InputWithLabel label="닉네임" placeholder="닉네임" onChange={(event) => setNick(event.target.value)}/>
-                <InputWithLabel label="아이디" placeholder="아이디" onChange={(event) => setId(event.target.value)}/>
-                <InputWithLabel label="비밀번호" placeholder="비밀번호" type="password" onChange={(event) => setPw(event.target.value)}/>
-                <InputWithLabel label="비밀번호 확인" placeholder="비밀번호 확인" type="password"onChange={(event) => setPwOk(event.target.value)}/>
+                <InputWithLabel 
+                    label = "닉네임"
+                    placeholder = "닉네임"
+                    onChange = {
+                        (event) => setNick(event.target.value)
+                    }
+                    onKeyPress = {
+                        (e) => {
+                            e.key === "Enter" && submit();
+                        }
+                    }
+                />
+                <InputWithLabel 
+                    label = "아이디"
+                    placeholder = "아이디"
+                    onChange = {
+                        (event) => setId(event.target.value)
+                    }
+                    onKeyPress = {
+                        (e) => {
+                            e.key === "Enter" && submit();
+                        }
+                    }
+                />
+                <InputWithLabel 
+                    label = "비밀번호"
+                    placeholder = "비밀번호"
+                    type = "password"
+                    onChange = {
+                        (event) => setPw(event.target.value)
+                    }
+                    onKeyPress = {
+                        (e) => {
+                            e.key === "Enter" && submit();
+                        }
+                    }
+                />
+                <InputWithLabel 
+                    label = "비밀번호 확인"
+                    placeholder = "비밀번호 확인"
+                    type = "password"
+                    onChange = {
+                        (event) => setPwOk(event.target.value)
+                    }
+                    onKeyPress = {
+                        (e) => {
+                            e.key === "Enter" && submit();
+                        }
+                    }
+                />
                 <FailMessage msg={fail}></FailMessage>
                 <Button onClick={submit}>회원가입</Button>
             </>

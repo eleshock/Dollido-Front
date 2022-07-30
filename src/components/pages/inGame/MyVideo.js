@@ -153,7 +153,6 @@ const MyVideo = ({ match, socket }) => {
 
     let videoRecorded = false; // 녹화 여부
 
-    
 
 
     useEffect(() => {

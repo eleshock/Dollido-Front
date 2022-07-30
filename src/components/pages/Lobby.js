@@ -16,7 +16,8 @@ import {select, enterRoom, exit, playingSF, celebrateSF} from './Sound'
 import { ServerName } from "../../serverName";
 
 // 임시
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setInit } from "../../modules/inGame.js";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -204,6 +205,7 @@ const Lobby = () => {
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 7;
+  const dispatch = useDispatch();
 
   // 1. 방 리스트 받아오기
   useEffect(() => {
@@ -214,7 +216,7 @@ const Lobby = () => {
       },
     });
     socket.current.emit("get room list");
-
+    dispatch(setInit());
     return () => {
       stopWebcam();
     }
