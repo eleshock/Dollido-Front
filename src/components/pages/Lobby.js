@@ -1,5 +1,5 @@
-import { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { ThemeProvider } from "styled-components";
 
@@ -8,6 +8,10 @@ import { LobbyModal } from "../common/LobbyModal.tsx";
 import mainBackGround from "../../images/mainBackground.gif";
 import styled from "styled-components";
 import { GlobalStyles } from "../common/Global.tsx";
+
+import useSound from 'use-sound';
+
+import {select, enterRoom, exit, playingSF, celebrateSF} from './Sound'
 
 import { ServerName } from "../../serverName";
 
@@ -170,6 +174,27 @@ const RightTriangle = styled.button`
 let startVideoPromise;
 
 const Lobby = () => {
+
+  const navigate = useNavigate();
+  
+  // game sound
+  celebrateSF.pause();
+  playingSF.pause();
+
+  const [enterGame] = useSound(
+    enterRoom,
+    { volume: 0.5 }
+  );
+  const [selectSound] = useSound(
+    select,
+    { volume: 0.5 }
+  );
+  const [exitSound] = useSound(
+    exit,
+  );
+  
+
+
   // 임시
   const nickname = useSelector((state) => state.member.member.user_nick);
 
@@ -262,6 +287,9 @@ const Lobby = () => {
     }
   }
 
+  const handleMakeRoom = () => {
+    navigate('/makeroom');
+  }
 
   const backToLoomList = () => {
     setModal(false);
@@ -278,7 +306,8 @@ const Lobby = () => {
       }}
     >
       <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
-          <FlexContainer>
+          <FlexContainer
+          >
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
                     {nickname &&
                         <div>
@@ -290,6 +319,9 @@ const Lobby = () => {
                             <Button2
                               color="orange"
                               size="medium"
+                              onMouseEnter = {() => {
+                                  selectSound();
+                              }}
                             >
                               마이페이지
                             </Button2>
@@ -303,15 +335,17 @@ const Lobby = () => {
               <Content>
                   <RoomListFrame>
                     <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
-                      <Link to = {`/makeRoom`} style = {{textDecoration:"none"}}>
                             <div style = {{margin: "30px"}}>
                               <Button2
                                 color="yellow"
+                                onClick={handleMakeRoom}
+                                onMouseEnter = {() => {
+                                  selectSound();
+                                }}
                               >
                                 방만들기
                               </Button2>
                             </div>
-                          </Link>
                       </div>
                       <RoomTagList>
                         <RoomTag1>이름</RoomTag1>
@@ -322,7 +356,12 @@ const Lobby = () => {
                         {currentPosts(rooms).map((room) => {
                           // console.log(room)
                           return (
-                              <RoomLinkList key={room[0]} onClick = { () => selectRoom(room) }>
+                              <RoomLinkList key={room[0]}
+                                onClick = { () => selectRoom(room)}
+                                onMouseEnter = {() => {
+                                  selectSound();
+                                }}
+                                >
                                 <RoomLink1>{room[1].roomName}</RoomLink1>
                                 <RoomLink2>{room[1].members[0]? room[1].members[0].nickName : "없음" }</RoomLink2>
                                 <RoomLink3>개인전</RoomLink3>
@@ -355,6 +394,7 @@ const Lobby = () => {
                           <Link to = {`/room/${localStorage.roomLink}`} name = {localStorage.roomName} style = {{textDecoration:"none"}}>
                             <div style = {{margin: "30px"}}>
                               <Button2
+                                onMouseUp = {enterGame}
                                 color="yellow"
                               >
                                 입장하기
@@ -364,7 +404,8 @@ const Lobby = () => {
                         </div>
                         <div style = {{margin: "30px"}}>
                               <Button2
-                                color="yellow" onClick={backToLoomList}
+                                color="yellow"
+                                onClick={backToLoomList}
                               >
                                 나가기
                               </Button2>

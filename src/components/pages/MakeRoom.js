@@ -16,6 +16,9 @@ import { ServerName } from "../../serverName";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
+import useSound from 'use-sound';
+import { select, enterRoom, exit, celebrateSF, playingSF } from './Sound'
+
 const FlexContainer = {
   display: "flex",
   flexDirection: "column",
@@ -160,6 +163,21 @@ function MakeRoom() {
   const socket = useRef();
   const roomNameRef = useRef(null);
 
+  // game sound
+  celebrateSF.pause();
+  playingSF.pause();
+
+  const [enterGame] = useSound(
+    enterRoom,
+    { volume: 0.5 }
+  );
+  const [selectSound] = useSound(
+    select,
+    { volume: 0.5 }
+  );
+  const [exitSound] = useSound(
+    exit,
+  );
 
   const onClickMode = (params, e) => {
     e.preventDefault();
@@ -288,6 +306,7 @@ function MakeRoom() {
                 onClick={(e) => {
                   onClickMode("One", e);
                 }}
+                onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>혼자하기</GradationTitle>
                 <Modeimage src={ModeOne} />
@@ -297,6 +316,7 @@ function MakeRoom() {
                 onClick={(e) => {
                   onClickMode("Two", e);
                 }}
+                onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>개인전</GradationTitle>
                 <Modeimage src={ModeThree} />
@@ -308,6 +328,7 @@ function MakeRoom() {
                 onClick={(e) => {
                   onClickMode("Three", e);
                 }}
+                onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>팀전</GradationTitle>
                 <Modeimage src={ModeTwo} />
@@ -315,7 +336,7 @@ function MakeRoom() {
               </Content>
             </div>
             <div style={Bottom}>
-              <BackToLobby to={"/lobby"}>&lt; 뒤로가기</BackToLobby>
+              <BackToLobby to = {'/lobby'} onMouseDown={exitSound} >&lt; 뒤로가기</BackToLobby>
             </div>
           </div>
         }
@@ -350,7 +371,10 @@ function MakeRoom() {
                   ref={roomNameRef}
                   style={sizes}
                 />
-                <Button2 color="yellow" size="medium" onClick={onClickMakeRoom}>
+                <Button2 color="yellow" size="medium"
+                  onMouseUp = {enterGame}
+                  onClick={onClickMakeRoom}
+                >
                   방만들기
                 </Button2>
               </div>

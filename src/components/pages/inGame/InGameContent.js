@@ -8,12 +8,10 @@ import { useSelector } from "react-redux";
 
 const InGameContent = ({socket}) => {
     const nickName = useSelector((state) => state.member.member.user_nick);
-    const inGameState = useSelector((state) => state.inGame);
-    const itemState = useSelector((state) => (state.item));
-    const gameFinished = inGameState.gameFinished;
-    const gameStarted = inGameState.gameStarted;
-    const roomID = inGameState.roomID;
-    const itemUsing = itemState.myWeapon;
+    const gameFinished = useSelector((state) => state.inGame.gameFinished);
+    const gameStarted = useSelector((state) => state.inGame.gameStarted);
+    const roomID = useSelector((state) => state.inGame.roomID);
+    const itemUsing = useSelector((state) => (state.item.myWeapon));
 
     return (
         <div>
