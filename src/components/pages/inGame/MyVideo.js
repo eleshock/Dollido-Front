@@ -154,7 +154,7 @@ const MyVideo = ({ match, socket }) => {
 
     let videoRecorded = false; // 녹화 여부
 
-   
+
 
     useEffect(() => {
         if (modelsLoaded && myStream && myStream.id) {
@@ -302,8 +302,6 @@ const MyVideo = ({ match, socket }) => {
     return (
         <>
             <Container>    
-                {myStream ? <p style = {{color:"white"}}>{myStream.id}</p> : null}
-
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
                     {loading && < Load></Load>}

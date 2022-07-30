@@ -3,7 +3,8 @@ import styled from "styled-components";
 
 // commponent import
 import Button from "../../common/Button";
-import Button4 from "../../common/Button4";
+import Button5 from "../../common/Button5";
+import Button7 from "../../common/Button7";
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
@@ -14,16 +15,16 @@ import { setIsMe, setMyWeapon, setMyWeaponCheck, setGotReverse } from '../../../
 
 const Bottom = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: flex-end;
+    justify-content: space-around;
+    align-items: center;
     font-family: koverwatch;
 `
 const MyButton = {
     flex: '3',
     display: "flex",
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     textAlign: "center",
-    alignItems: 'center'
+    
 }
 
 const ButtonSize = {
@@ -100,21 +101,21 @@ const InGameBottom = ({ socket }) => {
             {!gameStarted ?
                 <div style={MyButton}>
                     {myStream && (chief || chiefStream === myStream.id) ?
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
+                        <Button7 onClick={handleStart}>START</Button7>
                         :
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
+                        <Button7 onClick={handleReady}>Ready</Button7>
                     }
                     <Link to="/Lobby">
-                        <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
+                        <Button7 >QUIT</Button7>
                     </Link>
 
                 </div>
                 :
                 !gameFinished &&
                 (gotReverse ?
-                    <Button4 color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button4>
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
                     :
-                    <Button4 color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button4>)
+                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button>)
             }
             {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
                 <div style={MyButton}>

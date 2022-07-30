@@ -5,7 +5,7 @@ import { shadow } from '../../../lib/styleUtill';
 
 const Wrapper = styled.div`
     width: 100%;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     padding-top: 0.6rem;
     padding-bottom: 0.5rem;
     border-radius: 8px;

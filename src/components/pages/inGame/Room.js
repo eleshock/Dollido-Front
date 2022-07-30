@@ -6,18 +6,13 @@ import { ServerName } from "../../../serverName";
 
 function Room({ match }) {
   const SERVER_ADDRESS = ServerName;
-  const socket = io(SERVER_ADDRESS, {
-    withCredentials: false,
-    extraHeaders: {
-      "dollido-header": "dollido",
-    },
-  });
+  let socket = io(SERVER_ADDRESS);
 
   useEffect(() => {
     return () => {
       socket.disconnect();
     }
-  })
+  });
 
   return (
     <div style={{height:"100vh"}}>

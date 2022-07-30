@@ -37,3 +37,8 @@ code {
   font-family: "koverwatch";
   src: url("./fonts/koverwatch.ttf");
 }
+
+@font-face {
+  font-family: "PressStart2P";
+  src: url("./fonts/PressStart2P.ttf");
+}

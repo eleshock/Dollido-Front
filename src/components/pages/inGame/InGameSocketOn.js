@@ -50,7 +50,6 @@ const InGameSocketOn = ({ match, socket }) => {
 
         socket.on("finish", () => {
             dispatch(setGameFinish(true));
-
         });
 
         socket.on("ready", ({streamID, isReady}) => {

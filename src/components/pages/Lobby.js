@@ -4,6 +4,7 @@ import io from "socket.io-client";
 import { ThemeProvider } from "styled-components";
 
 import Button2 from "../common/Button2.js";
+import Button6 from "../common/Button6.js";
 import { LobbyModal } from "../common/LobbyModal.tsx";
 import mainBackGround from "../../images/mainBackground.gif";
 import styled from "styled-components";
@@ -14,6 +15,8 @@ import { ServerName } from "../../serverName";
 // 임시
 import { useSelector } from "react-redux";
 import { MakeRoomModal } from "../common/MakeRoomModal.tsx";
+import { useDispatch } from "react-redux";
+import { setInit } from "../../modules/inGame.js";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -182,6 +185,7 @@ const Lobby = () => {
   const [change, setChange] = useState(true);
   const [stop, setStop] = useState(false);
   const postsPerPage = 7;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (stop) {
@@ -198,7 +202,7 @@ const Lobby = () => {
       },
     });
     socket.current.emit("get room list");
-
+    dispatch(setInit());
     return () => {
       stopWebcam();
     }
@@ -290,18 +294,17 @@ const Lobby = () => {
           <FlexContainer>
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
                     {nickname &&
-                        <div>
+                        <div style ={{ display:"flex", flexDirection:"row"}} >
                           <span style={{ color: "white", fontSize: "1.7rem", margin: "0 10px 0 0" }}>
                             {" "}
                             {nickname}님 Dollido에 오신걸 환영합니다
                           </span>
                           <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
-                            <Button2
-                              color="orange"
-                              size="medium"
+                            <Button6
+                             style ={{ margin: "0 0 0 30px", display:"flex", height:"40px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}  
                             >
                               마이페이지
-                            </Button2>
+                            </Button6>
                           </Link>
                         </div>
                     }
@@ -314,12 +317,11 @@ const Lobby = () => {
                     <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
                       <Link to = {`/makeRoom`} style = {{textDecoration:"none"}}>
                             <div >
-                              <Button2
-                                color="orange"
-                                style = {{margin: "0 0 20px 0", height: "4rem", fontSize:"2rem", width: "8.9rem", textAlign:"center"}}
+                              <Button6
+                                style={{margin : "0 0 20px 0"}}
                               >
                                 방만들기
-                              </Button2>
+                              </Button6>
                             </div>
                           </Link>
                       </div>
