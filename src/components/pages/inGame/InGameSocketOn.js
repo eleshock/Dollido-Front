@@ -68,7 +68,6 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("restart", () => {
-            deleteBestVideo(userNick); // 이전 비디오 삭제 요청
             dispatch(clearReadyList());
             dispatch(setGamestart(false));
             dispatch(setGameFinish(false));
