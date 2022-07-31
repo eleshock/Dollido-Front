@@ -78,10 +78,14 @@ const WebRTC = ({ socket, match }) => {
             const offer = await peerConnection(userID);
             socket.emit("offer", offer, userID, socket.id);
         });
-
+        
         socket.on("setting", (streamID, isReady, nickName) => {
             dispatch(setPeerNick(streamID, nickName));
             dispatch(setReadyList(streamID, isReady));
+        });
+        
+        socket.on("setting_add", (streamID, nickName) => {
+            dispatch(setPeerNick(streamID, nickName));
         });
 
         socket.on("offer", async (socketID, offer) => {
