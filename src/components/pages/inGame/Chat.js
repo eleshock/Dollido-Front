@@ -32,8 +32,6 @@ function Chat({ socket, username, room }) {
     });
   }, [socket]);
 
-  console.log(messageList);
-
   return (
     <div style={{display: "flex", justifyContent: "center"}}>
         <div className="chat-window">
