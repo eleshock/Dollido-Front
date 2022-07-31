@@ -54,7 +54,7 @@ function Chat({ socket, username, room }) {
                       }
                     >
                       <div>
-                        <p id="author">{messageContent.author}</p>
+                        {messageContent.author !== "system"? <p id="author">{messageContent.author}</p>: null}
                         <div className="message-content">
                           <p>{messageContent.message}</p>
                         </div>
