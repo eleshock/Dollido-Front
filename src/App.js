@@ -23,6 +23,12 @@ function App()  {
                 <Route path="/makeroom" element={<AuthMakeRoom/>}/>
                 <Route path="/room/:roomID" element={<AuthRoom/>} />
                 <Route path="/mypage" element={<AuthMyPage/>}/>
+                
+                {/* <Route path="/univ" element={<Universe/>}/>
+                <Route path="/lobby" element={<Lobby/>}/>
+                <Route path="/makeroom" element={<MakeRoom/>}/>
+                <Route path="/room/:roomID" element={<Room/>} />
+                <Route path="/mypage" element={<MyPage/>}/> */}
             </Routes>
         </Router>
     );
