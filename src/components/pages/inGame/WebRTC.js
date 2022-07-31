@@ -48,6 +48,7 @@ const WebRTC = ({ socket, match }) => {
 
         return () => {
             socket.emit("out room");
+            socket.off();
             userStream.current = null;
             dispatch(clearPeerNick());
             dispatch(clearVideos());
@@ -162,7 +163,7 @@ const WebRTC = ({ socket, match }) => {
         try {
             if (candidate) {
                 peerList.current[userID].addIceCandidate(candidate);
-                console.log("addCandidate");
+                // console.log("addCandidate");
             }
         } catch (e) {
             console.log(e);

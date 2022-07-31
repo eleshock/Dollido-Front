@@ -36,7 +36,7 @@ const Video = ({index}) => {
     const partnerVideos = useSelector((state) => state.videos);
     let temp = useSelector((state) => state.inGame.peerNick);
     let nickName = ""
-    console.log(temp);
+    // console.log(temp);
     if (partnerVideos[index] !== undefined && Object.keys(temp).length !== 0) {
         nickName = temp[partnerVideos[index].id];
     }

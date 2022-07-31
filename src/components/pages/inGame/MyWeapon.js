@@ -37,7 +37,7 @@ const MyWeapon = ({socket}) => {
     useEffect(() => {
         // socket.on('my_weapon', (streamID, randomList) => {
             // dispatch(setRandom(randomList));
-            console.log(myWeaponImage);
+            // console.log(myWeaponImage);
             if(isMeFlag) {
                 setContent(
                     <Container>

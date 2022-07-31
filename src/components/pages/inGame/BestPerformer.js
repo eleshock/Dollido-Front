@@ -37,7 +37,7 @@ function BestPerformer(props) {
                     console.log(err);
                     return null;
                 });
-            console.log("response : ", response);
+            // console.log("response : ", response);
             setGotVideo(true);
         }
         getLoserVideo();

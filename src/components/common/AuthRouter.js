@@ -10,7 +10,7 @@ export default (Commponent) => {
         const navigate = useNavigate();
         useEffect(() => {
             auth(token).then((result) => {
-                console.log(result)
+                // console.log(result)
                 if(!result) {
                     navigate("/")
                 }
