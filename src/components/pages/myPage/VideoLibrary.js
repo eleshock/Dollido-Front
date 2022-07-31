@@ -4,63 +4,181 @@ import axios from "axios";
 import { useSelector } from 'react-redux';
 import { ServerName } from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
+import { Modal } from "../../common/Modal.tsx"
+import Button from "../../common/Button";
+
+
+const GridContainer = styled.div`
+	height: 60vh;
+	display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 2em;
+	overflow-y: auto;
+	overflow-x: hidden;
+	text-align: center;
+	font-family: koverwatch;
+`
+
+const Video = styled.video`
+	border-radius: 10%;
+	width: 100%;
+	transform: scaleX(-1);
+	padding : 10px 10px 10px 10px;
+	&:hover {
+		cursor: pointer;
+		transform: scale(1.05) scaleX(-1);
+`
+
+const ModalContainer = styled.div`
+	text-align: center;
+	color: white;
+	font-family: koverwatch;
+	// margin: auto;
+`
+
+const ModalVideo = styled.video`
+	border-radius: 10%;
+	width: 80%;
+	transform: scaleX(-1);
+	padding : 10px 10px 10px 10px;
+`
+
+const Bottom = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
+
 
 async function getVideoInfo(token) {
 	const headers = { headers: { token: token } }
 	const response = await axios.get(`${ServerName}/api/best/my-videos`, headers)
 		.then((res) => res)
 		.catch(() => null);
-	console.log(response);
-	return response.data
+	
+	if (response) return response.data;
+	else return null;
 }
 
-function nextVideo(clickNext, nowVideo, setNowVideo, numOfVideos) {
-	if (clickNext) {
-		if (nowVideo === numOfVideos - 1) {
-			alert("마지막 영상입니다.");
-			return;
+
+const downloadVideo = (videoUrl, video_name) => {
+	const a = document.createElement('a');
+	a.href = videoUrl;
+	a.download = video_name;
+	document.body.appendChild(a);
+	a.click();
+	a.remove();
+};
+
+
+async function deleteVideo(elem, token, myVideosInfo) {
+	const headers = {
+		headers: {
+			'Content-Type': 'application/json',
+			token: token
 		}
-		setNowVideo(nowVideo + 1);
+	}
+	const data = { video_id: elem.video_id, server_name: elem.server_name };
+	const response = await axios.post(`${ServerName}/api/best/delete-video`, data, headers)
+		.then((res) => res)
+		.catch(() => null);
+	console.log("video deletion response :", response);
+
+	myVideosInfo.current = myVideosInfo.current.filter(e => e.video_id !== elem.video_id);
+	
+	if (response !== null) {
+		alert("삭제 성공!");
 	} else {
-		if (nowVideo === 0) {
-			alert("첫번째 영상입니다.");
-			return;
-		}
-		setNowVideo(nowVideo - 1);
+		alert("삭제 실패");
 	}
 }
 
+
+// 비디오 클릭했을 때 모달창에 뜨는 내용 구성
+function handleVideo(modal, setModal, setModalContent, elem, token, myVideosInfo) {
+	const videoUrl = s3Domain + elem.server_name;
+	let dateObj = new Date(elem.creation_date);
+	let timeString_KR = dateObj.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+	const content = (
+		<ModalContainer>
+			<h3>{timeString_KR}</h3>
+			<ModalVideo autoPlay loop src={videoUrl}></ModalVideo>
+			<Bottom>
+				<Button style={{ width: '100px', height: '40px', margin: 'auto', fontSize: '24px' }}
+					onClick={() => downloadVideo(videoUrl, elem.video_name)}>다운로드</Button>
+				<Button style={{ width: '100px', height: '40px', margin: 'auto', fontSize: '24px' }}
+					onClick={() => deleteVideo(elem, token, myVideosInfo)}>영상 삭제</Button>
+			</Bottom>
+		</ModalContainer>)
+	setModalContent(content);
+	setModal(!modal);
+}
+
+
+
 const VideoLibrary = () => {
-	const [nowVideo, setNowVideo] = useState(0);
 	const [gotVideoInfo, setGotVideoInfo] = useState(false);
+	const [modal, setModal] = useState(false);
+	const [modalContent, setModalContent] = useState(<></>);
 	const token = useSelector((state) => state.member.member.tokenInfo.token);
 	const myVideosInfo = useRef();
-	let videoUrl;
+	const content = [];
 
 	useEffect(() => {
 		const getVideos = async () => {
 			myVideosInfo.current = await getVideoInfo(token);
+			if (myVideosInfo.current === null) {
+				window.location.href = "/";
+				alert("다시 로그인해주세요!");
+			}
 			setGotVideoInfo(true);
+			console.log("비디오 정보 :", myVideosInfo.current);
 		}
 		getVideos();
 	}, [])
 
-	let timeSource = "2020-10-05T09:00:00.000Z"
-	let dateObj = new Date(timeSource);
-	let timeString_KR = dateObj.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
-
 	if (gotVideoInfo) {
-		videoUrl = s3Domain + myVideosInfo.current[nowVideo].server_name;
+		myVideosInfo.current.forEach(elem => {
+			let dateObj = new Date(elem.creation_date);
+			let timeString_KR = dateObj.toLocaleString("ko-KR", { timeZone: "Asia/Seoul" });
+			const videoUrl = s3Domain + elem.server_name;
+			const cont = (
+				<article key={videoUrl + 'a'}>
+					<Video autoPlay loop src={videoUrl} key={videoUrl}
+						onClick={() => handleVideo(modal, setModal, setModalContent, elem, token, myVideosInfo)}></Video>
+					<h3 key={videoUrl + 't'}>{timeString_KR}</h3>
+				</article>)
+
+			content.push(cont)
+		});
 	}
 
+
 	return (
-		<div>
-			<button onClick={() => nextVideo(false, nowVideo, setNowVideo)}> 이전 </button>
-			{gotVideoInfo &&
-				<video src={videoUrl} autoPlay loop
-					style={{ margin: '40 0 0 0', borderRadius: '10px', width: "90%", transform: 'scaleX(-1)' }} />}
-			<button onClick={() => nextVideo(true, nowVideo, setNowVideo, myVideosInfo.current.length)}> 다음 </button>
-		</div>
+		<>
+			<GridContainer>
+				{
+					gotVideoInfo ?
+						content
+						:
+						<div></div>
+				}
+			</GridContainer>
+			{modal ?
+				<Modal
+					modal={modal}
+					setModal={setModal}
+					width="750"
+					height="600"
+					backgroundColor="rgba(0, 0, 0, 0)"
+					element={
+						modalContent
+					}
+				/>
+				:
+				<></>
+			}
+		</>
 	)
 }
 
