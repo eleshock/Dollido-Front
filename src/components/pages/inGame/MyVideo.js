@@ -79,15 +79,18 @@ const initialHP = 100;
 
 
 // 녹화가 완료된 후 서버로 비디오 데이터 post
-async function postVideo(recordedBlob, user_nick) {
+async function postVideo(recordedBlob, user_nick, token) {
     const formdata = new FormData();
-
     formdata.append('user_nick', user_nick);
-    formdata.append('video', recordedBlob, 'video.mp4');
+    formdata.append('video', recordedBlob, `${user_nick}.mp4`);
 
     await axios.post(`${ServerName}/api/best/send-video`, formdata, {
         headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            "ACCEPT": "*/*",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Max-Age": "8000",
+            token: token
         }
     })
         .then((res) => {
@@ -98,26 +101,15 @@ async function postVideo(recordedBlob, user_nick) {
         });
 }
 
-/** 서버에 유저의 best perform 영상 삭제 요청  */
-function deleteBestVideo(user_nick) {
-    const data = {
-        user_nick: user_nick
-    };
 
-    axios.post(`${ServerName}/api/best/delete-video`, data)
-        .then((res) => console.log(res))
-        .catch((err) => console.log(err));
-}
-
-
-function recordVideo(stream, user_nick) {
+function recordVideo(stream, user_nick, token) {
     let recorder = new MediaRecorder(stream);
 
     recorder.ondataavailable = (event) => {
         const recordedBlob = new Blob([event.data], {
             type: "video/mp4"
         });
-        postVideo(recordedBlob, user_nick);
+        postVideo(recordedBlob, user_nick, token);
     };
     console.log("Recording Start...");
     recorder.start();
@@ -137,12 +129,13 @@ const MyNickname = {
 
 const MyVideo = ({ match, socket }) => {
     const dispatch = useDispatch();
+    const user_nick = useSelector((state) => state.member.member.user_nick);
+    const token = useSelector((state) => state.member.member.tokenInfo.token);
     const inGameState = useSelector((state) => (state.inGame));
     const gameFinished = inGameState.gameFinished;
     const gameStarted = inGameState.gameStarted;
     const modelsLoaded = inGameState.modelsLoaded;
     const myStream = inGameState.myStream;
-    const user_nick = useSelector((state) => state.member.member.user_nick);
     const chiefStream = inGameState.chiefStream;
     const readyList = inGameState.readyList;
     const mineHP = inGameState.myHP;
@@ -152,7 +145,6 @@ const MyVideo = ({ match, socket }) => {
     const [loading, setLoading] = useState(true);
 
     let videoRecorded = false; // 녹화 여부
-
 
 
     useEffect(() => {
@@ -174,7 +166,6 @@ const MyVideo = ({ match, socket }) => {
 
     useEffect(() => {
         return () => {
-            deleteBestVideo(user_nick);
             dispatch(setMyStream(null));
             dispatch(setMineHP(null));
             dispatch(setMyWeapon(false));
@@ -189,14 +180,14 @@ const MyVideo = ({ match, socket }) => {
             happiness = 1 - happiness;
             if (!videoRecorded && happiness < 0.4) {
                 videoRecorded = true;
-                    recordVideo(userVideo.current.srcObject, user_nick);
+                recordVideo(userVideo.current.srcObject, user_nick, token);
             }
         }
         if (happiness > 0.2) { // 피를 깎아야 하는 경우
             if (happiness > 0.6) {
                 if (!videoRecorded && !reverse) { // 딱 한 번만 record
                     videoRecorded = true;
-                    recordVideo(userVideo.current.srcObject, user_nick);
+                    recordVideo(userVideo.current.srcObject, user_nick, token);
                 }
                 return 2;
             } else {
@@ -317,5 +308,5 @@ const MyVideo = ({ match, socket }) => {
     );
 }
 
-export { initialHP, deleteBestVideo };
+export { initialHP };
 export default MyVideo;
