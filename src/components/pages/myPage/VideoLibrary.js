@@ -99,7 +99,7 @@ async function deleteVideo(elem, token, myVideosInfo) {
 	const response = await axios.post(`${ServerName}/api/best/delete-video`, data, headers)
 		.then((res) => res)
 		.catch(() => null);
-	console.log("video deletion response :", response);
+	/* console.log("video deletion response :", response); */
 
 	myVideosInfo.current = myVideosInfo.current.filter(e => e.video_id !== elem.video_id);
 	
@@ -149,7 +149,7 @@ const VideoLibrary = () => {
 				alert("다시 로그인해주세요!");
 			}
 			setGotVideoInfo(true);
-			console.log("비디오 정보 :", myVideosInfo.current);
+			/* console.log("비디오 정보 :", myVideosInfo.current); */
 		}
 		getVideos();
 	}, [])

@@ -48,6 +48,7 @@ const WebRTC = ({ socket, match }) => {
 
         return () => {
             socket.emit("out room");
+            socket.off();
             userStream.current = null;
             dispatch(clearPeerNick());
             dispatch(clearVideos());
@@ -77,10 +78,14 @@ const WebRTC = ({ socket, match }) => {
             const offer = await peerConnection(userID);
             socket.emit("offer", offer, userID, socket.id);
         });
-
+        
         socket.on("setting", (streamID, isReady, nickName) => {
             dispatch(setPeerNick(streamID, nickName));
             dispatch(setReadyList(streamID, isReady));
+        });
+        
+        socket.on("setting_add", (streamID, nickName) => {
+            dispatch(setPeerNick(streamID, nickName));
         });
 
         socket.on("offer", async (socketID, offer) => {
@@ -128,27 +133,27 @@ const WebRTC = ({ socket, match }) => {
                 userID: userID
             }
             socket.emit("ice-candidate", payload);
-            console.log("icecandidate");
+            // console.log("icecandidate");
         }
     }
 
     const handleOfferAndAnswer = async (peer, _offer) => {
-        console.log("====================");
+        // console.log("====================");
         let offer = _offer;
         let answer;
         try {
             if (!offer) {
                 offer = await peer.createOffer();
-                console.log("createOffer");
+                // console.log("createOffer");
                 peer.setLocalDescription(offer);
-                console.log("setLocalDescription");
+                // console.log("setLocalDescription");
             } else {
                 await peer.setRemoteDescription(offer);
-                console.log("setRemoteDescription");
+                // console.log("setRemoteDescription");
                 answer = await peer.createAnswer();
-                console.log("createAnswer");
+                // console.log("createAnswer");
                 peer.setLocalDescription(answer);
-                console.log("setLocalDescription");
+                // console.log("setLocalDescription");
             }
 
             return answer || offer;
@@ -162,7 +167,7 @@ const WebRTC = ({ socket, match }) => {
         try {
             if (candidate) {
                 peerList.current[userID].addIceCandidate(candidate);
-                console.log("addCandidate");
+                // console.log("addCandidate");
             }
         } catch (e) {
             console.log(e);
