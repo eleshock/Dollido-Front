@@ -2,6 +2,15 @@ import univBackground from '../../images/DollidoUniverse.gif';
 import { Link } from "react-router-dom";
 import Button from '../common/Button';
 import { GlobalStyles } from '../common/Global.tsx';
+import styled from 'styled-components';
+
+const Word = styled.p`
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Black Han Sans";
+`
 
 const Universe = () => {
     return (
@@ -13,13 +22,11 @@ const Universe = () => {
                         position: "absolute",
                         bottom: "20px",
                         right: "20px",
-                        width: "300px",
-                        height: "100px"
+                        width: "15%",
+                        height: "10%"
                     }
                 } >
-                    <p style={ {fontSize: "40px", fontWeight: "900", fontFamily: "Black Han Sans", margin: "0", lineHeight: "104px"} }>
-                        SKIP
-                    </p>
+                    <Word style={{fontSize: "2rem"}}> SKIP </Word>
                 </Button>
             </Link>
         </div>

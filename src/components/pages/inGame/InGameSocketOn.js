@@ -40,12 +40,12 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("chief", ({chiefStream}) => {
-            console.log(chiefStream)
+            // console.log(chiefStream)
             dispatch(setChiefStream(chiefStream));
         });
 
         socket.on("start", (status, randomList) => {
-            console.log(randomList);
+            // console.log(randomList);
             if (status) {
                 dispatch(setRandom(randomList));
                 dispatch(setGamestart(true));

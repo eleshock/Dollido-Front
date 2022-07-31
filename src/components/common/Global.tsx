@@ -12,6 +12,7 @@ export const GlobalStyles = createGlobalStyle<Props>`
         width: 100vw;
         height: 100vh;
         background: url(${(props) => props.bgImage});
+        background-position: center;
         background-size: cover;
     }
 `

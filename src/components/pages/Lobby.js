@@ -199,8 +199,8 @@ const Lobby = () => {
   const nickname = useSelector((state) => state.member.member.user_nick);
 
   /* 방 만들기 & 입장 */
-  const SERVER_ADDRESS = useRef(ServerName);
-  const socket = useRef();
+  // const SERVER_ADDRESS = useRef(ServerName);
+  const socket = io(ServerName);
   const [rooms, setRooms] = useState({});
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -209,21 +209,17 @@ const Lobby = () => {
 
   // 1. 방 리스트 받아오기
   useEffect(() => {
-    socket.current = io(SERVER_ADDRESS.current, {
-      withCredentials: false,
-      extraHeaders: {
-        "dollido-header": "dollido",
-      },
-    });
-    socket.current.emit("get room list");
+    // socket.current = io(SERVER_ADDRESS.current);
+    socket.emit("get room list");
     dispatch(setInit());
     return () => {
+      socket.disconnect();
       stopWebcam();
     }
   }, []);
 
   useEffect(() => {
-    socket.current.on("give room list", (rooms) => {
+    socket.on("give room list", (rooms) => {
       setRooms(rooms);
       setRoomCount(Object.keys(rooms).length);
     });

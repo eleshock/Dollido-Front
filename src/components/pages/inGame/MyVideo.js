@@ -111,11 +111,11 @@ function recordVideo(stream, user_nick, token) {
         });
         postVideo(recordedBlob, user_nick, token);
     };
-    console.log("Recording Start...");
+    // console.log("Recording Start...");
     recorder.start();
     setTimeout(() => {
         recorder.stop();
-        console.log("Recording Finished!");
+        // console.log("Recording Finished!");
     }, recordTime);
 }
 
@@ -239,7 +239,7 @@ const MyVideo = ({ match, socket }) => {
         } else if(interval && !smiling){
             content = <ProgressBar striped variant="danger" now={myHP} />
         } else {
-            console.log(mineHP);
+            // console.log(mineHP);
             content = <ProgressBar striped variant="danger" now={mineHP} />
         }
 
