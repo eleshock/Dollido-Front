@@ -17,6 +17,23 @@ const GridContainer = styled.div`
 	overflow-x: hidden;
 	text-align: center;
 	font-family: koverwatch;
+
+	&::-webkit-scrollbar {
+		width: 10px;
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: rgba(255, 255, 255,  0.1); //스크롤 배경 색
+		border-radius: 100px;
+	}
+	
+	&::-webkit-scrollbar-thumb {
+		border-radius: 100px;
+		border: 6px solid #8070d4;
+		border-left: 0;
+		border-right: 0;
+		background-color: #8070d4; 
+	}
 `
 
 const Video = styled.video`
