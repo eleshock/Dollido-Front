@@ -2,9 +2,9 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { Background } from "../common/Background.tsx";
 // import "../common/RoomMode.css"
 import mainBackGround from "../../images/mainBackground.gif";
-import ModeOne from "../../images/ModeOne.jpeg";
-import ModeTwo from "../../images/ModeTwo.png";
-import ModeThree from "../../images/ModeThree.webp";
+import ModeOne from "../../images/ModeOne.gif";
+import ModeTwo from "../../images/ModeTwo.gif";
+import ModeThree from "../../images/ModeThree.gif";
 import styled from "styled-components";
 
 import Button2 from "../common/Button2.js";
@@ -15,6 +15,9 @@ import { v4 as uuid } from "uuid";
 import { ServerName } from "../../serverName";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+
+import useSound from 'use-sound';
+import { select, enterRoom, exit, celebrateSF, playingSF } from './Sound'
 
 const FlexContainer = {
   display: "flex",
@@ -87,6 +90,28 @@ const modecontent = {
   padding: "20px 0 20px 0",
   margin: "0 0 0 0",
 };
+
+const modecontentone ={
+  color : "black",
+  backgroundColor: "#FFFFFF",
+  display: "flex",
+  alignItems:"flex-end",
+  justifyContent: "center",
+  margin: "0 0 0 0",
+  padding: "20px 0 0 0",
+
+}
+
+const modecontenttwo ={
+  color : "black",
+  backgroundColor: "#FFFFFF",
+  display: "flex",
+  alignItems:"flex-end",
+  justifyContent: "center",
+  margin: "0 0 0 0",
+  padding: "0 0 20px 0",
+
+}
 
 const ModalContainer = {
   display: "flex",
@@ -163,6 +188,21 @@ function MakeRoom() {
   const socket = useRef();
   const roomNameRef = useRef(null);
 
+  // game sound
+  celebrateSF.pause();
+  playingSF.pause();
+
+  const [enterGame] = useSound(
+    enterRoom,
+    { volume: 0.5 }
+  );
+  const [selectSound] = useSound(
+    select,
+    { volume: 0.5 }
+  );
+  const [exitSound] = useSound(
+    exit,
+  );
 
   const onClickMode = (params, e) => {
     e.preventDefault();
@@ -210,7 +250,6 @@ function MakeRoom() {
   }, []);
 
   // 2. 방 생성 절차
-
   const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
@@ -292,34 +331,39 @@ function MakeRoom() {
                 onClick={(e) => {
                   onClickMode("One", e);
                 }}
+                onMouseEnter = {selectSound}
               >
-                <GradationTitle style={modename}>혼자하기</GradationTitle>
+                <GradationTitle style={modename}>리버스 모드</GradationTitle>
                 <Modeimage src={ModeOne} />
-                <h2 style={modecontent}>혼자서도 즐겨보세요 !</h2>
+                <h2 style={modecontentone}>돌발적으로 등장하는 리버스 타임!</h2> 
+                <h2 style={modecontenttwo}>웃지 않으면 오히려 체력이 깎인다고!?</h2>
               </Content>
               <Content
                 onClick={(e) => {
                   onClickMode("Two", e);
                 }}
+                onMouseEnter = {selectSound}
               >
-                <GradationTitle style={modename}>개인전</GradationTitle>
+                <GradationTitle style={modename}>나만의 무기</GradationTitle>
                 <Modeimage src={ModeThree} />
-                <h2 style={modecontent}>
-                  실시간 웃음 참기(최대 4인) 즐겨보세요 !
-                </h2>
+                <h2 style={modecontentone}>플레이어가 직접 고른 야심찬 웃짤!</h2>
+                <h2 style={modecontenttwo}>이걸 보고도 버틸 수 있겠어?</h2>
               </Content>
               <Content
                 onClick={(e) => {
                   onClickMode("Three", e);
                 }}
+                onMouseEnter = {selectSound}
               >
-                <GradationTitle style={modename}>팀전</GradationTitle>
+                <GradationTitle style={modename}>최후의 심판</GradationTitle>
                 <Modeimage src={ModeTwo} />
-                <h2 style={modecontent}>팀을 이루어 즐겨보세요 !</h2>
+                <h2 style={modecontentone}>방심은 금물 !!</h2>
+                <h2 style={modecontenttwo}>언제 내 머리위로 떨어질 지 모르는 번개!!</h2>
+
               </Content>
             </div>
             <div style={Bottom}>
-              <BackToLobby to={"/lobby"}>&lt; 뒤로가기</BackToLobby>
+              <BackToLobby to = {'/lobby'} onMouseDown={exitSound} >&lt; 뒤로가기</BackToLobby>
             </div>
           </div>
         }
@@ -354,7 +398,10 @@ function MakeRoom() {
                   ref={roomNameRef}
                   style={sizes}
                 />
-                <Button2 color="orange" size="medium" onClick={onClickMakeRoom}>
+                <Button2 color="yellow" size="medium"
+                  onMouseUp = {enterGame}
+                  onClick={onClickMakeRoom}
+                >
                   방만들기
                 </Button2>
               </div>

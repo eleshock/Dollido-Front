@@ -7,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { setBestDone } from "../../../modules/inGame";
 import firework from "../../../images/fireworks/firework_7.gif";
 import Button from "../../common/Button";
+import {yeahSF} from "../Sound";
+
 
 let response;
 
@@ -96,7 +98,7 @@ function BestPerformer(props) {
                     </>
             } else {
                 const videoUrl = ServerName + '/' + bestVideoName;
-
+                if (typedone) yeahSF.play();
                 content = <>
                     <div> {bestPerformerNick}! </div>
                     <video src={videoUrl} autoPlay loop

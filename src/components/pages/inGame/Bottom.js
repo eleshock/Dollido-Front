@@ -1,26 +1,34 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 // commponent import
-import Button from "../../common/Button";
-import Button5 from "../../common/Button5";
+import Button8 from "../../common/Button8";
+import Button9 from "../../common/Button9";
 import Button7 from "../../common/Button7";
+import { RedButtons, BlueButtons, YellowButtons } from "../../common/Button5";
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
 import { setMineHP } from "../../../modules/inGame";
 import { setIsMe, setMyWeapon, setMyWeaponCheck, setGotReverse } from '../../../modules/item';
 
+import {celebrateSF} from "../Sound";
+
+// icon import
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowsSpin } from "@fortawesome/free-solid-svg-icons";
+import { faDumbbell } from "@fortawesome/free-solid-svg-icons";
 
 
 const Bottom = styled.div`
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     font-family: koverwatch;
 `
+
 const MyButton = {
-    flex: '3',
+    flex: '33',
     display: "flex",
     justifyContent: 'space-around',
     textAlign: "center",
@@ -34,6 +42,17 @@ const ButtonSize = {
     height: "45px",
     margin: "30px"
 }
+
+const buttonstyle ={
+
+    backgroundColor: "transparent",
+    backgroundRepeat: "noRepeat",
+    border: "none",
+    cursor:"pointer",
+    overflow: "hidden",
+    outline: "none"
+}
+
 
 const InGameBottom = ({ socket }) => {
     const dispatch = useDispatch();
@@ -59,9 +78,7 @@ const InGameBottom = ({ socket }) => {
     const myWeaponUsingInThisGame = itemState.myWeaponCheck;
 
 
-
-
-
+    const navigate = useNavigate();
 
 
 
@@ -80,6 +97,11 @@ const InGameBottom = ({ socket }) => {
         dispatch(setMineHP(null));
     }
 
+    function handleQuit() {
+        celebrateSF.pause();
+        navigate('/lobby');
+    }
+
     function handleNamanmoo() {
         if (!myWeaponUsingInThisGame && !myWeaponUsing) {
                 socket.emit("my_weapon", roomID, myGIF, MyNickname);
@@ -93,6 +115,7 @@ const InGameBottom = ({ socket }) => {
         if (!reverse) {
             socket.emit("reverse", { roomID: roomID });
             dispatch(setGotReverse(false));
+
         }
     }
 
@@ -101,36 +124,60 @@ const InGameBottom = ({ socket }) => {
             {!gameStarted ?
                 <div style={MyButton}>
                     {myStream && (chief || chiefStream === myStream.id) ?
-                        <Button7 onClick={handleStart}>START</Button7>
+                        <Button9 onClick={handleStart}>START</Button9>
                         :
-                        <Button7 onClick={handleReady}>Ready</Button7>
+                        <Button9 onClick={handleReady}>Ready</Button9>
                     }
                     <Link to="/Lobby">
-                        <Button7 >QUIT</Button7>
+                        <Button9 >QUIT</Button9>
                     </Link>
 
                 </div>
                 :
-                !gameFinished &&
+                <div style={{display: 'flex', flexDirection:"row", justifyContent:"space-between", alignItems: "center"}}>
+
+                {!gameFinished &&
                 (gotReverse ?
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
+                    <div style={{margin:"0 80px 0 0"}}>
+                    <RedButtons onClick={handleReverse}>R</RedButtons>
+                    </div>
+                   
                     :
-                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button>)
+                    <div style={{margin:"0 80px 0 0"}}>
+                    <RedButtons style={{opacity:"0.3"}}>R</RedButtons>
+                    </div>
+        
+                     )
             }
-            {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
-                <div style={MyButton}>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기!</Button> </div> }
-            {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
-                <div style={MyButton}>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기 사용완료!</Button> </div> }
+                {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
+                   <div style={{display:"flex", flexDirection:"row"}}>
+                   <div style={{margin:"0 80px 0 0"}}>
+                   <BlueButtons onClick={handleNamanmoo} >W</BlueButtons>
+                   </div>
+                      <div style={MyButton}>
+                      <YellowButtons >Y</YellowButtons>
+                      </div>
+                   </div> }   
+                {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
+                <div style={{display:"flex", flexDirection:"row"}}>
+                <div style={{margin:"0 80px 0 0"}}>
+                <BlueButtons onClick={handleNamanmoo} style={{opacity:"0.3"}} >W</BlueButtons>
+                </div>
+                   <div style={MyButton}>
+                   <YellowButtons >Y</YellowButtons>
+                   </div>
+                </div>
+                 }
+              
+                 </div>
+            }
+            
             {(gameFinished && bestDone) &&
                 <div style={MyButton}>
                     {chief &&
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
-                    }
-                    <Link to="/Lobby">
-                        <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
-                    </Link>
+                        <Button8 size="large" onClick={handleRestart}>RESTART</Button8>
+                    }   
+                        <Button9 size="large" onClick={handleQuit}>QUIT</Button9>
                 </div>
             }
             <div style={{ opacity: '0', height: '6.5rem' }}> </div>

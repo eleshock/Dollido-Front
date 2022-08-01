@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import dollidoLogo from "../../../images/DollidoLogo2.png";
 import { useInterval } from "../../common/usefulFuntions";
@@ -98,7 +98,7 @@ const InGameHeader = ({socket}) => {
                     }
                 </HeaderMiddle>
                 <HeaderRight>
-                <h1>{localStorage.roommode}</h1>
+                <h1>개인전</h1>
                 </HeaderRight>
             </HeaderStyle>
         </Header>

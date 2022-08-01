@@ -1,6 +1,11 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from 'react';
 import styled from "styled-components";
+import readyimage from "../../../images/ready.gif"
+import Notreadyimage from "../../../images/Notready.png"
+import Chiefimage from "../../../images/Chief.png"
+import Playingimage from "../../../images/Playing.png"
+import readyvideo from "../../../images/ready.mp4"
 
 const Container = styled.div`
     text-align: center;
@@ -28,9 +33,12 @@ const IsReady = ({socket, index}) => {
         <Container>
           {!gameStarted ?
             (partnerVideos[index].id === chiefStream ?
-              <h2 style = {{color:"orange"}}>방장</h2> :
-              <h2 style = {{color: "white"}}>{ready ? "ready" : "not ready"}</h2>) :
-              <h2 style = {{color:"white"}}>Playing</h2>}
+              <img alt="Chief" src={Chiefimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}} /> :
+              <div>{ready ? 
+              <video src={readyvideo} autoPlay style={{margin:"8px 0 0 0",borderRadius: "10px"}} ></video>
+              : <img alt="Notready" src={Notreadyimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}}/>
+            }</div>) :
+            <img alt="Plyaing"src={Playingimage} ></img>}
         </Container>
     )
 }

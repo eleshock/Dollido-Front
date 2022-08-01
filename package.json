@@ -6,6 +6,11 @@
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@fontsource/roboto": "^4.5.7",
+    "@fortawesome/fontawesome-svg-core": "^6.1.2",
+    "@fortawesome/free-brands-svg-icons": "^6.1.2",
+    "@fortawesome/free-regular-svg-icons": "^6.1.2",
+    "@fortawesome/free-solid-svg-icons": "^6.1.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@mui/icons-material": "^5.8.4",
     "@mui/lab": "^5.0.0-alpha.91",
     "@mui/material": "^5.9.1",
@@ -26,6 +31,8 @@
     "bootstrap": "^5.2.0",
     "core-js": "^3.23.4",
     "face-api.js": "^0.22.2",
+    "font-awesome-animation": "^1.1.1",
+    "howler": "^2.2.3",
     "http-proxy-middleware": "^2.0.6",
     "immutable": "^4.1.0",
     "open-color": "^1.9.1",
@@ -51,6 +58,7 @@
     "socket.io-client": "^4.5.1",
     "styled-components": "^5.3.5",
     "typewriter-effect": "^2.19.0",
+    "use-sound": "^4.0.1",
     "web-vitals": "^2.1.0"
   },
   "scripts": {

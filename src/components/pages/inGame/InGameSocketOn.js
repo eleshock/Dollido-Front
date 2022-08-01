@@ -17,6 +17,8 @@ import { setRandom } from "../../../modules/random";
 import { setIsWho, setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse } from '../../../modules/item';
 import { deleteBestVideo } from "./MyVideo";
 
+// sound
+import {waitingSF, playingSF, celebrateSF, myWeaponSF, reverseSF, gameStartSF} from "../Sound";
 
 
 const InGameSocketOn = ({ match, socket }) => {
@@ -26,6 +28,8 @@ const InGameSocketOn = ({ match, socket }) => {
     }
     const userNick = useSelector((state) => state.member.member.user_nick);
 
+
+    playingSF.loop = true;
 
     // socket on
     useEffect(() => {
@@ -45,11 +49,18 @@ const InGameSocketOn = ({ match, socket }) => {
             if (status) {
                 dispatch(setRandom(randomList));
                 dispatch(setGamestart(true));
+                playingSF.currentTime = 0;
+                celebrateSF.currentTime = 0;
+                waitingSF.currentTime = 0;
+                playingSF.play();
+                gameStartSF.play();
             }
         });
 
         socket.on("finish", () => {
             dispatch(setGameFinish(true));
+            playingSF.pause();
+            celebrateSF.play();
         });
 
         socket.on("ready", ({streamID, isReady}) => {
@@ -65,6 +76,7 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setMyWeaponCheck(false));
             dispatch(setMyWeapon(false));
             dispatch(setGotReverse(false));
+            celebrateSF.pause();
         });
 
         socket.on('my_weapon', async ({randomList, myGIF, myNickname}) => {
@@ -73,11 +85,13 @@ const InGameSocketOn = ({ match, socket }) => {
             await settingMyweapons(myGIF);
             dispatch(setMyWeapon(true));
             dispatch(setRandom(randomList));
+            myWeaponSF.play();
         });
 
         socket.on('reverse', () => {
             dispatch(setReverse(true));
             setTimeout(() => dispatch(setReverse(false)), 8000);
+            reverseSF.play();
         });
 
         socket.on("send-reverse", () => {

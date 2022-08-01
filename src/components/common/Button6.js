@@ -8,11 +8,11 @@ const StyledButton = styled.button`
     line-height:65px;
     padding:0px 3px ;
     border:3px solid transparent;
-    background-color: #ffd200;
+    background-color: #F0A82BEE;
     box-shadow: 0px 0px 3px #ffd200;
     // border-radius:5px;
     -webkit-appearance:none;
-    opacity:0.8;
+    // opacity:0.8;
 
     font-family:koverwatch;
     text-transform:uppercase;

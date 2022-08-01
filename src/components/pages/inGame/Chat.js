@@ -12,10 +12,6 @@ function Chat({ socket, username, room }) {
         room: room,
         author: username,
         message: currentMessage,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
       };
 
       await socket.emit("send_message", messageData);
@@ -28,21 +24,36 @@ function Chat({ socket, username, room }) {
     socket.on("receive_message", (data) => {
       setMessageList((list) => [...list, data]);
     });
+    socket.on("onConnect", (data) => {
+      setMessageList((list) => [...list, data]);
+    });
+    socket.on("onDisconnect", (data) => {
+      setMessageList((list) => [...list, data]);
+    });
   }, [socket]);
+
+  console.log(messageList);
 
   return (
     <div style={{display: "flex", justifyContent: "center"}}>
         <div className="chat-window">
           <div className="chat-header">
-            <p style={{textAlign: "center"}}>Live Chat</p>
+            <p style={{textAlign: "center"}}>Live  Chat</p>
           </div>
           <div className="chat-body">
             <ScrollToBottom className="message-container">
-              {messageList.map((messageContent) => {
+              {messageList.map((messageContent, index) => {
                 return (
                     <div
+                      key={index}
                       className="message"
-                      id={username === messageContent.author ? "you" : "other"}
+                      id={
+                        messageContent.author !== "system" ?
+                          messageContent.author === username ? 
+                            "you" 
+                          : "other"
+                        : "system"
+                      }
                     >
                       <div>
                         <p id="author">{messageContent.author}</p>
@@ -50,7 +61,6 @@ function Chat({ socket, username, room }) {
                           <p>{messageContent.message}</p>
                         </div>
                         <div className="message-meta">
-                          <p id="time">{messageContent.time}</p>
                         </div>
                       </div>
                     </div>
