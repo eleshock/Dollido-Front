@@ -129,17 +129,17 @@ const MyNickname = {
 
 const MyVideo = ({ match, socket }) => {
     const dispatch = useDispatch();
-    const user_nick = useSelector((state) => state.member.member.user_nick);
+    // const inGameState = useSelector((state) => (state.inGame));
     const token = useSelector((state) => state.member.member.tokenInfo.token);
-    const inGameState = useSelector((state) => (state.inGame));
-    const gameFinished = inGameState.gameFinished;
-    const gameStarted = inGameState.gameStarted;
-    const modelsLoaded = inGameState.modelsLoaded;
-    const myStream = inGameState.myStream;
-    const chiefStream = inGameState.chiefStream;
-    const readyList = inGameState.readyList;
-    const mineHP = inGameState.myHP;
+    const gameFinished = useSelector((state) => (state.inGame.gameFinished));
+    const gameStarted = useSelector((state) => (state.inGame.gameStarted));
+    const modelsLoaded = useSelector((state) => (state.inGame.modelsLoaded));
+    const myStream = useSelector((state) => (state.inGame.myStream));
+    const chiefStream = useSelector((state) => (state.inGame.chiefStream));
+    const readyList = useSelector((state) => state.inGame.readyList);
+    const mineHP = useSelector((state) => (state.inGame.myHP));
 
+    const user_nick = useSelector((state) => state.member.member.user_nick);
     const { roomID } = useParams();
     const userVideo = useRef(null);
     const [loading, setLoading] = useState(true);
@@ -189,7 +189,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick, token);
                 }
-                return 2;
+                return 15;
             } else {
                 return 1;
             }

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { ServerName } from "../../../serverName";
 import Typewriter from "typewriter-effect";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setBestDone } from "../../../modules/inGame";
 import firework from "../../../images/fireworks/firework_7.gif";
 import { s3Domain } from "../../../s3Domain";
@@ -25,12 +25,14 @@ function BestPerformer(props) {
     const dispatch = useDispatch();
     const [gotVideo, setGotVideo] = useState(false);
     const [typedone, setTypeDone] = useState(false);
+    const nick = useSelector((state) => state.member.member.user_nick);
     let content = '';
+    console.log("Show Best Performer");
 
     useEffect(() => {
         // Best Performer Nick과 비디오 얻어오기
         async function getLoserVideo() {
-            const data = { roomID: props.roomID };
+            const data = { roomID: props.roomID, user_nick: nick };
             response = await axios.post(`${ServerName}/api/best/get-best`, data)
                 .then(res => res)
                 .catch((err) => {

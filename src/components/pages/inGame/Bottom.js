@@ -72,7 +72,7 @@ const InGameBottom = ({ socket }) => {
 
 
     function handleRestart() {
-        socket.emit("restart", {roomID: roomID});
+        socket.emit("restart", { roomID: roomID });
         dispatch(setMineHP(null));
     }
 
@@ -83,10 +83,10 @@ const InGameBottom = ({ socket }) => {
 
     function handleNamanmoo() {
         if (!myWeaponUsingInThisGame && !myWeaponUsing) {
-                socket.emit("my_weapon", roomID, myGIF, MyNickname);
-                dispatch(setIsMe(true));
-                dispatch(setMyWeapon(true));
-                dispatch(setMyWeaponCheck(true));
+            socket.emit("my_weapon", roomID, myGIF, MyNickname);
+            dispatch(setIsMe(true));
+            dispatch(setMyWeapon(true));
+            dispatch(setMyWeaponCheck(true));
         }
     }
 
@@ -120,10 +120,10 @@ const InGameBottom = ({ socket }) => {
             }
             {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
                 <div style={MyButton}>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기!</Button> </div> }
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기!</Button> </div>}
             {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
                 <div style={MyButton}>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기 사용완료!</Button> </div> }
+                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기 사용완료!</Button> </div>}
             {(gameFinished && bestDone) &&
                 <div style={MyButton}>
                     {chief &&
