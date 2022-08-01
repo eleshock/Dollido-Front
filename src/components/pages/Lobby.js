@@ -174,7 +174,7 @@ const RightTriangle = styled.button`
 let startVideoPromise;
 
 const Lobby = () => {
-
+  console.log("1")
   const navigate = useNavigate();
   
   // game sound
@@ -188,9 +188,6 @@ const Lobby = () => {
   const [selectSound] = useSound(
     select,
     { volume: 0.5 }
-  );
-  const [exitSound] = useSound(
-    exit,
   );
   
 

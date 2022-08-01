@@ -14,7 +14,7 @@ import {
 
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
-import { setIsWho, setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse } from '../../../modules/item';
+import { setIsWho, setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse, setJudgement, setJudgementID, setZeus } from '../../../modules/item';
 import { deleteBestVideo } from "./MyVideo";
 
 // sound
@@ -95,7 +95,20 @@ const InGameSocketOn = ({ match, socket }) => {
 
         socket.on("send-reverse", () => {
             dispatch(setGotReverse(true));
-        })
+        });
+
+        socket.on("zeus", () => {
+            console.log("zeus 띄워주세요");
+            dispatch(setZeus(true));
+        });
+
+        socket.on("judgement", (peerStreamID) => {
+            console.log("최후의 심판이 내려집니다");
+            dispatch(setJudgement(true));
+            dispatch(setJudgementID(peerStreamID));
+            setTimeout(() => dispatch(setJudgement(false)), 1500);
+            console.log("심판이 끝났습니다", peerStreamID);
+        });
 
         return () => {
             dispatch(clearReadyList());

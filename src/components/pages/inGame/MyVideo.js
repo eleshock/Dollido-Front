@@ -3,8 +3,9 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 import effect from "../../../images/pepe-laugh-laugh.gif";
+import judgementEffect from "../../../images/judgement.png"
 import Load from "./Loading";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -20,6 +21,19 @@ import { setMineHP, setMyStream } from "../../../modules/inGame";
 import * as faceapi from 'face-api.js';
 import { setMyWeapon, setMyWeaponCheck } from "../../../modules/item";
 
+const blinkEffect = keyframes`
+    50% {
+        opacity: 0;
+    }
+`
+const JudgementImage = styled.img`
+    position: absolute;
+    width: auto;
+    height: auto;
+    top: -20%;
+    left: 12%;
+    animation: ${blinkEffect} 0.25s step-end infinite;
+`
 
 const Container = styled.div `
     display: flex;
@@ -200,22 +214,48 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = () => {
         const reverse = useSelector((state) => state.item.reverse);
+        const judgement = useSelector((state) => state.item.judgement)
+        const judgementID = useSelector((state) => state.item.judgementID)
+        const abusingCount = useRef(0);
         const [myHP, setMyHP] = useState(initialHP);
          /* Reverse Mode */
         const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
-        let decrease = 0;
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
+            let newHP = 0;
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+
+                if(detections.length === 0 && gameStarted) {
+                    abusingCount.current += 1;
+                    if(abusingCount.current === 5) {
+                        console.log("제우스가 지켜봅니다");
+                        socket.emit("zeus", roomID);
+                    };
+                    if(abusingCount.current === 10) {
+                        console.log("최후의 심판 발동");
+                        socket.emit("judgement", roomID, myStream.id);
+                        abusingCount.current = 0;
+                        newHP = myHP - 30;
+                        setMyHP(newHP);
+                        socket.emit("smile", newHP, roomID, user_nick, myStream.id, true);
+                        if (newHP <= 0) { // game over
+                            socket.emit("finish", { roomID: roomID });
+                            setModelInterval(null);
+                        }
+                    };
+                } else {
+                    abusingCount.current = 0;
+                };
+
                 if (detections[0] && gameStarted) {
                     const decrease = handleHP(detections[0].expressions.happy, reverse);
 
                     if (decrease > 0) {
-                        const newHP = myHP - decrease;
-                        socket.emit("smile", newHP, roomID, user_nick, myStream.id);
+                        newHP = myHP - decrease;
+                        socket.emit("smile", newHP, roomID, user_nick, myStream.id, false);
                         if (newHP <= 0) { // game over
                             socket.emit("finish", { roomID: roomID });
                             setModelInterval(null);
@@ -236,8 +276,14 @@ const MyVideo = ({ match, socket }) => {
             <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"10%", left:"8%" }}></img>
             <ProgressBar striped variant="danger" now={myHP} />
             </>;
-        } else if(interval && !smiling){
+        } else if(interval && !smiling && !judgement){
             content = <ProgressBar striped variant="danger" now={myHP} />
+        } else if(interval && !smiling && judgement) {
+            content = <>
+                {judgementID === myStream.id?
+                <JudgementImage src={judgementEffect} /> : null}
+                <ProgressBar striped variant="danger" now={myHP} />
+            </>;
         } else {
             // console.log(mineHP);
             content = <ProgressBar striped variant="danger" now={mineHP} />
@@ -247,7 +293,6 @@ const MyVideo = ({ match, socket }) => {
             socket.on("finish", (hpList) => {
               // HP [streamID, HP]
                 if (myStream && myStream.id) {
-                    // console.log(hpList)
                     hpList.map((HP) => {
                         if (myStream.id === HP[0]){
                             // console.log(myStream.id)

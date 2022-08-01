@@ -7,6 +7,10 @@ const SET_IS_WHO = "item/SET_IS_WHO";
 const SET_REVERSE = "item/SET_REVERSE";
 const SET_GOT_REVERSE = "item/SET_GOT_REVERSE";
 
+const SET_ZEUS = "item/SET_ZEUS";
+const SET_JUDGEMENT = "item/SET_JUDGEMENT";
+const SET_JUDGEMENTID = "item/SET_JUDGEMENTID";
+
 export const setMyWeapon = (bool) => ({type: SET_MY_WEAPON, bool});
 export const setMyWeaponCheck = (bool) => ({type: SET_MY_WEAPON_CHECK, bool});
 export const setMyWeaponImage = (image) => ({type: SET_MY_WEAPON_IMAGE, image});
@@ -15,6 +19,10 @@ export const setIsWho = (otherID) => ({type: SET_IS_WHO, otherID});
 
 export const setReverse = (bool) => ({type: SET_REVERSE, bool});
 export const setGotReverse = (bool) => ({type: SET_GOT_REVERSE, bool});
+
+export const setZeus = (bool) => ({type: SET_ZEUS, bool});
+export const setJudgement = (bool) => ({type: SET_JUDGEMENT, bool});
+export const setJudgementID = (judgementID) => ({type: SET_JUDGEMENTID, judgementID});
 
 
 const initialState = {
@@ -25,6 +33,9 @@ const initialState = {
     isWho: null,
     reverse : false,
     gotReverse : false,
+    zeus: false,
+    judgement : false,
+    judgementID: null,
 }
 
 export default function item(state = initialState, action) {
@@ -43,6 +54,12 @@ export default function item(state = initialState, action) {
             return { ...state, reverse: action.bool };
         case SET_GOT_REVERSE:
             return { ...state, gotReverse: action.bool };
+        case SET_ZEUS:
+            return { ...state, zeus: action.bool };
+        case SET_JUDGEMENT:
+            return { ...state, judgement: action.bool };
+        case SET_JUDGEMENTID:
+            return { ...state, judgementID: action.judgementID };
         default:
             return state;
     }
