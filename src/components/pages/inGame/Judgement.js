@@ -24,31 +24,11 @@ const Judgement = ({ index }) => {
 	const [content, setContent] = useState(null);
 	useEffect(() => {
 		if (partnerVideos[index].id === judgementID) {
-		if (index === 0) {
 			setContent(
-			judgement ? (
-				<JudgementImage
-				src={judgementEffect}
-				/>
-			) : null
+				judgement ? (
+					<JudgementImage src={judgementEffect}/>
+				) : null
 			);
-		} else if (index === 1) {
-			setContent(
-			judgement ? (
-				<JudgementImage
-				src={judgementEffect}
-				/>
-			) : null
-			);
-		} else if (index === 2) {
-			setContent(
-			judgement ? (
-				<JudgementImage
-				src={judgementEffect}
-				/>
-			) : null
-			);
-		}
 		}
 	}, [judgement]);
 
