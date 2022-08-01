@@ -12,10 +12,12 @@ const JudgementImage = styled.img`
 	position: absolute;
 	width: auto;
 	height: auto;
+	top: -20%;
+    left: 12%;
 	animation: ${blinkEffect} 0.25s step-end infinite;
 `;
 
-const Judgement = ({ socket, index }) => {
+const Judgement = ({ index }) => {
 	const partnerVideos = useSelector((state) => state.videos);
 	const judgement = useSelector((state) => state.item.judgement);
 	const judgementID = useSelector((state) => state.item.judgementID);
@@ -27,7 +29,6 @@ const Judgement = ({ socket, index }) => {
 			judgement ? (
 				<JudgementImage
 				src={judgementEffect}
-				style={{ top: "-20%", right: "12%" }}
 				/>
 			) : null
 			);
@@ -36,7 +37,6 @@ const Judgement = ({ socket, index }) => {
 			judgement ? (
 				<JudgementImage
 				src={judgementEffect}
-				style={{ top: "60%", left: "12%" }}
 				/>
 			) : null
 			);
@@ -45,7 +45,6 @@ const Judgement = ({ socket, index }) => {
 			judgement ? (
 				<JudgementImage
 				src={judgementEffect}
-				style={{ top: "60%", right: "12%" }}
 				/>
 			) : null
 			);

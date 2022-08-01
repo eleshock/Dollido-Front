@@ -103,11 +103,11 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("judgement", (peerStreamID) => {
-            console.log("최후의 심판이 내려집니다");
             dispatch(setJudgement(true));
             dispatch(setJudgementID(peerStreamID));
-            setTimeout(() => dispatch(setJudgement(false)), 1500);
-            console.log("심판이 끝났습니다", peerStreamID);
+            setTimeout(() => {
+                dispatch(setJudgement(false));
+            }, 1500);
         });
 
         return () => {

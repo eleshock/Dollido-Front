@@ -31,7 +31,7 @@ const JudgementImage = styled.img`
     width: auto;
     height: auto;
     top: -20%;
-    left: 12%;
+    left: 11%;
     animation: ${blinkEffect} 0.25s step-end infinite;
 `
 
@@ -214,8 +214,9 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = () => {
         const reverse = useSelector((state) => state.item.reverse);
-        const judgement = useSelector((state) => state.item.judgement)
-        const judgementID = useSelector((state) => state.item.judgementID)
+        const judgement = useSelector((state) => state.item.judgement);
+        const judgementID = useSelector((state) => state.item.judgementID);
+        const zeus = useSelector((state) => state.item.zeus);
         const abusingCount = useRef(0);
         const [myHP, setMyHP] = useState(initialHP);
          /* Reverse Mode */
@@ -235,10 +236,9 @@ const MyVideo = ({ match, socket }) => {
                         socket.emit("zeus", roomID);
                     };
                     if(abusingCount.current === 10) {
-                        console.log("최후의 심판 발동");
                         socket.emit("judgement", roomID, myStream.id);
                         abusingCount.current = 0;
-                        newHP = myHP - 30;
+                        newHP = myHP - 5;
                         setMyHP(newHP);
                         socket.emit("smile", newHP, roomID, user_nick, myStream.id, true);
                         if (newHP <= 0) { // game over

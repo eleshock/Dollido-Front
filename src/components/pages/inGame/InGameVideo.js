@@ -59,7 +59,7 @@ const Test = ({socket, match}) => {
                     <Video index={1}></Video>
                     {partnerVideos[1] ?
                     <>
-                    <Judgement socket={socket} index={1}></Judgement>
+                    <Judgement index={1}></Judgement>
                     <HP socket={socket} index={1}></HP>
                     <IsReady socket={socket} index={1}></IsReady>
                     </> : <></>}
@@ -76,7 +76,7 @@ const Test = ({socket, match}) => {
                     <Video index={0}></Video>
                     {partnerVideos[0] ?
                     <>
-                    <Judgement socket={socket} index={0}></Judgement>
+                    <Judgement index={0}></Judgement>
                     <HP socket={socket} index={0}></HP>
                     <IsReady socket={socket} index={0}></IsReady>
                     </> : <></>}
@@ -86,7 +86,7 @@ const Test = ({socket, match}) => {
                     <Video index={2}></Video>
                     {partnerVideos[2] ?
                     <>
-                    <Judgement socket={socket} index={2}></Judgement>
+                    <Judgement index={2}></Judgement>
                     <HP socket={socket} index={2}></HP>
                     <IsReady socket={socket} index={2}></IsReady>
                     </> : <></>}
