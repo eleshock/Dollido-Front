@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 import { ServerName } from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
@@ -13,7 +13,7 @@ const FlexContainer = styled.div`
   font-family: koverwatch;
 `
 
-async function postImage({image, token}) {
+async function postImage({ image, token }) {
   const formData = new FormData();
   formData.append("image", image);
   console.log(image)
@@ -42,10 +42,11 @@ function Images() {
   const myGIF = membersState.user_gif;
   const [file, setFile] = useState("")
   const [images, setImages] = useState([])
+  const [previewImg, setPreviewImg] = useState(null)
 
   const submit = async event => {
     event.preventDefault()
-    const result = await postImage({image: file, token: token.token});
+    const result = await postImage({ image: file, token: token.token });
     console.log(result.imagePath);
     dispatch(setUserGif(result.imagePath));
     setImages([result.image, ...images])
@@ -53,22 +54,42 @@ function Images() {
 
   const fileSelected = event => {
     const file = event.target.files[0]
+    insertImg(event);
     console.log(file)
     setFile(file)
-	}
+  }
 
   const alertSubmit = () => {
     alert("제출 완료!");
   }
 
+  const insertImg = event => {
+    const img = event.target.files[0]
+    console.log(img)
+    let reader = new FileReader()
+    if (img) {
+      reader.readAsDataURL(img)
+    }
+
+    reader.onloadend = () => {
+      const previewImgUrl = reader.result
+
+      if (previewImgUrl) {
+        setPreviewImg(previewImgUrl)
+      }
+    }
+  }
+
+
+
   return (
     <div className="App">
       <FlexContainer>
         <h2>나의 비장의 무기</h2>
-        <img src={`${s3Domain}${myGIF}`}></img>
+        <img src={previewImg ? previewImg : `${s3Domain}${myGIF}`}></img>
         <form onSubmit={submit}>
-          <input onChange={fileSelected} type="file" accept="image/*"/>
-          <button type="submit" onClick={alertSubmit}>Submit</button>
+          <input onChange={fileSelected} type="file" accept="image/*" />
+          <button type="submit" onClick={alertSubmit} >Submit</button>
         </form>
       </FlexContainer>
     </div>

@@ -21,8 +21,7 @@ object-fit: contain;
 `;
 
 
-
-const MyWeapon = ({socket}) => {
+const MyWeapon = ({ socket }) => {
     const dispatch = useDispatch();
     const [content, setContent] = useState(<></>)
     const itemState = useSelector((state) => (state.item));
@@ -36,37 +35,36 @@ const MyWeapon = ({socket}) => {
 
     useEffect(() => {
         // socket.on('my_weapon', (streamID, randomList) => {
-            // dispatch(setRandom(randomList));
-            console.log(myWeaponImage);
-            if(isMeFlag) {
-                setContent(
-                    <Container>
-                        <h2> {myID} 발동!!</h2>
-                            <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
-                    </Container>
-                    )
-                } else {
-                    setContent(
-                        <Container>
-                            <h2> {isWho} 발동!!</h2>
-                                <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
-                        </Container>
-                        )
-                }
-            setTimeout(() => {
-                if(isMeFlag) {
-                    setContent(<Container>
-                        <BackgroundSizeStyle src={`${s3Domain}${myGIF}`} ></BackgroundSizeStyle>
-                        </Container>);
-                } else {
-                    setContent(<Container>
-                        <BackgroundSizeStyle src={`${s3Domain}${myWeaponImage}`} ></BackgroundSizeStyle>
-                        </Container>);
-                }
-            }, 2400);
-            setTimeout(() => {
-                dispatch(setMyWeapon(false));
-            }, 7400)
+        // dispatch(setRandom(randomList));
+        if (isMeFlag) {
+            setContent(
+                <Container>
+                    <h2> {myID} 발동!!</h2>
+                    <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
+                </Container>
+            )
+        } else {
+            setContent(
+                <Container>
+                    <h2> {isWho} 발동!!</h2>
+                    <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
+                </Container>
+            )
+        }
+        setTimeout(() => {
+            if (isMeFlag) {
+                setContent(<Container>
+                    <BackgroundSizeStyle src={`${s3Domain}${myGIF}`} ></BackgroundSizeStyle>
+                </Container>);
+            } else {
+                setContent(<Container>
+                    <BackgroundSizeStyle src={`${s3Domain}${myWeaponImage}`} ></BackgroundSizeStyle>
+                </Container>);
+            }
+        }, 2400);
+        setTimeout(() => {
+            dispatch(setMyWeapon(false));
+        }, 7400)
 
     }, [])
     return content;
