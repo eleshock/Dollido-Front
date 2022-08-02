@@ -38,12 +38,18 @@ const ReverseModeStyle = styled.img`
     object-fit: contain;
 `
 
+const ReverseFontStyle = styled.div`
+    font-size: 60px;
+    font-style: italic;
+`
+
 const Giftest = () => {
     const [name, setName] = useState(['0.gif'])
     const tempGIF = useRef();
 
     const randomGIF = useSelector((state) => state.random);
     const reverse = useSelector((state) => state.item.reverse);
+    const reverseUser = useSelector((state) => state.item.reverseUser);
     const [reverse1stGIF, setReverse1stGIF] = useState(true);
 
     const [countDown, setCountDown] = useState(true);
@@ -107,7 +113,10 @@ const Giftest = () => {
     return (
         <Container>
             { (reverse && reverse1stGIF) ?
-                <ReverseModeStyle src={reverseMode}></ReverseModeStyle>
+                <>
+                    <ReverseFontStyle> {reverseUser} 리버스 발동! </ReverseFontStyle>
+                    <ReverseModeStyle src={reverseMode}></ReverseModeStyle>
+                </>
                 :
                 !countDown ?
                     <BackgroundSizeStyle src={`${s3Domain}${name[randomGIF[0][count]]}`}></BackgroundSizeStyle>
