@@ -11,19 +11,27 @@ import {
     setReadyList,
     setRoomID,
     clearReadyList,
-
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
-import { setIsWho, setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse, setJudgementList, setZeus } from '../../../modules/item';
-import { deleteBestVideo } from "./MyVideo";
+import {
+    setIsWho,
+    setIsMe,
+    setMyWeapon, 
+    setMyWeaponCheck, 
+    setMyWeaponImage, 
+    setReverse, 
+    setGotReverse,
+    setJudgementList,
+    setZeusAppear,
+} from '../../../modules/item';
 
 // sound
-import {waitingSF, playingSF, celebrateSF, myWeaponSF, reverseSF, gameStartSF} from "../Sound";
+import { waitingSF, playingSF, celebrateSF, myWeaponSF, reverseSF, gameStartSF } from "../Sound";
 
 
 const InGameSocketOn = ({ match, socket }) => {
     const dispatch = useDispatch();
-    async function settingMyweapons (myGIF) {
+    async function settingMyweapons(myGIF) {
         dispatch(setMyWeaponImage(myGIF));
     }
     const userNick = useSelector((state) => state.member.member.user_nick);
@@ -39,7 +47,7 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setChiefStream(chiefStream));
         });
 
-        socket.on("chief", ({chiefStream}) => {
+        socket.on("chief", ({ chiefStream }) => {
             // console.log(chiefStream)
             dispatch(setChiefStream(chiefStream));
         });
@@ -59,11 +67,12 @@ const InGameSocketOn = ({ match, socket }) => {
 
         socket.on("finish", () => {
             dispatch(setGameFinish(true));
+            dispatch(setZeusAppear(false));
             playingSF.pause();
             celebrateSF.play();
         });
 
-        socket.on("ready", ({streamID, isReady}) => {
+        socket.on("ready", ({ streamID, isReady }) => {
             dispatch(setReadyList(streamID, isReady));
         });
 
@@ -78,7 +87,7 @@ const InGameSocketOn = ({ match, socket }) => {
             celebrateSF.pause();
         });
 
-        socket.on('my_weapon', async ({randomList, myGIF, myNickname}) => {
+        socket.on('my_weapon', async ({ randomList, myGIF, myNickname }) => {
             dispatch(setIsMe(false));
             dispatch(setIsWho(myNickname));
             await settingMyweapons(myGIF);
@@ -97,11 +106,6 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setGotReverse(true));
         });
 
-        socket.on("zeus", () => {
-            console.log("zeus 띄워주세요");
-            dispatch(setZeus(true));
-        });
-
         socket.on("judgement", (streamID) => {
             dispatch(setJudgementList(streamID, true));
             setTimeout(() => {
@@ -109,9 +113,16 @@ const InGameSocketOn = ({ match, socket }) => {
             }, 1500);
         });
 
+        socket.on("zeus_appear", () => {
+            dispatch(setZeusAppear(true));
+        });
+
+        socket.on("zeus_disappear", () => {
+            dispatch(setZeusAppear(false));
+        });
+
         return () => {
             dispatch(clearReadyList());
-            dispatch(setGotReverse(false));
         }
     }, [match, socket, dispatch]);
 

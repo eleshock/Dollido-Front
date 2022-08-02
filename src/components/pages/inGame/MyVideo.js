@@ -212,13 +212,13 @@ const MyVideo = ({ match, socket }) => {
     }
 
 
-    const ShowStatus = () => {
+    const ShowStatus = ({myStreamID}) => {
         const reverse = useSelector((state) => state.item.reverse);
         
         /* judgement*/
-        const judgementList = useSelector((state) => state.item.judgementList);
-        const [isAbusing, setIsAbusing] = useState(false);
-        const zeus = useSelector((state) => state.item.zeus);
+        const isAbusing = useSelector((state) => state.item.judgementList[myStreamID]);
+        const zeusAppear = useRef(false);
+        // const [isAbusing, setIsAbusing] = useState(false);
         const abusingCount = useRef(0);
 
         const [myHP, setMyHP] = useState(initialHP);
@@ -232,16 +232,19 @@ const MyVideo = ({ match, socket }) => {
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
                 
-                setIsAbusing(judgementList[myStream.id])
+                // setIsAbusing(judgementList[myStream.id])
 
                 if(detections.length === 0 && gameStarted) {
                     abusingCount.current += 1;
-                    if(abusingCount.current === 5) {
-                        console.log("제우스가 지켜봅니다");
-                        socket.emit("zeus", roomID);
-                    };
                     if(abusingCount.current === 10) {
+                        console.log("제우스가 지켜봅니다");
+                        zeusAppear.current = true;
+                        socket.emit("zeus_appear", roomID);
+                    };
+                    if(abusingCount.current === 25) {
                         socket.emit("judgement", roomID, myStream.id);
+                        socket.emit("zeus_disappear", roomID)
+                        zeusAppear.current = false;
                         abusingCount.current = 0;
                         newHP = myHP - 5;
                         setMyHP(newHP);
@@ -251,8 +254,13 @@ const MyVideo = ({ match, socket }) => {
                             setModelInterval(null);
                         }
                     };
-                } else {
+                } else if (abusingCount.current !== 0) {
+                    console.log("abuseCnt :", abusingCount.current);
                     abusingCount.current = 0;
+                    if (zeusAppear.current) {
+                        socket.emit("zeus_disappear", roomID);
+                        zeusAppear.current = false;
+                    }
                 };
 
                 if (detections[0] && gameStarted) {
@@ -349,7 +357,7 @@ const MyVideo = ({ match, socket }) => {
             </Container>
             <HPContainer>
                 <HPContent>
-                    <ShowStatus></ShowStatus>
+                    {modelsLoaded && myStream && myStream.id && <ShowStatus myStreamID={myStream.id}></ShowStatus>}
                 </HPContent>
             </HPContainer>
             <ShowMyReady></ShowMyReady>

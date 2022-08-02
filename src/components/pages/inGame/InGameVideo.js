@@ -9,6 +9,8 @@ import HP from "./HP";
 import IsReady from "./IsReady";
 import Bottom from "./Bottom";
 import Judgement from "./Judgement";
+import ZeusAppear from "./ZeusAppear";
+
 
 
 const Container = styled.div`
@@ -16,6 +18,8 @@ const Container = styled.div`
     justify-content: space-between;
     flex: 20;
     height: 100vh;
+    overflow: hidden;
+    position: relative;
 `
 
 const LeftContent = styled.div`
@@ -51,6 +55,7 @@ const Test = ({socket, match}) => {
 
     return (
         <Container>
+            <ZeusAppear socket={socket}></ZeusAppear>
             <LeftContent>
                 <EachContent>
                     <MyVideo socket={socket} match={match}></MyVideo>

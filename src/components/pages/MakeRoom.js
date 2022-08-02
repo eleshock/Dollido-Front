@@ -19,6 +19,10 @@ import { Link } from "react-router-dom";
 import useSound from 'use-sound';
 import { select, enterRoom, exit, celebrateSF, playingSF } from './Sound'
 
+import { useDispatch } from "react-redux";
+import { setInGameInit } from "../../modules/inGame.js";
+import { setItemInit } from "../../modules/item.js";
+
 const FlexContainer = {
   display: "flex",
   flexDirection: "column",
@@ -162,6 +166,7 @@ function MakeRoom() {
 
   const socket = useRef();
   const roomNameRef = useRef(null);
+  const dispatch = useDispatch();
 
   // game sound
   celebrateSF.pause();
@@ -219,6 +224,8 @@ function MakeRoom() {
         "dollido-header": "dollido",
       },
     });
+    dispatch(setInGameInit()); // 방장이 게임 중에 뒤로가기 누르는 케이스 때문
+    dispatch(setItemInit());
     return () => {
       stopWebcam();
     }
