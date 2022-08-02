@@ -13,7 +13,7 @@ const SET_READY_LIST = "inGame/SET_READY_LIST";
 const CLEAR_READY_LIST = "inGame/CLEAR_READY_LIST";
 const DELETE_READY_LIST = "inGame/DELETE_READY_LIST";
 const SET_MY_HP = "inGame/SET_MY_HP";
-const SET_INIT = "inGame/SET_INIT";
+const SET_INGAME_INIT = "inGame/SET_INGAME_INIT";
 
 
 export const setModelsLoaded = (bool) => ({type: SET_MODELS_LOADED, bool});
@@ -31,7 +31,7 @@ export const setReadyList = (streamID, bool) => ({type: SET_READY_LIST, streamID
 export const clearReadyList = () => ({type: CLEAR_READY_LIST});
 export const deleteReadyList = (streamID) => ({type: DELETE_READY_LIST, streamID});
 export const setMineHP = (myHP) => ({type: SET_MY_HP, myHP});
-export const setInit = () => ({type: SET_INIT});
+export const setInGameInit = () => ({type: SET_INGAME_INIT});
 
 const initialState = {
     gameFinished: false,
@@ -83,7 +83,7 @@ export default function inGame(state = initialState, action) {
             return  { ...state, readyList: {} }
         case SET_MY_HP:
             return { ...state, myHP : action.myHP };
-        case SET_INIT:
+        case SET_INGAME_INIT:
             return {
                 gameFinished: false,
                 gameStarted: false,

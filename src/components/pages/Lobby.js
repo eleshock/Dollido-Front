@@ -17,7 +17,8 @@ import { ServerName } from "../../serverName";
 
 // 임시
 import { useSelector, useDispatch } from "react-redux";
-import { setInit } from "../../modules/inGame.js";
+import { setInGameInit } from "../../modules/inGame.js";
+import { setItemInit } from "../../modules/item.js";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -211,7 +212,8 @@ const Lobby = () => {
   useEffect(() => {
     // socket.current = io(SERVER_ADDRESS.current);
     socket.emit("get room list");
-    dispatch(setInit());
+    dispatch(setInGameInit());
+    dispatch(setItemInit());
     return () => {
       socket.disconnect();
       stopWebcam();
