@@ -3,9 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
 import { ThemeProvider } from "styled-components";
 
-import Button2 from "../common/Button2.js";
-import Button6 from "../common/Button6.js";
-import { LobbyModal } from "../common/LobbyModal.tsx";
+import Button3 from "../common/Button3.js";
 import mainBackGround from "../../images/mainBackground.gif";
 import styled from "styled-components";
 import { GlobalStyles } from "../common/Global.tsx";
@@ -251,47 +249,14 @@ const RoomModalBottom = {
 };
 
 const sizes = {
-  width: "48%",
+  width: "42%",
   height: "36px",
   fontSize: "1rem",
   border: "1px solid transparent",
   margin: "0 20px 0 0",
 };
 
-// AI 모델
 
-const Container = styled.div `
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-`
-
-const VideoContent = styled.div`
-    flex: 9;
-    width: 250px;
-    display: relative;
-`
-
-const VideoStyle = styled.video `
-    flex: 9;
-    width: 250px;
-    height: 190px;
-    border-radius: 10%;
-    justify-content: center;
-    transform: scaleX(-1);
-`
-
-const HPContainer = styled.div `
-    display: flex;
-    width: 320px;
-    color: white;
-    justify-content: center;
-    margin-top: 20px;
-`
-
-const HPContent = styled.div `
-    width: 80%;
-`
 
 let startVideoPromise;
 
@@ -536,10 +501,6 @@ const ShowStatus = () => {
     }
   }
 
-  const handleMakeRoom = () => {
-    navigate('/makeroom');
-  }
-
   const backToLoomList = () => {
     setModal(false);
     stopWebcam();
@@ -565,11 +526,11 @@ const ShowStatus = () => {
                             {nickname}님 Dollido에 오신걸 환영합니다
                           </span>
                           <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
-                            <Button6
+                            <Button3
                              style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}  
                             >
                               마이페이지
-                            </Button6>
+                            </Button3>
                           </Link>
                         </div>
                     }
@@ -580,16 +541,14 @@ const ShowStatus = () => {
               <Content>
                   <RoomListFrame>
                     <div style = {{display: "flex", justifyContent: "flex-end", margin: "0 0 5px 0"}}>
-                      <Link to = {`/makeRoom`} style = {{textDecoration:"none"}}>
                             <div >
-                              <Button6
+                              <Button3
                                 onClick = {onClickStartRoom}
                                 style={{margin : "0 0 20px 0", fontSize:"30px", height:"50px", display:"flex", alignItems:"center", justifyContent:"center"}}
                               >
                                 방만들기
-                              </Button6>
+                              </Button3>
                             </div>
-                      </Link>
                       </div>
                       <RoomTagList>
                         <RoomTag1>이름</RoomTag1>
@@ -622,7 +581,7 @@ const ShowStatus = () => {
                         </PageControl>
                   </RoomListFrame>
                   <div >
-                      <BackToLobby to = {'/makeRoom'} onMouseDown={exitSound} >
+                      <BackToLobby to = {'/tutorial'} onMouseDown={exitSound} >
                         <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>  
                       </BackToLobby>
                       
@@ -648,21 +607,21 @@ const ShowStatus = () => {
                         <div style = {{display: "flex", justifyContent: "center"}}>
                           <Link to = {`/room/${localStorage.roomLink}`} name = {localStorage.roomName} style = {{textDecoration:"none"}}>
                             <div style = {{margin: "30px"}}>
-                              <Button6
-                                style={{fontSize:"30px", display:"flex", justifyContent:"center", alignItems:"center", width:"11rem", height:"36px"}}
+                              <Button3
+                                style={{fontSize:"25px", display:"flex", justifyContent:"center", alignItems:"center", width:"11rem", height:"36px"}}
                               >
                                 입장하기
-                              </Button6>
+                              </Button3>
                             </div>
                           </Link>
                         </div>
                         <div style = {{margin: "30px"}}>
-                              <Button6
+                              <Button3
                                 onClick={backToLoomList}
-                                style={{fontSize:"30px", display:"flex", justifyContent:"center", alignItems:"center", width:"11rem", height:"36px"}}
+                                style={{fontSize:"25px", display:"flex", justifyContent:"center", alignItems:"center", width:"11rem", height:"36px"}}
                               >
                                 나가기
-                              </Button6>
+                              </Button3>
                         </div>
                       </div>
                   </div>
@@ -700,13 +659,13 @@ const ShowStatus = () => {
                   ref={roomNameRef}
                   style={sizes}
                 />
-                <Button6 
-                  style={{margin : "0 0 20px 0", fontSize:"30px", height:"36px", display:"flex", alignItems:"center", justifyContent:"center"}}
+                <Button3 
+                  style={{margin : "0 0 20px 0", fontSize:"25px", height:"36px", display:"flex", alignItems:"center", justifyContent:"center"}}
                   onMouseUp = {enterGame}
                   onClick={onClickMakeRoom}
                 >
                   방만들기
-                </Button6>
+                </Button3>
               </div>
             </div>
           }

@@ -2,22 +2,39 @@ import React from 'react';
 import styled, { css } from "styled-components";
 import "./Button3.css";
 
-const Button3 = styled.button`
+const StyledButton = styled.button`
+    display:inline-block;
+    min-width:140px;
+    line-height:65px;
+    padding:0px 3px ;
+    border:3px solid transparent;
+    background-color: #F0A82BEE;
+    box-shadow: 0px 0px 3px #ffd200;
+    // border-radius:5px;
+    -webkit-appearance:none;
+    // opacity:0.8;
 
-`;
-// Usage
+    font-family:koverwatch;
+    text-transform:uppercase;
+    font-size:42px;
+    color:white;
+    text-shadow:0px 0px 2px white;
 
-function button3({children, onClick}) {
+    transition: opacity 0.2s ease-out, border 0.2s ease-out;
+
+    &:hover {
+        opacity:1;
+        border:3px solid white;
+    }
+
+`
+
+
+function button3({children, ...rest}) {
   return (
-  
-        <div onClick={onClick} class="my-super-cool-btn">
-          <div class="dots-container">
-          </div>
-          <span>{children}</span>
-        </div>
 
-  
-  );
+    <StyledButton {...rest}> {children} </StyledButton>
+    );
 }
 
 export default button3;

@@ -2,10 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 // commponent import
-import Button8 from "../../common/Button8";
-import Button9 from "../../common/Button9";
-import Button7 from "../../common/Button7";
-import { RedButtons, BlueButtons, YellowButtons } from "../../common/Button5";
+import {GameButtonOranges, GameButtonBlues, GameButtonReds, GameButtonGreens } from "../../common/Button4";
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
@@ -28,10 +25,10 @@ const Bottom = styled.div`
 `
 
 const MyButton = {
-    flex: '33',
     display: "flex",
     justifyContent: 'space-around',
     textAlign: "center",
+    flex: 1
     
 }
 
@@ -124,60 +121,48 @@ const InGameBottom = ({ socket }) => {
             {!gameStarted ?
                 <div style={MyButton}>
                     {myStream && (chief || chiefStream === myStream.id) ?
-                        <Button9 onClick={handleStart}>START</Button9>
+                        <div>
+                        <GameButtonOranges onClick={handleStart}>START</GameButtonOranges>
+                        </div>
                         :
-                        <Button9 onClick={handleReady}>Ready</Button9>
+                        <div>
+                        <GameButtonOranges onClick={handleReady}>READY</GameButtonOranges>
+                        </div>
                     }
+                     <div>
                     <Link to="/Lobby">
-                        <Button9 >QUIT</Button9>
+                        <GameButtonOranges >QUIT</GameButtonOranges>
                     </Link>
-
+                    </div>
                 </div>
                 :
-                <div style={{display: 'flex', flexDirection:"row", justifyContent:"space-between", alignItems: "center"}}>
-
-                {!gameFinished &&
-                (gotReverse ?
-                    <div style={{margin:"0 80px 0 0"}}>
-                    <RedButtons onClick={handleReverse}>R</RedButtons>
-                    </div>
-                   
-                    :
-                    <div style={{margin:"0 80px 0 0"}}>
-                    <RedButtons style={{opacity:"0.3"}}>R</RedButtons>
-                    </div>
-        
-                     )
-            }
-                {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
-                   <div style={{display:"flex", flexDirection:"row"}}>
-                   <div style={{margin:"0 80px 0 0"}}>
-                   <BlueButtons onClick={handleNamanmoo} >W</BlueButtons>
-                   </div>
-                      <div style={MyButton}>
-                      <YellowButtons >Y</YellowButtons>
-                      </div>
-                   </div> }   
-                {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
-                <div style={{display:"flex", flexDirection:"row"}}>
-                <div style={{margin:"0 80px 0 0"}}>
-                <BlueButtons onClick={handleNamanmoo} style={{opacity:"0.3"}} >W</BlueButtons>
-                </div>
-                   <div style={MyButton}>
-                   <YellowButtons >Y</YellowButtons>
-                   </div>
-                </div>
-                 }
-              
+                <div style={MyButton}>
+                    {!gameFinished &&
+                        (gotReverse ?
+                        <div>
+                            <GameButtonReds onClick={handleReverse}>리버스 모드</GameButtonReds>
+                        </div>
+                        :
+                        <div>
+                            <GameButtonReds style={{opacity:"0.3"}}>리버스 모드</GameButtonReds>
+                        </div>
+                        )
+                    }
+                    {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
+                    <GameButtonBlues onClick={handleNamanmoo} >나만의 무기</GameButtonBlues>
+                    }   
+                    {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
+                    <GameButtonBlues onClick={handleNamanmoo} style={{opacity:"0.3"}} >나만의 무기</GameButtonBlues>
+                    }
                  </div>
             }
             
             {(gameFinished && bestDone) &&
-                <div style={MyButton}>
+                <div style={{ display: "flex", justifyContent: 'space-around', textAlign: "center", flex: "33"}}>
                     {chief &&
-                        <Button8 size="large" onClick={handleRestart}>RESTART</Button8>
+                        <GameButtonGreens size="large" onClick={handleRestart}>RESTART</GameButtonGreens>
                     }   
-                        <Button9 size="large" onClick={handleQuit}>QUIT</Button9>
+                        <GameButtonOranges size="large" onClick={handleQuit}>QUIT</GameButtonOranges>
                 </div>
             }
             <div style={{ opacity: '0', height: '6.5rem' }}> </div>

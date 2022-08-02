@@ -205,7 +205,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick);
                 }
-                return 2;
+                return 10;
             } else {
                 return 1;
             }

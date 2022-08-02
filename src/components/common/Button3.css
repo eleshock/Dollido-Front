@@ -1,259 +1,92 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:900');
+/* I also did the Mirror's Edge main menu in CSS here: https://codepen.io/brundolf/pen/XKddbJ?editors=1100 */
 
-body{
-  margin:0;
-  padding:0;
-  background-color:#292929;
-  font-family: 'Montserrat', sans-serif;
+/* Credit goes to "Resike" for the fonts http://www.wowinterface.com/forums/showthread.php?p=311654 */
+
+
+ 
+  
+.overwatch-button-primary {
+    display:inline-block;
+    min-width:140px;
+    line-height:65px;
+    padding:0px 3px ;
+    border:3px solid transparent;
+    background-color: #ffd200;
+    box-shadow: 0px 0px 3px #ffd200;
+    /* border-radius:5px; */
+    -webkit-appearance:none;
+    opacity:0.8;
+    
+    font-family:koverwatch;
+    text-transform:uppercase;
+    font-size:42px;
+    color:white;
+    text-shadow:0px 0px 2px white;
+    
+    transition: opacity 0.2s ease-out, border 0.2s ease-out;
+    margin : 0 0 20px
+
 }
-#wrapper{
-  width:100vw;
-  height:100vh;
-  box-sizing:border-box;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-.my-super-cool-btn{
-  position:ab;
-  text-decoration:none;
-  color:orange;
-  letter-spacing:1px;
-  font-size:2rem;
-  box-sizing:border-box;
-}
-.my-super-cool-btn span{
-  position:relative;
-  box-sizing:border-box;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  width:100px;
-  height:100px;
-}
-.my-super-cool-btn span:before{
-  content:'';
-  width:100%;
-  height:100%;
-  display:block;
-  position:absolute;
-  border-radius:100%;
-  border:7px solid orange;
-  box-sizing:border-box;
-  transition: all .85s cubic-bezier(0.25, 1, 0.33, 1);
-  box-shadow: 0 30px 85px rgba(0,0,0,0.14), 0 15px 35px rgba(0,0,0,0.14);
-}
-.my-super-cool-btn:hover span:before{
-  transform:scale(0.8);
-  box-shadow: 0 20px 55px rgba(0,0,0,0.14), 0 15px 35px rgba(0,0,0,0.14);
-}
-.my-super-cool-btn .dots-container{
-  display: flex;
-  opacity:0;
-  animation: intro 1.6s;
-  animation-fill-mode: forwards;
-  /* position: relative; */
-}
-.my-super-cool-btn .dot{
-  display: flex;
-  width:10px;
-  height:10px;
-  display:block;
-  background-color:#F3CF14;
-  border-radius:100%;
-  /* position:absolute; */
-  transition: all .85s cubic-bezier(0.25, 1, 0.33, 1);
-}
-.my-super-cool-btn .dot:nth-child(1){
-  top:50px;
-  left:50px;
-  transform:rotate(-140deg);
-  animation: swag1-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity:0;
-  padding : 5px 0 0 0;
-}
-.my-super-cool-btn .dot:nth-child(2){
-  top:50px;
-  right:50px;
-  transform:rotate(140deg);
-  animation: swag2-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity:0;
-}
-.my-super-cool-btn .dot:nth-child(3){
-  bottom:50px;
-  left:50px;
-  transform:rotate(140deg);
-  animation: swag3-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity:0;
-}
-.my-super-cool-btn .dot:nth-child(4){
-  bottom:50px;
-  right:50px;
-  transform:rotate(-140deg);
-  animation: swag4-out 0.3s;
-  animation-fill-mode: forwards;
-  opacity:0;
-}
-.my-super-cool-btn:hover .dot:nth-child(1){
-  animation: swag1 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(2){
-  animation: swag2 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(3){
-  animation: swag3 0.3s;
-  animation-fill-mode: forwards;
-}
-.my-super-cool-btn:hover .dot:nth-child(4){
-  animation: swag4 0.3s;
-  animation-fill-mode: forwards;
-}
-@keyframes intro {
-   0% {
-     opacity:0;
-  }
-  100% {
-     opacity:1;
-  }
-}
-@keyframes swag1 {
-   0% {
-     top:50px;
-     left:50px;
-     width:8px;
-  }
-  50% {
-    width:30px;
+.overwatch-button-primary:hover {
     opacity:1;
+    border:3px solid white;
   }
-  100% {
-     top:20px;
-     left:20px;
-     width:8px;
-     opacity:1;
+
+  .overwatch-button-secondary {
+    display:inline-block;
+    min-width:150px;
+    line-height:65px;
+    padding:0px 3px;
+    border:3px solid transparent;
+    background-color: #469ed7;
+    box-shadow: 0px 0px 3px #469ed7;
+    border-radius:5px;
+    -webkit-appearance:none;
+    opacity:0.8;
+    
+    font-family:koverwatch;
+    text-transform:uppercase;
+    font-size:26px;
+    color:white;
+    text-shadow:0px 0px 2px white;
+    
+    transition: opacity 0.2s ease-out, border 0.2s ease-out;
+    
   }
-}
-@keyframes swag1-out {
-   0% {
-     top:20px;
-     left:20px;
-     width:8px;
-  }
-  50% {
-     width:30px;
+  .overwatch-button-secondary:hover {
     opacity:1;
+    border:3px solid white;
   }
-  100% {
-     top:50px;
-     left:50px;
-     width:8px;
-    opacity:0;
-  }
+  
+ 
+    
+.section {
+      display:flex;
+      width:100%;
+      margin:30px 0;
+      justify-content:space-between;
 }
-@keyframes swag2 {
-   0% {
-     top:50px;
-     right:50px;
-     width:8px;
-  }
-  50% {
-    width:30px;
-    opacity:1;
-  }
-  100% {
-     top:20px;
-     right:20px;
-     width:8px;
-     opacity:1;
-  }
+.section-header {
+    display:inline-block;
+    text-align:right;
+    font-size:36px;
+    width:30%;
+    padding:20px;
 }
-@keyframes swag2-out {
-   0% {
-     top:20px;
-     right:20px;
-     width:8px;
-  }
-  50% {
-     width:30px;
-    opacity:1;
-  }
-  100% {
-     top:50px;
-     right:50px;
-     width:8px;
-    opacity:0;
-  }
+      
+      
+.section-content {
+        text-align:left;
+        padding:20px;
+        width:70%;
+        overflow:hidden;
 }
-@keyframes swag3 {
-   0% {
-     bottom:50px;
-     left:50px;
-     width:8px;
-  }
-  50% {
-    width:30px;
-    opacity:1;
-  }
-  100% {
-     bottom:20px;
-     left:20px;
-     width:8px;
-     opacity:1;
-  }
+.section-content.buttons {
+        display:flex;
 }
-@keyframes swag3-out {
-   0% {
-     bottom:20px;
-     left:20px;
-     width:8px;
-  }
-  50% {
-     width:30px;
-    opacity:1;
-  }
-  100% {
-     bottom:50px;
-     left:50px;
-     width:8px;
-    opacity:0;
-  }
+.overwatch-button-primary {
+          margin-left:10px;
 }
-@keyframes swag4 {
-   0% {
-     bottom:50px;
-     right:50px;
-     width:8px;
-  }
-  50% {
-    width:30px;
-    opacity:1;
-  }
-  100% {
-     bottom:20px;
-     right:20px;
-     width:8px;
-     opacity:1;
-  }
-}
-@keyframes swag4-out {
-   0% {
-     bottom:20px;
-     right:20px;
-     width:8px;
-  }
-  50% {
-     width:30px;
-    opacity:1;
-  }
-  100% {
-     bottom:50px;
-     right:50px;
-     width:8px;
-    opacity:0;
-  }
-}
+      
+
+ 
