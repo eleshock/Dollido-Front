@@ -246,7 +246,7 @@ const MyVideo = ({ match, socket }) => {
                         socket.emit("zeus_disappear", roomID)
                         zeusAppear.current = false;
                         abusingCount.current = 0;
-                        newHP = myHP - 5;
+                        newHP = myHP - 30;
                         setMyHP(newHP);
                         socket.emit("smile", newHP, roomID, user_nick, myStream.id, true);
                         if (newHP <= 0) { // game over
