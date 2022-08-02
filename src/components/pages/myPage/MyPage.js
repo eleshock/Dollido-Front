@@ -71,7 +71,7 @@ const MyPage = () => {
                       "& button.Mui-selected": { color: "#57C2F0" },
                     }}
                     onChange={handleChange}>
-                    <MyTab sx={{ "&:hover": { transform: "scale(1.3)" } }} label="내 정보" value="1"
+                    <MyTab sx={{ "&:hover": { transform: "scale(1.3)" } }} label="프로필" value="1"
                       onMouseEnter={() => {
                         selectSound();
                       }}
@@ -94,7 +94,7 @@ const MyPage = () => {
                   </TabList>
                 </Box>
                 <TabPanel value="1">
-                    <Profile></Profile>
+                      <Profile></Profile>
                 </TabPanel>
                 <TabPanel value="2">
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
