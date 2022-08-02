@@ -67,7 +67,8 @@ const StyledButton = styled.button`
     cursor: pointer;
     padding-left: 1rem;
     padding-right: 1rem;
-
+    justify-content: center;
+    align-items: center;
     ${sizeStyles}
     ${colorStyles}
     

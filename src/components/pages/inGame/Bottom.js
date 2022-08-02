@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 // commponent import
-import Button from "../../common/Button";
+import {GameButtonOranges, GameButtonBlues, GameButtonReds, GameButtonGreens } from "../../common/Button4";
 
 // redux import
 import { useSelector, useDispatch } from "react-redux";
@@ -11,18 +11,25 @@ import { setIsMe, setMyWeapon, setMyWeaponCheck, setGotReverse } from '../../../
 
 import {celebrateSF} from "../Sound";
 
+// icon import
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowsSpin } from "@fortawesome/free-solid-svg-icons";
+import { faDumbbell } from "@fortawesome/free-solid-svg-icons";
+
+
 const Bottom = styled.div`
     display: flex;
     justify-content: center;
-    align-items: flex-end;
+    align-items: center;
     font-family: koverwatch;
 `
+
 const MyButton = {
-    flex: '3',
     display: "flex",
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     textAlign: "center",
-    alignItems: 'center'
+    flex: 1
+    
 }
 
 const ButtonSize = {
@@ -32,6 +39,17 @@ const ButtonSize = {
     height: "45px",
     margin: "30px"
 }
+
+const buttonstyle ={
+
+    backgroundColor: "transparent",
+    backgroundRepeat: "noRepeat",
+    border: "none",
+    cursor:"pointer",
+    overflow: "hidden",
+    outline: "none"
+}
+
 
 const InGameBottom = ({ socket }) => {
     const dispatch = useDispatch();
@@ -72,7 +90,7 @@ const InGameBottom = ({ socket }) => {
 
 
     function handleRestart() {
-        socket.emit("restart", {roomID: roomID});
+        socket.emit("restart", { roomID: roomID });
         dispatch(setMineHP(null));
     }
 
@@ -83,10 +101,10 @@ const InGameBottom = ({ socket }) => {
 
     function handleNamanmoo() {
         if (!myWeaponUsingInThisGame && !myWeaponUsing) {
-                socket.emit("my_weapon", roomID, myGIF, MyNickname);
-                dispatch(setIsMe(true));
-                dispatch(setMyWeapon(true));
-                dispatch(setMyWeaponCheck(true));
+            socket.emit("my_weapon", roomID, myGIF, MyNickname);
+            dispatch(setIsMe(true));
+            dispatch(setMyWeapon(true));
+            dispatch(setMyWeaponCheck(true));
         }
     }
 
@@ -94,6 +112,7 @@ const InGameBottom = ({ socket }) => {
         if (!reverse) {
             socket.emit("reverse", { roomID: roomID });
             dispatch(setGotReverse(false));
+
         }
     }
 
@@ -102,34 +121,48 @@ const InGameBottom = ({ socket }) => {
             {!gameStarted ?
                 <div style={MyButton}>
                     {myStream && (chief || chiefStream === myStream.id) ?
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleStart}>START</Button>
+                        <div>
+                        <GameButtonOranges onClick={handleStart}>START</GameButtonOranges>
+                        </div>
                         :
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleReady}>Ready</Button>
+                        <div>
+                        <GameButtonOranges onClick={handleReady}>READY</GameButtonOranges>
+                        </div>
                     }
-                    <Link to="/Lobby" style = {{textDecoration:"none"}}>
-                        <Button color="yellow" size="large" style={ButtonSize}>QUIT</Button>
+                    <div>
+                    <Link to="/Lobby">
+                        <GameButtonOranges >QUIT</GameButtonOranges>
                     </Link>
-
+                    </div>
                 </div>
                 :
-                !gameFinished &&
-                (gotReverse ?
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleReverse}>Reverse</Button>
-                    :
-                    <Button color="yellow" size="large" style={{ ButtonSize, opacity: '0.3' }}>Reverse</Button>)
-            }
-            {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
                 <div style={MyButton}>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기!</Button> </div> }
-            {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
-                <div style={MyButton}>
-                    <Button color="yellow" size="large" style={ButtonSize} onClick={handleNamanmoo}>나만의무기 사용완료!</Button> </div> }
-            {(gameFinished && bestDone) &&
-                <div style={MyButton}>
-                    {chief &&
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleRestart}>RESTART</Button>
+                    {!gameFinished &&
+                        (gotReverse ?
+                        <div>
+                            <GameButtonReds onClick={handleReverse}>리버스 모드</GameButtonReds>
+                        </div>
+                        :
+                        <div>
+                            <GameButtonReds style={{opacity:"0.3"}}>리버스 모드</GameButtonReds>
+                        </div>
+                        )
                     }
-                        <Button color="yellow" size="large" style={ButtonSize} onClick={handleQuit}>QUIT</Button>
+                    {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
+                    <GameButtonBlues onClick={handleNamanmoo} >나만의 무기</GameButtonBlues>
+                    }   
+                    {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
+                    <GameButtonBlues onClick={handleNamanmoo} style={{opacity:"0.3"}} >나만의 무기</GameButtonBlues>
+                    }
+                </div>
+            }
+            
+            {(gameFinished && bestDone) &&
+                <div style={{ display: "flex", justifyContent: 'space-around', textAlign: "center", flex: "33"}}>
+                    {chief &&
+                        <GameButtonGreens size="large" onClick={handleRestart}>RESTART</GameButtonGreens>
+                    }   
+                        <GameButtonOranges size="large" onClick={handleQuit}>QUIT</GameButtonOranges>
                 </div>
             }
             <div style={{ opacity: '0', height: '6.5rem' }}> </div>

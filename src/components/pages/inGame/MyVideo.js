@@ -3,9 +3,17 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useInterval } from "../../common/usefulFuntions";
 import ProgressBar from 'react-bootstrap/ProgressBar';
-import styled from "styled-components";
+import styled, {keyframes} from "styled-components";
 import effect from "../../../images/pepe-laugh-laugh.gif";
+import judgementEffect from "../../../images/judgement.png"
 import Load from "./Loading";
+import readyimage from "../../../images/ready.gif"
+import Notreadyimage from "../../../images/Notready.png"
+import Chiefimage from "../../../images/Chief.png"
+import Playingimage from "../../../images/Playing.png"
+import readyvideo from "../../../images/ready.mp4"
+
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -20,6 +28,19 @@ import { setMineHP, setMyStream } from "../../../modules/inGame";
 import * as faceapi from 'face-api.js';
 import { setMyWeapon, setMyWeaponCheck } from "../../../modules/item";
 
+const blinkEffect = keyframes`
+    50% {
+        opacity: 0;
+    }
+`
+const JudgementImage = styled.img`
+    position: absolute;
+    width: auto;
+    height: auto;
+    top: -20%;
+    left: 11%;
+    animation: ${blinkEffect} 0.25s step-end infinite;
+`
 
 const Container = styled.div `
     display: flex;
@@ -129,17 +150,17 @@ const MyNickname = {
 
 const MyVideo = ({ match, socket }) => {
     const dispatch = useDispatch();
-    const user_nick = useSelector((state) => state.member.member.user_nick);
+    // const inGameState = useSelector((state) => (state.inGame));
     const token = useSelector((state) => state.member.member.tokenInfo.token);
-    const inGameState = useSelector((state) => (state.inGame));
-    const gameFinished = inGameState.gameFinished;
-    const gameStarted = inGameState.gameStarted;
-    const modelsLoaded = inGameState.modelsLoaded;
-    const myStream = inGameState.myStream;
-    const chiefStream = inGameState.chiefStream;
-    const readyList = inGameState.readyList;
-    const mineHP = inGameState.myHP;
+    const gameFinished = useSelector((state) => (state.inGame.gameFinished));
+    const gameStarted = useSelector((state) => (state.inGame.gameStarted));
+    const modelsLoaded = useSelector((state) => (state.inGame.modelsLoaded));
+    const myStream = useSelector((state) => (state.inGame.myStream));
+    const chiefStream = useSelector((state) => (state.inGame.chiefStream));
+    const readyList = useSelector((state) => state.inGame.readyList);
+    const mineHP = useSelector((state) => (state.inGame.myHP));
 
+    const user_nick = useSelector((state) => state.member.member.user_nick);
     const { roomID } = useParams();
     const userVideo = useRef(null);
     const [loading, setLoading] = useState(true);
@@ -189,7 +210,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick, token);
                 }
-                return 2;
+                return 5;
             } else {
                 return 1;
             }
@@ -198,24 +219,63 @@ const MyVideo = ({ match, socket }) => {
     }
 
 
-    const ShowStatus = () => {
+    const ShowStatus = ({myStreamID}) => {
         const reverse = useSelector((state) => state.item.reverse);
+        
+        /* judgement*/
+        const isAbusing = useSelector((state) => state.item.judgementList[myStreamID]);
+        const zeusAppear = useRef(false);
+        // const [isAbusing, setIsAbusing] = useState(false);
+        const abusingCount = useRef(0);
+
         const [myHP, setMyHP] = useState(initialHP);
          /* Reverse Mode */
         const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
         let content = "";
-        let decrease = 0;
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
+            let newHP = 0;
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+                
+                // setIsAbusing(judgementList[myStream.id])
+
+                if(detections.length === 0 && gameStarted) {
+                    abusingCount.current += 1;
+                    if(abusingCount.current === 10) {
+                        console.log("제우스가 지켜봅니다");
+                        zeusAppear.current = true;
+                        socket.emit("zeus_appear", roomID);
+                    };
+                    if(abusingCount.current === 25) {
+                        socket.emit("judgement", roomID, myStream.id);
+                        socket.emit("zeus_disappear", roomID)
+                        zeusAppear.current = false;
+                        abusingCount.current = 0;
+                        newHP = myHP - 30;
+                        setMyHP(newHP);
+                        socket.emit("smile", newHP, roomID, user_nick, myStream.id, true);
+                        if (newHP <= 0) { // game over
+                            socket.emit("finish", { roomID: roomID });
+                            setModelInterval(null);
+                        }
+                    };
+                } else if (abusingCount.current !== 0) {
+                    console.log("abuseCnt :", abusingCount.current);
+                    abusingCount.current = 0;
+                    if (zeusAppear.current) {
+                        socket.emit("zeus_disappear", roomID);
+                        zeusAppear.current = false;
+                    }
+                };
+
                 if (detections[0] && gameStarted) {
                     const decrease = handleHP(detections[0].expressions.happy, reverse);
 
                     if (decrease > 0) {
-                        const newHP = myHP - decrease;
-                        socket.emit("smile", newHP, roomID, user_nick, myStream.id);
+                        newHP = myHP - decrease;
+                        socket.emit("smile", newHP, roomID, user_nick, myStream.id, false);
                         if (newHP <= 0) { // game over
                             socket.emit("finish", { roomID: roomID });
                             setModelInterval(null);
@@ -236,8 +296,13 @@ const MyVideo = ({ match, socket }) => {
             <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"10%", left:"8%" }}></img>
             <ProgressBar striped variant="danger" now={myHP} />
             </>;
-        } else if(interval && !smiling){
+        } else if(interval && !smiling && !isAbusing){
             content = <ProgressBar striped variant="danger" now={myHP} />
+        } else if(interval && !smiling && isAbusing) {
+            content = <>
+                <JudgementImage src={judgementEffect} />
+                <ProgressBar striped variant="danger" now={myHP} />
+            </>;
         } else {
             // console.log(mineHP);
             content = <ProgressBar striped variant="danger" now={mineHP} />
@@ -247,7 +312,6 @@ const MyVideo = ({ match, socket }) => {
             socket.on("finish", (hpList) => {
               // HP [streamID, HP]
                 if (myStream && myStream.id) {
-                    // console.log(hpList)
                     hpList.map((HP) => {
                         if (myStream.id === HP[0]){
                             // console.log(myStream.id)
@@ -281,9 +345,10 @@ const MyVideo = ({ match, socket }) => {
             <ShowReady>
                 {!gameStarted?
                     myStream && myStream.id === chiefStream ?
-                        <h2 style = {{color:"orange"}}>방장</h2> :
-                        <h2 style = {{color: "white"}}>{bool ? "ready" : "not ready"}</h2> :
-                        <h2 style = {{color:"white"}}>Playing</h2>
+                        <img alt="Chief" src={Chiefimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}} /> :
+                        bool ? <video src={readyvideo} autoPlay style={{margin:"8px 0 0 0",borderRadius: "10px"}} ></video>
+                        : <img alt="Notready" src={Notreadyimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}}/>:
+                        <img alt="Playing" src={Playingimage}/>
                 }
             </ShowReady>
         )
@@ -291,7 +356,7 @@ const MyVideo = ({ match, socket }) => {
 
     return (
         <>
-            <Container>
+            <Container>    
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
                     {loading && < Load></Load>}
@@ -300,7 +365,7 @@ const MyVideo = ({ match, socket }) => {
             </Container>
             <HPContainer>
                 <HPContent>
-                    <ShowStatus></ShowStatus>
+                    {modelsLoaded && myStream && myStream.id && <ShowStatus myStreamID={myStream.id}></ShowStatus>}
                 </HPContent>
             </HPContainer>
             <ShowMyReady></ShowMyReady>

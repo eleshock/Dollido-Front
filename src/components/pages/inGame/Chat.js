@@ -32,8 +32,6 @@ function Chat({ socket, username, room }) {
     });
   }, [socket]);
 
-  // console.log(messageList);
-
   return (
     <div style={{display: "flex", justifyContent: "center"}}>
         <div className="chat-window">
@@ -56,7 +54,7 @@ function Chat({ socket, username, room }) {
                       }
                     >
                       <div>
-                        <p id="author">{messageContent.author}</p>
+                        {messageContent.author !== "system"? <p id="author">{messageContent.author}</p>: null}
                         <div className="message-content">
                           <p>{messageContent.message}</p>
                         </div>

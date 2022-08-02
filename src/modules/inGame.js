@@ -13,7 +13,7 @@ const SET_READY_LIST = "inGame/SET_READY_LIST";
 const CLEAR_READY_LIST = "inGame/CLEAR_READY_LIST";
 const DELETE_READY_LIST = "inGame/DELETE_READY_LIST";
 const SET_MY_HP = "inGame/SET_MY_HP";
-const SET_INIT = "inGame/SET_INIT";
+const SET_INGAME_INIT = "inGame/SET_INGAME_INIT";
 
 
 export const setModelsLoaded = (bool) => ({type: SET_MODELS_LOADED, bool});
@@ -31,7 +31,7 @@ export const setReadyList = (streamID, bool) => ({type: SET_READY_LIST, streamID
 export const clearReadyList = () => ({type: CLEAR_READY_LIST});
 export const deleteReadyList = (streamID) => ({type: DELETE_READY_LIST, streamID});
 export const setMineHP = (myHP) => ({type: SET_MY_HP, myHP});
-export const setInit = () => ({type: SET_INIT});
+export const setInGameInit = () => ({type: SET_INGAME_INIT});
 
 const initialState = {
     gameFinished: false,
@@ -61,12 +61,12 @@ export default function inGame(state = initialState, action) {
             return { ...state, myStream: action.stream };
         case SET_PEER_NICK:
             state.peerNick[action.streamID] = action.nickName;
-            return {...state , ...state.peerNick };
+            return {...state, peerNick: { ...state.peerNick } };
         case CLEAR_PEER_NICK:
             return { ...state, peerNick: {} };
         case DELETE_PEER_NICK:
             delete state.peerNick[action.streamID];
-            return { ...state, ...state.peerNick };
+            return { ...state, peerNick: { ...state.peerNick } };
         case SET_ROOM_ID:
             return { ...state, roomID: action.roomID };
         case SET_CHIEF:
@@ -75,15 +75,15 @@ export default function inGame(state = initialState, action) {
             return { ...state, chiefStream: action.streamID };
         case SET_READY_LIST:
             state.readyList[action.streamID] = action.bool;
-            return { ...state, ...state.readyList };
+            return { ...state, readyList: { ...state.readyList } };
         case DELETE_READY_LIST:
             delete state.readyList[action.streamID];
-            return { ...state, ...state.readyList };
+            return { ...state, readyList: { ...state.readyList } };
         case CLEAR_READY_LIST:
             return  { ...state, readyList: {} }
         case SET_MY_HP:
             return { ...state, myHP : action.myHP };
-        case SET_INIT:
+        case SET_INGAME_INIT:
             return {
                 gameFinished: false,
                 gameStarted: false,
