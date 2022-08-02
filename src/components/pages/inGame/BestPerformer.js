@@ -27,7 +27,7 @@ function BestPerformer(props) {
     const [typedone, setTypeDone] = useState(false);
     const nick = useSelector((state) => state.member.member.user_nick);
     let content = '';
-    console.log("Show Best Performer");
+    // console.log("Show Best Performer");
 
     useEffect(() => {
         // Best Performer Nick과 비디오 얻어오기
@@ -53,6 +53,9 @@ function BestPerformer(props) {
         } else {
             const bestPerformerNick = response.data.bestPerformerNick;
             const bestVideoName = response.data.bestVideoName;
+
+            // console.log("Best Performer Nick :", bestPerformerNick);
+            // console.log("Best Video Name :", bestVideoName);
 
             if (bestVideoName === undefined) {
                 content =

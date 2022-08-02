@@ -6,6 +6,13 @@ import ProgressBar from 'react-bootstrap/ProgressBar';
 import styled from "styled-components";
 import effect from "../../../images/pepe-laugh-laugh.gif";
 import Load from "./Loading";
+import readyimage from "../../../images/ready.gif"
+import Notreadyimage from "../../../images/Notready.png"
+import Chiefimage from "../../../images/Chief.png"
+import Playingimage from "../../../images/Playing.png"
+import readyvideo from "../../../images/ready.mp4"
+
+
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -281,9 +288,10 @@ const MyVideo = ({ match, socket }) => {
             <ShowReady>
                 {!gameStarted?
                     myStream && myStream.id === chiefStream ?
-                        <h2 style = {{color:"orange"}}>방장</h2> :
-                        <h2 style = {{color: "white"}}>{bool ? "ready" : "not ready"}</h2> :
-                        <h2 style = {{color:"white"}}>Playing</h2>
+                        <img alt="Chief" src={Chiefimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}} /> :
+                        bool ? <video src={readyvideo} autoPlay style={{margin:"8px 0 0 0",borderRadius: "10px"}} ></video>
+                        : <img alt="Notready" src={Notreadyimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}}/>:
+                        <img alt="Playing" src={Playingimage}/>
                 }
             </ShowReady>
         )
@@ -291,7 +299,7 @@ const MyVideo = ({ match, socket }) => {
 
     return (
         <>
-            <Container>
+            <Container>    
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
                     {loading && < Load></Load>}

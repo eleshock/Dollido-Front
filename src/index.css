@@ -37,3 +37,9 @@ code {
   font-family: "koverwatch";
   src: url("./fonts/koverwatch.ttf");
 }
+
+
+@font-face {
+  font-family: "CarterOne";
+  src: url("./fonts/CarterOne.ttf");
+}
