@@ -210,7 +210,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick, token);
                 }
-                return 5;
+                return 13;
             } else {
                 return 1;
             }
@@ -221,7 +221,7 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = ({myStreamID}) => {
         const reverse = useSelector((state) => state.item.reverse);
-        
+
         /* judgement*/
         const isAbusing = useSelector((state) => state.item.judgementList[myStreamID]);
         const zeusAppear = useRef(false);
@@ -238,7 +238,7 @@ const MyVideo = ({ match, socket }) => {
             let newHP = 0;
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-                
+
                 // setIsAbusing(judgementList[myStream.id])
 
                 if(detections.length === 0 && gameStarted) {
@@ -356,7 +356,7 @@ const MyVideo = ({ match, socket }) => {
 
     return (
         <>
-            <Container>    
+            <Container>
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
                     {loading && < Load></Load>}

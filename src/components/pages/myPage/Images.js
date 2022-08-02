@@ -5,6 +5,7 @@ import { s3Domain } from "../../../s3Domain";
 import styled from "styled-components";
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserGif } from "../../../modules/member";
+import Button3 from "../../common/Button3.js";
 
 
 import './Images.css'
@@ -57,6 +58,7 @@ function Images() {
     insertImg(event);
     console.log(file)
     setFile(file)
+    console.log(file);
   }
 
   const alertSubmit = () => {
@@ -80,7 +82,11 @@ function Images() {
     }
   }
 
-
+  const LabelStyle = styled.label`
+    width: 100px;
+    height: 100px;
+    border: 6px solid black;
+  `
 
   return (
     <div className="App">
@@ -88,8 +94,12 @@ function Images() {
         <h2>나의 비장의 무기</h2>
         <img src={previewImg ? previewImg : `${s3Domain}${myGIF}`}></img>
         <form onSubmit={submit}>
-          <input onChange={fileSelected} type="file" accept="image/*" />
-          <button type="submit" onClick={alertSubmit} >Submit</button>
+          <LabelStyle for="image">
+
+          </LabelStyle>
+          {file.name}
+          <input id="image" style={{display: "none"}} onChange={fileSelected} type="file" accept="image/*" />
+          <Button3 type="submit" onClick={alertSubmit} >Submit</Button3>
         </form>
       </FlexContainer>
     </div>

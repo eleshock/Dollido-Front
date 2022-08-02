@@ -29,6 +29,7 @@ import { useInterval } from "../common/usefulFuntions";
 import { useSelector, useDispatch } from "react-redux";
 import { setInGameInit } from "../../modules/inGame.js";
 import { setItemInit } from "../../modules/item.js";
+import { setCheckGet, setRanking, setTier, setWinRate, setWin, setLose } from "../../modules/member.js";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -263,7 +264,7 @@ let startVideoPromise;
 const Lobby = () => {
   console.log("1")
   const navigate = useNavigate();
-  
+
   // game sound
   celebrateSF.pause();
   playingSF.pause();
@@ -276,7 +277,7 @@ const Lobby = () => {
     select,
     { volume: 0.5 }
   );
-  
+
   const [exitSound] = useSound(
     exit, {
       volume: 0.5
@@ -285,6 +286,7 @@ const Lobby = () => {
 
   // 임시
   const nickname = useSelector((state) => state.member.member.user_nick);
+  const checkGet = useSelector((state) => state.member.check_get);
 
   /* 방 만들기 & 입장 */
   // const SERVER_ADDRESS = useRef(ServerName);
@@ -313,7 +315,11 @@ const Lobby = () => {
   // 1. 방 리스트 받아오기
   useEffect(() => {
     // socket.current = io(SERVER_ADDRESS.current);
-    socket.emit("get room list");
+    if (!checkGet) {
+      console.log("들어옵니다")
+      socket.emit("get room list", (nickname));
+    }
+    else socket.emit("get room list", (null));
     dispatch(setInGameInit());
     dispatch(setItemInit());
     return () => {
@@ -323,7 +329,16 @@ const Lobby = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("give room list", (rooms) => {
+    socket.on("give room list", (rooms, result) => {
+      if (result) {
+        console.log(result[0].tier)
+        dispatch(setTier(result[0].tier));
+        dispatch(setRanking(result[0].ranking));
+        dispatch(setWinRate(result[0].point));
+        dispatch(setWin(result[0].win));
+        dispatch(setLose(result[0].lose));
+        dispatch(setCheckGet(true));
+      }
       setRooms(rooms);
       setRoomCount(Object.keys(rooms).length);
     });
@@ -368,7 +383,7 @@ const Lobby = () => {
      setmakeRoomModal(true);
      startVideo();
      videoNModelInit();
- 
+
    })
 
    const handleVideoOnPlay = () => {
@@ -403,7 +418,7 @@ const Lobby = () => {
 
   // 비디오 가져오기
   const videoRef = useRef();
-  
+
   const startVideo = (deviceId) => {
     startVideoPromise = navigator.mediaDevices.getUserMedia({
         audio: false,
@@ -426,7 +441,7 @@ const Lobby = () => {
 
 
   const videoNModelInit = async () => {
-        
+
         const MODEL_URL = process.env.PUBLIC_URL + '/models';
         // console.log("AI Model Loading...")
         Promise.all([
@@ -435,7 +450,7 @@ const Lobby = () => {
         ]).then(setModelsLoaded(true));
   }
 
-  
+
 
 
  function handleHP(happiness, myHP) {
@@ -458,7 +473,7 @@ const ShowStatus = () => {
   const [smiling, setSmiling]  = useState(false);
   const [interval, setInterval] = useState(350);
   let content = "";
-  
+
   useInterval(async () => {
       const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
       if (detections[0]) {
@@ -483,11 +498,11 @@ const ShowStatus = () => {
           if(smiling)
           content = <h2 style={RoomModalHeader2} > 웃음 인식 확인! </h2>
       } else {
-          content = <h2 style={RoomModalHeaderRed}> {detecContent}</h2> 
+          content = <h2 style={RoomModalHeaderRed}> {detecContent}</h2>
       }
       return content
   }
-  
+
 
   const stopWebcam = async () => {
     if (startVideoPromise) {
@@ -525,7 +540,7 @@ const ShowStatus = () => {
                           </span>
                           <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
                             <Button3
-                             style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}  
+                             style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}
                             >
                               마이페이지
                             </Button3>
@@ -580,10 +595,10 @@ const ShowStatus = () => {
                   </RoomListFrame>
                   <div >
                       <BackToLobby to = {'/tutorial'} onMouseDown={exitSound} >
-                        <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>  
+                        <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>
                       </BackToLobby>
-                      
-                 
+
+
                   </div>
               </Content>
             </FlexContainer>
@@ -657,7 +672,7 @@ const ShowStatus = () => {
                   ref={roomNameRef}
                   style={sizes}
                 />
-                <Button3 
+                <Button3
                   style={{margin : "0 0 20px 0", fontSize:"25px", height:"36px", display:"flex", alignItems:"center", justifyContent:"center"}}
                   onMouseUp = {enterGame}
                   onClick={onClickMakeRoom}

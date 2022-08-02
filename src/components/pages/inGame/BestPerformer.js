@@ -5,6 +5,7 @@ import Typewriter from "typewriter-effect";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { setBestDone } from "../../../modules/inGame";
+import { setTier, setWinRate, setRanking, setWin, setLose, setCheckGet } from "../../../modules/member"
 import firework from "../../../images/fireworks/firework_7.gif";
 import { s3Domain } from "../../../s3Domain";
 import {yeahSF} from "../Sound";
@@ -26,6 +27,8 @@ function BestPerformer(props) {
     const [gotVideo, setGotVideo] = useState(false);
     const [typedone, setTypeDone] = useState(false);
     const nick = useSelector((state) => state.member.member.user_nick);
+
+
     let content = '';
     // console.log("Show Best Performer");
 
@@ -51,8 +54,22 @@ function BestPerformer(props) {
         if (response === null) {
             content = <h1> 오류가 발생했습니다 </h1>
         } else {
-            const bestPerformerNick = response.data.bestPerformerNick;
-            const bestVideoName = response.data.bestVideoName;
+            console.log(response.data)
+            const result = response.data;
+            const bestPerformerNick = result.bestPerformerNick;
+            const bestVideoName = result.bestVideoName;
+            const tier = result.tier;
+            const ranking = result.ranking;
+            const winRate = result.winRate;
+            const win = result.win;
+            const lose = result.lose;
+
+            dispatch(setTier(tier));
+            dispatch(setRanking(ranking));
+            dispatch(setWinRate(winRate));
+            dispatch(setWin(win));
+            dispatch(setLose(lose));
+            dispatch(setCheckGet(true));
 
             // console.log("Best Performer Nick :", bestPerformerNick);
             // console.log("Best Video Name :", bestVideoName);
