@@ -44,6 +44,7 @@ const Video = styled.video`
 	&:hover {
 		cursor: pointer;
 		transform: scale(1.05) scaleX(-1);
+	}
 `
 
 const ModalContainer = styled.div`
