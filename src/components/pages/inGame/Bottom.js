@@ -110,9 +110,8 @@ const InGameBottom = ({ socket }) => {
 
     function handleReverse() {
         if (!reverse) {
-            socket.emit("reverse", { roomID: roomID });
+            socket.emit("reverse", { roomID: roomID, nickName: MyNickname });
             dispatch(setGotReverse(false));
-
         }
     }
 

@@ -21,6 +21,7 @@ import {
     setMyWeaponImage, 
     setReverse, 
     setGotReverse,
+    setReverseUser,
     setJudgementList,
     setZeusAppear,
 } from '../../../modules/item';
@@ -96,8 +97,9 @@ const InGameSocketOn = ({ match, socket }) => {
             myWeaponSF.play();
         });
 
-        socket.on('reverse', () => {
+        socket.on('reverse', (nickName ) => {
             dispatch(setReverse(true));
+            dispatch(setReverseUser(nickName));
             setTimeout(() => dispatch(setReverse(false)), 8000);
             reverseSF.play();
         });
