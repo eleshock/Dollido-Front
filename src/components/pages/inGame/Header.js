@@ -27,7 +27,6 @@ const HeaderMiddle = styled.div`
     text-align: center;
     color: white;
     width: 100%;
-    padding: 10px 0 0 0;
 `
 
 const HeaderRight = styled.div`
@@ -99,7 +98,7 @@ const InGameHeader = ({socket}) => {
                     }
                 </HeaderMiddle>
                 <HeaderRight>
-                <h1>{localStorage.roommode}</h1>
+                <h1>개인전</h1>
                 </HeaderRight>
             </HeaderStyle>
         </Header>

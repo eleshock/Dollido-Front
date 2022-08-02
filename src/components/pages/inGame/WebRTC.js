@@ -160,8 +160,7 @@ const WebRTC = ({ socket, match }) => {
         } catch (e) {
             console.log(e);
         }
-
-    }
+    };
 
     const handleNewICECandidateMsg = async (candidate, userID) => {
         try {
@@ -174,5 +173,8 @@ const WebRTC = ({ socket, match }) => {
         }
     }
 }
+
+   
+
 
 export default React.memo(WebRTC);

@@ -61,7 +61,7 @@ export default function inGame(state = initialState, action) {
             return { ...state, myStream: action.stream };
         case SET_PEER_NICK:
             state.peerNick[action.streamID] = action.nickName;
-            return {...state , peerNick: { ...state.peerNick } };
+            return {...state, peerNick: { ...state.peerNick } };
         case CLEAR_PEER_NICK:
             return { ...state, peerNick: {} };
         case DELETE_PEER_NICK:
@@ -75,10 +75,10 @@ export default function inGame(state = initialState, action) {
             return { ...state, chiefStream: action.streamID };
         case SET_READY_LIST:
             state.readyList[action.streamID] = action.bool;
-            return { ...state, readyList: {...state.readyList} };
+            return { ...state, readyList: { ...state.readyList } };
         case DELETE_READY_LIST:
             delete state.readyList[action.streamID];
-            return { ...state, readyList: {...state.readyList} };
+            return { ...state, readyList: { ...state.readyList } };
         case CLEAR_READY_LIST:
             return  { ...state, readyList: {} }
         case SET_MY_HP:
