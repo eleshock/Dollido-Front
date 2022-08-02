@@ -214,10 +214,13 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = () => {
         const reverse = useSelector((state) => state.item.reverse);
-        const judgement = useSelector((state) => state.item.judgement);
-        const judgementID = useSelector((state) => state.item.judgementID);
+        
+        /* judgement*/
+        const judgementList = useSelector((state) => state.item.judgementList);
+        const [isAbusing, setIsAbusing] = useState(false);
         const zeus = useSelector((state) => state.item.zeus);
         const abusingCount = useRef(0);
+
         const [myHP, setMyHP] = useState(initialHP);
          /* Reverse Mode */
         const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
@@ -228,6 +231,8 @@ const MyVideo = ({ match, socket }) => {
             let newHP = 0;
             if (myStream && myStream.id) {
                 const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+                
+                setIsAbusing(judgementList[myStream.id])
 
                 if(detections.length === 0 && gameStarted) {
                     abusingCount.current += 1;
@@ -276,12 +281,11 @@ const MyVideo = ({ match, socket }) => {
             <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"10%", left:"8%" }}></img>
             <ProgressBar striped variant="danger" now={myHP} />
             </>;
-        } else if(interval && !smiling && !judgement){
+        } else if(interval && !smiling && !isAbusing){
             content = <ProgressBar striped variant="danger" now={myHP} />
-        } else if(interval && !smiling && judgement) {
+        } else if(interval && !smiling && isAbusing) {
             content = <>
-                {judgementID === myStream.id?
-                <JudgementImage src={judgementEffect} /> : null}
+                <JudgementImage src={judgementEffect} />
                 <ProgressBar striped variant="danger" now={myHP} />
             </>;
         } else {

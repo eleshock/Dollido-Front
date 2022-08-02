@@ -14,7 +14,7 @@ import {
 
 } from "../../../modules/inGame";
 import { setRandom } from "../../../modules/random";
-import { setIsWho, setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse, setJudgement, setJudgementID, setZeus } from '../../../modules/item';
+import { setIsWho, setIsMe, setMyWeapon, setMyWeaponCheck, setMyWeaponImage, setReverse, setGotReverse, setJudgementList, setZeus } from '../../../modules/item';
 import { deleteBestVideo } from "./MyVideo";
 
 // sound
@@ -102,11 +102,10 @@ const InGameSocketOn = ({ match, socket }) => {
             dispatch(setZeus(true));
         });
 
-        socket.on("judgement", (peerStreamID) => {
-            dispatch(setJudgement(true));
-            dispatch(setJudgementID(peerStreamID));
+        socket.on("judgement", (streamID) => {
+            dispatch(setJudgementList(streamID, true));
             setTimeout(() => {
-                dispatch(setJudgement(false));
+                dispatch(setJudgementList(streamID, false));
             }, 1500);
         });
 

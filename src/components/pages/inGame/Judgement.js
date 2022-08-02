@@ -19,18 +19,15 @@ const JudgementImage = styled.img`
 
 const Judgement = ({ index }) => {
 	const partnerVideos = useSelector((state) => state.videos);
-	const judgement = useSelector((state) => state.item.judgement);
-	const judgementID = useSelector((state) => state.item.judgementID);
+	const isAbusing = useSelector((state) => state.item.judgementList[partnerVideos[index].id]);
 	const [content, setContent] = useState(null);
 	useEffect(() => {
-		if (partnerVideos[index].id === judgementID) {
 			setContent(
-				judgement ? (
+				isAbusing ? (
 					<JudgementImage src={judgementEffect}/>
 				) : null
 			);
-		}
-	}, [judgement]);
+	}, [isAbusing]);
 
 	return content;
 };
