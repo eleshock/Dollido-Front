@@ -1,0 +1,12 @@
+.logout:hover .logouticon{
+    color: red
+} 
+
+.logout {
+    background-color: transparent !important;
+    background-image: none !important;
+    border-color: transparent;
+    border: none;
+    color: #FFFFFF;
+
+}
