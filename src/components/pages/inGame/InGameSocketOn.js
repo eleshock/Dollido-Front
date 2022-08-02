@@ -26,7 +26,7 @@ import {
 } from '../../../modules/item';
 
 // sound
-import { waitingSF, playingSF, celebrateSF, myWeaponSF, reverseSF, gameStartSF } from "../Sound";
+import { judgement, waitingSF, playingSF, celebrateSF, myWeaponSF, reverseSF, gameStartSF } from "../Sound";
 
 
 const InGameSocketOn = ({ match, socket }) => {
@@ -107,6 +107,9 @@ const InGameSocketOn = ({ match, socket }) => {
         });
 
         socket.on("judgement", (streamID) => {
+            const judgementSF = new Audio(judgement);
+            // judgementSF.volume = 0.5;
+            judgementSF.play();
             dispatch(setJudgementList(streamID, true));
             setTimeout(() => {
                 dispatch(setJudgementList(streamID, false));

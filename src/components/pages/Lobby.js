@@ -540,7 +540,8 @@ const ShowStatus = () => {
                           </span>
                           <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
                             <Button3
-                             style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}
+                              style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}
+                              onMouseEnter = {selectSound}
                             >
                               마이페이지
                             </Button3>
@@ -558,6 +559,7 @@ const ShowStatus = () => {
                               <Button3
                                 onClick = {onClickStartRoom}
                                 style={{margin : "0 0 20px 0", fontSize:"30px", height:"50px", display:"flex", alignItems:"center", justifyContent:"center"}}
+                                onMouseEnter = {selectSound}
                               >
                                 방만들기
                               </Button3>
@@ -594,7 +596,7 @@ const ShowStatus = () => {
                         </PageControl>
                   </RoomListFrame>
                   <div >
-                      <BackToLobby to = {'/tutorial'} onMouseDown={exitSound} >
+                      <BackToLobby to = {'/tutorial'} onMouseEnter={selectSound} >
                         <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>
                       </BackToLobby>
 
@@ -674,6 +676,7 @@ const ShowStatus = () => {
                 />
                 <Button3
                   style={{margin : "0 0 20px 0", fontSize:"25px", height:"36px", display:"flex", alignItems:"center", justifyContent:"center"}}
+                  onMouseEnter = {selectSound}
                   onMouseUp = {enterGame}
                   onClick={onClickMakeRoom}
                 >
