@@ -11,6 +11,8 @@ import { ServerName } from '../../../serverName';
 import { useDispatch } from "react-redux";
 import { setMember, setUserGif } from "../../../modules/member"
 
+import useSound from 'use-sound';
+import {select, exit} from '../Sound';
 
 const SingIn = ({ setChange }) => {
     let [id, setId] = useState("");
@@ -36,6 +38,17 @@ const SingIn = ({ setChange }) => {
     const onChange = () => {
         setChange(false);
     }
+
+    const [selectSound] = useSound(
+        select,
+        { volume: 0.5 }
+    );
+
+    const [exitSound] = useSound(
+        exit, {
+            volume: 0.5
+        }
+    );
 
     return (
         <Content title="로그인">
@@ -65,8 +78,8 @@ const SingIn = ({ setChange }) => {
                 }
                 />
             <FailMessage msg={fail}></FailMessage>
-            <Button onClick={submit}>로그인</Button>
-            <RightAlignedLink onClick={onChange}>회원가입</RightAlignedLink>
+            <Button onClick={submit} onMouseEnter={selectSound}>로그인</Button>
+            <RightAlignedLink onClick={onChange} onMouseEnter={selectSound}>회원가입</RightAlignedLink>
         </Content>
     );
 }
