@@ -544,7 +544,7 @@ const ShowStatus = () => {
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "50px 100px 0 0"}}>
                     {nickname &&
                     <>
-                    <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
+                    <Link to = {`/mypage`} style = {{textDecoration:"none"}} onMouseEnter = {selectSound}>
                         <div style ={{ display:"flex", flexDirection:"row"}} >
                           <span style={{ color: "white", fontSize: "1.3rem", backgroundColor: '#ffd700', height:"48px"}}>
                           &nbsp;&nbsp;
@@ -555,14 +555,7 @@ const ShowStatus = () => {
                           <span style={{ color: "#00ffff", fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
                           {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                           </span>
-                          <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
-                            <Button3
-                              style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}
-                              onMouseEnter = {selectSound}
-                            >
-                              마이페이지
-                            </Button3>
-                          </Link>
+
                         </div>
                       </Link>
                       <button className="logout" border="0" outline="0">
