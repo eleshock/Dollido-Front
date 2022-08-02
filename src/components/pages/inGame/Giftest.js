@@ -5,8 +5,12 @@ import {ServerName} from "../../../serverName";
 import { s3Domain } from "../../../s3Domain";
 import { useSelector } from "react-redux";
 import reverseMode from "../../../images/reverseMode.gif";
+import number_1 from "../../../images/numberSet/number_1.png"
+import number_2 from "../../../images/numberSet/number_2.png"
+import number_3 from "../../../images/numberSet/number_3.png"
 import gifList from "../../../images/gifList";
 
+const numberImageList = [number_1, number_2, number_3];
 
 const Container = styled.div`
     display: flex;
@@ -17,10 +21,8 @@ const Container = styled.div`
     color: white;
 `
 
-const Timer = styled.p`
-    font-size: 100px;
-    font-weight: "900";
-    font-family: "Black Han Sans";
+const Timer = styled.img`
+    width: 250px;
 `
 
 const BackgroundSizeStyle = styled.img`
@@ -50,9 +52,9 @@ const Giftest = () => {
 
     const Ticktock = () => {
         useEffect(() => {
-                if(seconds >= 0 && seconds <= 3) {
+                if(seconds >= 1 && seconds <= 3) {
                     const timer = setInterval(() => {
-                        if (seconds === 0){
+                        if (seconds === 1){
                             setSeconds(4);
                             setCountDown(false);
                         }else {
@@ -110,7 +112,7 @@ const Giftest = () => {
                 !countDown ?
                     <BackgroundSizeStyle src={`${s3Domain}${name[randomGIF[0][count]]}`}></BackgroundSizeStyle>
                     :
-                    <Timer> {seconds} </Timer>}
+                    <Timer src={numberImageList[seconds-1]}></Timer>}
         </Container>
     );
 };
