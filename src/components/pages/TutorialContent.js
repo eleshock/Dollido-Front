@@ -296,13 +296,13 @@ export default class SimpleSlider extends Component {
                 <h1 style={modecontentfive}>상위 10% - 30%</h1>
             </Content>
             <Content>
-            <GradationTitle style={{textAlign: "center", color: "#f0f0f0"}}>모나리자</GradationTitle>
-                <Modeimage src={Monarisa} style={{backgroundColor: "#f0f0f0", width: "300px", height:"300px"}} />
+            <GradationTitle style={{textAlign: "center", color: "#c0c0c0"}}>모나리자</GradationTitle>
+                <Modeimage src={Monarisa} style={{backgroundColor: "#c0c0c0", width: "300px", height:"300px"}} />
                 <h1 style={modecontentfive}>상위 30% - 60%</h1>
             </Content>
             <Content>
-            <GradationTitle style={{textAlign: "center", color: "#6A3805"}}>하회탈</GradationTitle>
-                <Modeimage src={KoreanMask} style={{backgroundColor: "#6A3805", width: "300px", height:"300px"}} />
+            <GradationTitle style={{textAlign: "center", color: "#c36729"}}>하회탈</GradationTitle>
+                <Modeimage src={KoreanMask} style={{backgroundColor: "#c36729", width: "300px", height:"300px"}} />
                 <h1 style={modecontentfive}>상위 60% - 100%</h1>
             </Content>
             </div>

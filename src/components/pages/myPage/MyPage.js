@@ -22,6 +22,10 @@ import VideoLibrary from "./VideoLibrary";
 import useSound from 'use-sound';
 import { select, exit } from '../Sound';
 
+//profile
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Moai from "../../../images/Moai3.png";
+import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 
 
 const MyPage = () => {
@@ -47,13 +51,26 @@ const MyPage = () => {
     <div style={{ height: "100vh" }}>
         <GlobalStyles bgImage={mainBackground}></GlobalStyles>
         <FlexContainer>
-          <header style={{ height: 80, display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "0 100px 0 0" }}>
+          <header style={{ height: 80, display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "50px 100px 0 0" }}>
             {nickname && (
-              <div>
-                <h3 style={{ color: "white" }}>
-                  {nickname}님, Dollido에 오신걸 환영합니다!
-                </h3>
-              </div>
+                      <>
+                      <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
+                          <div style ={{ display:"flex", flexDirection:"row"}} >
+                            <span style={{ color: "white", fontSize: "1.3rem", backgroundColor: '#ffd700', height:"48px"}}>
+                            &nbsp;&nbsp;
+                            </span>
+                            
+                              <img src={Moai} style={{backgroundColor: "#00ffff"}}/>
+                            
+                            <span style={{ color: "#00ffff", fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
+                            {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                            </span>
+                          </div>
+                        </Link>
+                        <button className="logout" border="0" outline="0">
+                        <FontAwesomeIcon className="logouticon" icon={faPowerOff} size="2x" color="white" style={{padding:"0 0 0 20px"}}/>
+                        </button>
+                      </>
 
             )}
           </header>
