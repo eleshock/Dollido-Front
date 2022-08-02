@@ -15,10 +15,7 @@ import {select, enterRoom, exit, playingSF, celebrateSF} from './Sound'
 import { ServerName } from "../../serverName";
 
 // 임시
-import { useSelector } from "react-redux";
 import { MakeRoomModal } from "../common/MakeRoomModal.tsx";
-import { useDispatch } from "react-redux";
-import { setInit } from "../../modules/inGame.js";
 import { v4 as uuid } from "uuid";
 
 // 아이템 설명 버튼
@@ -29,6 +26,9 @@ import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
 // face api import
 import * as faceapi from 'face-api.js';
 import { useInterval } from "../common/usefulFuntions";
+import { useSelector, useDispatch } from "react-redux";
+import { setInGameInit } from "../../modules/inGame.js";
+import { setItemInit } from "../../modules/item.js";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -261,7 +261,7 @@ const sizes = {
 let startVideoPromise;
 
 const Lobby = () => {
-
+  console.log("1")
   const navigate = useNavigate();
   
   // game sound
@@ -276,11 +276,12 @@ const Lobby = () => {
     select,
     { volume: 0.5 }
   );
-  const [exitSound] = useSound(
-    exit,
-  );
   
-
+  const [exitSound] = useSound(
+    exit, {
+      volume: 0.5
+    }
+  );
 
   // 임시
   const nickname = useSelector((state) => state.member.member.user_nick);
@@ -313,7 +314,8 @@ const Lobby = () => {
   useEffect(() => {
     // socket.current = io(SERVER_ADDRESS.current);
     socket.emit("get room list");
-    dispatch(setInit());
+    dispatch(setInGameInit());
+    dispatch(setItemInit());
     return () => {
       socket.disconnect();
       stopWebcam();

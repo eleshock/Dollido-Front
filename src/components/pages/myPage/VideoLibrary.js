@@ -44,6 +44,7 @@ const Video = styled.video`
 	&:hover {
 		cursor: pointer;
 		transform: scale(1.05) scaleX(-1);
+	}
 `
 
 const ModalContainer = styled.div`
@@ -88,7 +89,7 @@ const downloadVideo = (videoUrl, video_name) => {
 };
 
 
-async function deleteVideo(elem, token, myVideosInfo) {
+async function deleteVideo(elem, token, myVideosInfo, setModal) {
 	const headers = {
 		headers: {
 			'Content-Type': 'application/json',
@@ -105,6 +106,7 @@ async function deleteVideo(elem, token, myVideosInfo) {
 	
 	if (response !== null) {
 		alert("삭제 성공!");
+		setModal(false);
 	} else {
 		alert("삭제 실패");
 	}
@@ -124,7 +126,7 @@ function handleVideo(modal, setModal, setModalContent, elem, token, myVideosInfo
 				<Button style={{ width: '100px', height: '40px', margin: 'auto', fontSize: '24px' }}
 					onClick={() => downloadVideo(videoUrl, elem.video_name)}>다운로드</Button>
 				<Button style={{ width: '100px', height: '40px', margin: 'auto', fontSize: '24px' }}
-					onClick={() => deleteVideo(elem, token, myVideosInfo)}>영상 삭제</Button>
+					onClick={() => deleteVideo(elem, token, myVideosInfo, setModal)}>영상 삭제</Button>
 			</Bottom>
 		</ModalContainer>)
 	setModalContent(content);

@@ -27,7 +27,7 @@ const HP = ({ socket, index }) => {
 
     // console.log(peersHP)
     useEffect(() => {
-      socket.on("smile", (peerHP, peerID, peerStreamID) => {
+      socket.on("smile", (peerHP, peerID, peerStreamID, isJudgement) => {
         if (partnerVideos[index].id === peerStreamID) {
           peersHP.current = peerHP;
 
@@ -35,7 +35,11 @@ const HP = ({ socket, index }) => {
           setContent(
           <Container>
             <Content>
+            { 
+              isJudgement === false ?
               <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"10%", right:"8%", transform:"scaleX(-1)" }}></img>
+              : null
+            }
               <ProgressBar striped variant="danger" now={peersHP.current} />
             </Content>
           </Container>)
@@ -51,7 +55,11 @@ const HP = ({ socket, index }) => {
           setContent(
             <Container>
               <Content>
+              {
+                isJudgement === false?
                 <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"50%", left:"8%" }}></img>
+                : null
+              }
                 <ProgressBar striped variant="danger" now={peersHP.current} />
               </Content>
             </Container>
@@ -68,7 +76,11 @@ const HP = ({ socket, index }) => {
           setContent(
             <Container>
               <Content>
+              {
+                isJudgement === false?
                 <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"50%", right:"8%", transform:"scaleX(-1)" }}></img>
+                : null
+              }
                 <ProgressBar striped variant="danger" now={peersHP.current} />
               </Content>
             </Container>)
