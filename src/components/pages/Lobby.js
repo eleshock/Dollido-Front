@@ -33,6 +33,10 @@ import { setCheckGet, setRanking, setTier, setWinRate, setWin, setLose } from ".
 
 //마이페이지 로고
 import Moai from "../../images/Moai3.png";
+import Kaonish from "../../images/Kaonish2.png";
+import Monarisa from "../../images/Monarisa2.png";
+import KoreanMask from "../../images/KoreanMask2.png";
+
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import "../common/logout.css";
 
@@ -289,10 +293,12 @@ const Lobby = () => {
     }
   );
 
+  
+
   // 임시
   const nickname = useSelector((state) => state.member.member.user_nick);
   const checkGet = useSelector((state) => state.member.check_get);
-
+  const tier = useSelector((state) => state.member.tier)
   /* 방 만들기 & 입장 */
   // const SERVER_ADDRESS = useRef(ServerName);
   const socket = io(ServerName);
@@ -309,7 +315,9 @@ const Lobby = () => {
   const [makeroommodal, setmakeRoomModal] = useState(false);
   const roomNameRef = useRef(null);
 
+  
 
+  
   useEffect(() => {
     if (stop) {
       stopWebcam();
@@ -472,6 +480,7 @@ const Lobby = () => {
 
 
 
+
 const ShowStatus = () => {
   const [myHP, setMyHP] = useState(100);
   const [faceDetected, setFaceDetected]  = useState(false);
@@ -524,6 +533,26 @@ const ShowStatus = () => {
     stopWebcam();
   };
 
+  let image;
+  let color;
+
+  if (tier === "모나리자") 
+    {image = Monarisa
+     color = "#c0c0c0"}
+  else if (tier === "모아이") {
+    image = Moai
+    color = "#00ffff"
+  }
+  else if (tier === "가오나시") {
+    image = Kaonish
+    color = "#ffe140"
+  }
+  else {
+
+    image = KoreanMask
+    color = "#c36729"
+  }
+
   return (
     <ThemeProvider
       theme={{
@@ -550,9 +579,9 @@ const ShowStatus = () => {
                           &nbsp;&nbsp;
                           </span>
 
-                            <img src={Moai} style={{backgroundColor: "#00ffff"}}/>
+                            <img src={image} style={{backgroundColor: color, height:"48px"}}/>
 
-                          <span style={{ color: "#00ffff", fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
+                          <span style={{ color: color, fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
                           {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                           </span>
 

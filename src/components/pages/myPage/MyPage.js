@@ -24,8 +24,11 @@ import { select, exit } from '../Sound';
 
 //profile
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Moai from "../../../images/Moai3.png";
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import Moai from "../../../images/Moai3.png";
+import Kaonish from "../../../images/Kaonish2.png";
+import Monarisa from "../../../images/Monarisa2.png";
+import KoreanMask from "../../../images/KoreanMask2.png";
 
 
 const MyPage = () => {
@@ -39,6 +42,7 @@ const MyPage = () => {
   );
 
   const nickname = useSelector((state) => state.member.member.user_nick);
+  const tier = useSelector((state) => state.member.tier)
   const [value, setValue] = useState('1');
 
   const handleChange = (event, newValue) => {
@@ -46,7 +50,25 @@ const MyPage = () => {
   };
 
   const [modal, setModal] = useState(false);
+  let image;
+  let color;
 
+  if (tier === "모나리자") 
+    {image = Monarisa
+     color = "#c0c0c0"}
+  else if (tier === "모아이") {
+    image = Moai
+    color = "#00ffff"
+  }
+  else if (tier === "가오나시") {
+    image = Kaonish
+    color = "#ffe140"
+  }
+  else {
+
+    image = KoreanMask
+    color = "#c36729"
+  }
   return (
     <div style={{ height: "100vh" }}>
         <GlobalStyles bgImage={mainBackground}></GlobalStyles>
@@ -60,9 +82,9 @@ const MyPage = () => {
                             &nbsp;&nbsp;
                             </span>
                             
-                              <img src={Moai} style={{backgroundColor: "#00ffff"}}/>
+                              <img src={image} style={{backgroundColor: color, height:"48px" }}/>
                             
-                            <span style={{ color: "#00ffff", fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
+                            <span style={{ color: color, fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
                             {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                             </span>
                           </div>
