@@ -15,11 +15,11 @@ const Container = styled.div`
     margin: 0;
 `
 
-const IsReady = ({socket, index}) => {
+const IsReady = ({index}) => {
     const partnerVideos = useSelector((state) => state.videos);
     const gameStarted = useSelector((state) => state.inGame.gameStarted);
     const chiefStream = useSelector((state) => state.inGame.chiefStream);
-    const readyList = useSelector((state) => state.inGame.readyList[partnerVideos[index].id]);
+    const readyList = useSelector((state) => state.inGame.readyList[partnerVideos[index] !== undefined ? partnerVideos[index].id : null]);
     const [ready, setReady] = useState(readyList);
 
     useEffect(() => {
@@ -30,16 +30,20 @@ const IsReady = ({socket, index}) => {
     }, [readyList, index, partnerVideos]);
 
     return (
-        <Container>
-          {!gameStarted ?
-            (partnerVideos[index].id === chiefStream ?
-              <img alt="Chief" src={Chiefimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}} /> :
-              <div>{ready ? 
-              <video src={readyvideo} autoPlay style={{margin:"8px 0 0 0",borderRadius: "10px"}} ></video>
-              : <img alt="Notready" src={Notreadyimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}}/>
-            }</div>) :
-            <img alt="Plyaing"src={Playingimage} ></img>}
-        </Container>
+      <>
+        {partnerVideos[index] !== undefined &&
+          <Container>
+            {!gameStarted ?
+              (partnerVideos[index].id === chiefStream ?
+                <img alt="Chief" src={Chiefimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}} /> :
+                <div>{ready ? 
+                <video src={readyvideo} autoPlay style={{margin:"8px 0 0 0",borderRadius: "10px"}} ></video>
+                : <img alt="Notready" src={Notreadyimage} style={{margin:"8px 0 0 0",borderRadius: "10px"}}/>
+              }</div>) :
+              <img alt="Plyaing"src={Playingimage} ></img>}
+          </Container>
+        }
+      </>
     )
 }
 
