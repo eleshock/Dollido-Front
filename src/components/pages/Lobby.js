@@ -29,6 +29,7 @@ import { useInterval } from "../common/usefulFuntions";
 import { useSelector, useDispatch } from "react-redux";
 import { setInGameInit } from "../../modules/inGame.js";
 import { setItemInit } from "../../modules/item.js";
+import { setMemberInit } from "../../modules/member";
 import { setCheckGet, setRanking, setTier, setWinRate, setWin, setLose } from "../../modules/member.js";
 
 //마이페이지 로고
@@ -396,13 +397,11 @@ const Lobby = () => {
     setmakeRoomModal(true);
     startVideo();
     videoNModelInit();
-
   })
 
   const handleVideoOnPlay = () => {
     setOnVideo(true);
-
-}
+  }
   const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
@@ -466,9 +465,9 @@ const Lobby = () => {
 
 
 
- function handleHP(happiness, myHP) {
-   if(myHP >0)
-    if (happiness > 0.2) { // 피를 깎아야 하는 경우
+  function handleHP(happiness, myHP) {
+    if(myHP >0)
+      if (happiness > 0.2) { // 피를 깎아야 하는 경우
         if (happiness > 0.6) {
             return 2;
         } else {
@@ -479,8 +478,7 @@ const Lobby = () => {
 }
 
 
-
-
+const faceDetectionOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: 224 });
 const ShowStatus = () => {
   const [myHP, setMyHP] = useState(100);
   const [faceDetected, setFaceDetected]  = useState(false);
@@ -489,7 +487,7 @@ const ShowStatus = () => {
   let content = "";
 
   useInterval(async () => {
-      const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+      const detections = await faceapi.detectAllFaces(videoRef.current, faceDetectionOptions).withFaceExpressions();
       if (detections[0]) {
               const decrease = handleHP(detections[0].expressions.happy, myHP);
               if (decrease > 0) {
@@ -516,7 +514,10 @@ const ShowStatus = () => {
       }
       return content
   }
-
+  
+  const logout = () => {
+    dispatch(setMemberInit());
+  }
 
   const stopWebcam = async () => {
     if (startVideoPromise) {
@@ -568,8 +569,7 @@ const ShowStatus = () => {
         // </Button3>
     >
       <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
-          <FlexContainer
-          >
+          <FlexContainer>
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "50px 100px 0 0"}}>
                     {nickname &&
                     <>
@@ -587,7 +587,7 @@ const ShowStatus = () => {
 
                         </div>
                       </Link>
-                      <button className="logout" border="0" outline="0">
+                      <button className="logout" border="0" outline="0" onClick={logout}>
                       <FontAwesomeIcon className="logouticon" icon={faPowerOff} size="2x" color="white" style={{padding:"0 0 0 20px"}}/>
                       </button>
                     </>
@@ -643,8 +643,6 @@ const ShowStatus = () => {
                       <BackToLobby to = {'/tutorial'} onMouseEnter={selectSound} >
                         <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>
                       </BackToLobby>
-
-
                   </div>
               </Content>
             </FlexContainer>

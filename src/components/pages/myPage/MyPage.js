@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { ThemeProvider } from "styled-components";
-import { Modal } from "../../common/Modal.tsx";
 import mainBackground from "../../../images/mainBackground.gif";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
@@ -49,13 +47,12 @@ const MyPage = () => {
     setValue(newValue);
   };
 
-  const [modal, setModal] = useState(false);
   let image;
   let color;
 
   if (tier === "모나리자") 
     {image = Monarisa
-     color = "#c0c0c0"}
+      color = "#c0c0c0"}
   else if (tier === "모아이") {
     image = Moai
     color = "#00ffff"
@@ -82,7 +79,7 @@ const MyPage = () => {
                             &nbsp;&nbsp;
                             </span>
                             
-                              <img src={image} style={{backgroundColor: color, height:"48px" }}/>
+                              <img src={image} style={{backgroundColor: color, height:"48px" }} alt="tier"/>
                             
                             <span style={{ color: color, fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
                             {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;

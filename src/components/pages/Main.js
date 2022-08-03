@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ThemeProvider } from 'styled-components';
-
+import auth from "../common/auth";
+import { useSelector } from "react-redux";
 
 // common import
 import Button from "../common/Button.js";
@@ -27,9 +27,21 @@ const Word = styled.p `
 `
 
 const Main = () => {
+    const token = useSelector((state) => state.member.member.tokenInfo.token);
+
     const [modal, setModal] = useState(false);
     const [change, setChange] = useState(true);
 
+    const login = () => {
+        auth(token).then((result) => {
+            console.log(result);
+            if (result) {
+                window.location.href = "/univ";
+            } else {
+                setModal(true);
+            }
+        })
+    }  
     const [selectSound] = useSound(
         select,
         { volume: 0.5 }

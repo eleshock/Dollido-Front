@@ -1,5 +1,3 @@
-import { StateContext } from "react-scroll-to-bottom";
-
 const SET_MY_WEAPON = "item/SET_MY_WEAPON";
 const SET_MY_WEAPON_CHECK = "item/SET_MY_WEAPON_CHECK";
 const SET_MY_WEAPON_IMAGE = "item/SET_MY_WEAPON_IMAGE";
@@ -8,6 +6,7 @@ const SET_IS_WHO = "item/SET_IS_WHO";
 
 const SET_REVERSE = "item/SET_REVERSE";
 const SET_GOT_REVERSE = "item/SET_GOT_REVERSE";
+const SET_REVERSE_USER = "item/SET_REVERSE_USER";
 
 const SET_JUDGEMENT_LIST = "item/SET_JUDGEMENT_LIST";
 const SET_ZEUS_APPEAR = "item/SET_ZEUS_APPEAR";
@@ -21,6 +20,7 @@ export const setIsWho = (otherID) => ({type: SET_IS_WHO, otherID});
 
 export const setReverse = (bool) => ({type: SET_REVERSE, bool});
 export const setGotReverse = (bool) => ({type: SET_GOT_REVERSE, bool});
+export const setReverseUser = (nickName) => ({type: SET_REVERSE_USER, nickName});
 
 export const setJudgementList = (streamID, bool) => ({type: SET_JUDGEMENT_LIST, streamID, bool});
 export const setZeusAppear = (bool) => ({type: SET_ZEUS_APPEAR, bool});
@@ -35,6 +35,7 @@ const initialState = {
     isWho: null,
     reverse : false,
     gotReverse : false,
+    reverseUser: "",
     judgementList : {},
     zeusAppear: false,
 }
@@ -55,6 +56,8 @@ export default function item(state = initialState, action) {
             return { ...state, reverse: action.bool };
         case SET_GOT_REVERSE:
             return { ...state, gotReverse: action.bool };
+        case SET_REVERSE_USER:
+            return { ...state, reverseUser: action.nickName };
         case SET_JUDGEMENT_LIST:
             state.judgementList[action.streamID] = action.bool;
             return { ...state, judgement: {...state.judgementList} };
