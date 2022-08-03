@@ -29,6 +29,7 @@ import { useInterval } from "../common/usefulFuntions";
 import { useSelector, useDispatch } from "react-redux";
 import { setInGameInit } from "../../modules/inGame.js";
 import { setItemInit } from "../../modules/item.js";
+import { setMemberInit } from "../../modules/member";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -360,22 +361,20 @@ const Lobby = () => {
   };
 
    // 2. 방 생성 절차
-   const [onVideo, setOnVideo] = useState(false);
-   const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [onVideo, setOnVideo] = useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
 
-   const onClickStartRoom = useCallback((e) =>{
-     e.preventDefault();
-     setmakeRoomModal(true);
-     startVideo();
-     videoNModelInit();
- 
-   })
+  const onClickStartRoom = useCallback((e) =>{
+    e.preventDefault();
+    setmakeRoomModal(true);
+    startVideo();
+    videoNModelInit();
+  })
 
-   const handleVideoOnPlay = () => {
+  const handleVideoOnPlay = () => {
     setOnVideo(true);
-
-}
-   const onChangeRoomName = useCallback((e) => {
+  }
+  const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
   }, []);
@@ -438,9 +437,9 @@ const Lobby = () => {
   
 
 
- function handleHP(happiness, myHP) {
-   if(myHP >0)
-    if (happiness > 0.2) { // 피를 깎아야 하는 경우
+  function handleHP(happiness, myHP) {
+    if(myHP >0)
+      if (happiness > 0.2) { // 피를 깎아야 하는 경우
         if (happiness > 0.6) {
             return 2;
         } else {
@@ -488,6 +487,9 @@ const ShowStatus = () => {
       return content
   }
   
+  const logout = () => {
+    dispatch(setMemberInit());
+  }
 
   const stopWebcam = async () => {
     if (startVideoPromise) {
@@ -514,8 +516,7 @@ const ShowStatus = () => {
       }}
     >
       <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
-          <FlexContainer
-          >
+          <FlexContainer>
               <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
                     {nickname &&
                         <div style ={{ display:"flex", flexDirection:"row"}} >
@@ -525,11 +526,17 @@ const ShowStatus = () => {
                           </span>
                           <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
                             <Button3
-                             style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}  
+                              style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}  
                             >
                               마이페이지
                             </Button3>
                           </Link>
+                          <Button3
+                            style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}
+                            onClick={logout}
+                          >
+                            로그아웃
+                          </Button3>
                         </div>
                     }
               </header>
@@ -582,8 +589,6 @@ const ShowStatus = () => {
                       <BackToLobby to = {'/tutorial'} onMouseDown={exitSound} >
                         <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>  
                       </BackToLobby>
-                      
-                 
                   </div>
               </Content>
             </FlexContainer>

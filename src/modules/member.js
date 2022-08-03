@@ -4,6 +4,7 @@ const SET_MEMBER_INIT = "member/SET_MEMBER_INIT";
 
 export const setMember = (data) => ({ type: SET_MEMBER, data });
 export const setUserGif = (data) => ({ type: SET_USER_GIF, data });
+export const setMemberInit = () => ({ type: SET_MEMBER_INIT });
 
 const initialState = {
     member: {
