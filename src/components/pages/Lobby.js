@@ -447,7 +447,6 @@ const ShowStatus = () => {
   const logout = () => {
     dispatch(setMemberInit());
   }
-
   const stopWebcam = async () => {
     if (startVideoPromise) {
       await startVideoPromise.then(stream => {
@@ -490,11 +489,7 @@ const ShowStatus = () => {
           orange: "#F0A82BEE"
         },
       }}
-        // <Button3
-        //  style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}
-        // >
-        //   마이페이지
-        // </Button3>
+
     >
       <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
           <FlexContainer>
