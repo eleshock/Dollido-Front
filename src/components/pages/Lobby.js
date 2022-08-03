@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
 import io from "socket.io-client";
 import { ThemeProvider } from "styled-components";
 
@@ -7,16 +7,15 @@ import Button3 from "../common/Button3.js";
 import mainBackGround from "../../images/mainBackground.gif";
 import styled from "styled-components";
 import { GlobalStyles } from "../common/Global.tsx";
+import MakeRoomElement from "./MakeRoomElement.js";
+
 
 import useSound from 'use-sound';
-
-import {select, enterRoom, exit, playingSF, celebrateSF} from './Sound'
+import {enterRoom, select, playingSF, celebrateSF} from './Sound'
 
 import { ServerName } from "../../serverName";
 
-// 임시
 import { MakeRoomModal } from "../common/MakeRoomModal.tsx";
-import { v4 as uuid } from "uuid";
 
 // 아이템 설명 버튼
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,6 +30,7 @@ import { setInGameInit } from "../../modules/inGame.js";
 import { setItemInit } from "../../modules/item.js";
 import { setMemberInit } from "../../modules/member";
 import { setCheckGet, setRanking, setTier, setWinRate, setWin, setLose } from "../../modules/member.js";
+import { setOnVideo } from "../../modules/makeRoomVideo";
 
 //마이페이지 로고
 import Moai from "../../images/Moai3.png";
@@ -221,13 +221,6 @@ const ModalContainer = {
   fontFamily: "koverwatch",
 };
 
-const RoomModalHeader1 = {
-  margin: "10px 0 5px 0",
-  flex: "1",
-  textAlign: "center",
-  color: "white",
-};
-
 const RoomModalHeader2 = {
   margin: "0 0 0 0",
   flex: "1",
@@ -247,37 +240,14 @@ const RoomModalHeaderRed = {
   color: "red",
 };
 
-const RoomModalMiddle = {
-  flex: "8",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-};
-
-const RoomModalBottom = {
-  flex: "1",
-  justifyContent: "center",
-  display: "flex"
-};
-
-const sizes = {
-  width: "42%",
-  height: "36px",
-  fontSize: "1rem",
-  border: "1px solid transparent",
-  margin: "0 20px 0 0",
-};
-
-
 let startVideoPromise;
 
 const Lobby = () => {
-  console.log("1")
-  const navigate = useNavigate();
 
   // game sound
   celebrateSF.pause();
   playingSF.pause();
+
 
   const [enterGame] = useSound(
     enterRoom,
@@ -287,13 +257,6 @@ const Lobby = () => {
     select,
     { volume: 0.5 }
   );
-
-  const [exitSound] = useSound(
-    exit, {
-      volume: 0.5
-    }
-  );
-
   
 
   // 임시
@@ -306,15 +269,13 @@ const Lobby = () => {
   const [rooms, setRooms] = useState({});
   const [roomCount, setRoomCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [change, setChange] = useState(true);
   const [stop, setStop] = useState(false);
   const postsPerPage = 7;
   const dispatch = useDispatch();
+  const onVideo = useSelector((state) => state.makeRoomVideo.onVideo);
 
   /* 방 만들기 */
-  const [roomName, setRoomName] = useState("");
   const [makeroommodal, setmakeRoomModal] = useState(false);
-  const roomNameRef = useRef(null);
 
   
 
@@ -340,7 +301,7 @@ const Lobby = () => {
       socket.disconnect();
       stopWebcam();
     }
-  }, []);
+  }, [checkGet, dispatch, nickname]);
 
   useEffect(() => {
     socket.on("give room list", (rooms, result) => {
@@ -356,7 +317,7 @@ const Lobby = () => {
       setRooms(rooms);
       setRoomCount(Object.keys(rooms).length);
     });
-  }, [rooms]);
+  }, [rooms, dispatch, socket]);
 
   const indexOfLast = currentPage * postsPerPage;
   const indexOfFirst = indexOfLast - postsPerPage;
@@ -388,45 +349,16 @@ const Lobby = () => {
     videoNModelInit();
   };
 
-   // 2. 방 생성 절차
-  const [onVideo, setOnVideo] = useState(false);
-  const [modelsLoaded, setModelsLoaded] = useState(false);
-
-  const onClickStartRoom = useCallback((e) =>{
+  const onClickStartRoom = (e) =>{
     e.preventDefault();
     setmakeRoomModal(true);
     startVideo();
     videoNModelInit();
-  })
+  };
 
   const handleVideoOnPlay = () => {
-    setOnVideo(true);
-  }
-  const onChangeRoomName = useCallback((e) => {
-    setRoomName(e.target.value);
-    localStorage.roomName = e.target.value;
-  }, []);
-
-  const onClickMakeRoom = useCallback(
-    (e) => {
-      e.preventDefault();
-      // 2-1. 방제 없을 시, 생성 불가
-      if (roomName === "") {
-        alert("방 이름을 입력하세요");
-        return;
-      }
-      const roomID = uuid();
-      // console.log(roomID);
-      localStorage.roomLink = roomID;
-      // 2-3. 방 생성, 방이름과 방ID 서버에 전달
-      socket.emit("make room", { roomName, roomID});
-      alert(`${roomName} 방이 생성되었습니다`);
-      setRoomName("");
-      roomNameRef.current.value = "";
-      navigate(`/room/${roomID}`);
-    },
-    [roomName]
-  );
+    dispatch(setOnVideo(true));
+  };
 
   // 비디오 가져오기
   const videoRef = useRef();
@@ -445,10 +377,7 @@ const Lobby = () => {
         console.log(err);
     });
     setStop(false);
-    setModelsLoaded(false);
-    setOnVideo(false);
-
-
+    dispatch(setOnVideo(false));
   };
 
 
@@ -459,7 +388,7 @@ const Lobby = () => {
         Promise.all([
             faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
             faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL),
-        ]).then(setModelsLoaded(true));
+        ]);
   }
 
 
@@ -536,10 +465,10 @@ const ShowStatus = () => {
   let image;
   let color;
 
-  if (tier === "모나리자") 
-    {image = Monarisa
-     color = "#c0c0c0"}
-  else if (tier === "모아이") {
+  if (tier === "모나리자") {
+    image = Monarisa
+    color = "#c0c0c0"
+  } else if (tier === "모아이") {
     image = Moai
     color = "#00ffff"
   }
@@ -548,7 +477,6 @@ const ShowStatus = () => {
     color = "#ffe140"
   }
   else {
-
     image = KoreanMask
     color = "#c36729"
   }
@@ -574,7 +502,7 @@ const ShowStatus = () => {
                           &nbsp;&nbsp;
                           </span>
 
-                            <img src={image} style={{backgroundColor: color, height:"48px"}}/>
+                            <img src={image} alt="tier" style={{backgroundColor: color, height:"48px"}}/>
 
                           <span style={{ color: color, fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
                           {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
@@ -645,7 +573,6 @@ const ShowStatus = () => {
           <MakeRoomModal
               modal={modal}
               setModal={setModal}
-              setChange={setChange}
               setStop={setStop}
               video={startVideoPromise}
               width="550"
@@ -653,7 +580,6 @@ const ShowStatus = () => {
               element={
                   <div style={ModalContainer}>
                       {!onVideo ? <h2 style={RoomModalHeader2}>model loading...</h2>: <ShowStatus ></ShowStatus>}
-                      {/* <div style={{ fontSize: "30px", color: "white", margin: "30px", display: "flex", justifyContent: "center"}}>웃어보세요^_^</div> */}
                       <Video ref = {videoRef} onPlay = { handleVideoOnPlay }></Video>
                       <div style = {{display: "flex", justifyContent: "space-around"}}>
                         <div style = {{display: "flex", justifyContent: "center"}}>
@@ -661,6 +587,7 @@ const ShowStatus = () => {
                             <div style = {{margin: "30px"}}>
                               <Button3
                                 style={{fontSize:"25px", display:"flex", justifyContent:"center", alignItems:"center", width:"11rem", height:"36px"}}
+                                onMouseUp = {enterGame}
                               >
                                 입장하기
                               </Button3>
@@ -685,45 +612,18 @@ const ShowStatus = () => {
         <MakeRoomModal
           modal={makeroommodal}
           setModal={setmakeRoomModal}
-          setChange={setChange}
           setStop={setStop}
           width="700"
           height="600"
           video={startVideoPromise}
           element={
-            <div style={ModalContainer}>
-              <h1 style={RoomModalHeader1}>방만들기</h1>
-              {/* <h2 style={RoomModalHeader2}>웃어보세요 ^_^</h2> */}
-              {!onVideo ? <h2 style={RoomModalHeader2}>model loading...</h2>: <ShowStatus ></ShowStatus>}
-              <div style={RoomModalMiddle}>
-              <Video ref={videoRef} onPlay = { handleVideoOnPlay }></Video>
-              </div>
-              <div style={RoomModalBottom}>
-                <input
-                  type="text"
-                  placeholder="방이름을 입력하세요"
-                  name="roomName"
-                  value={roomName}
-                  onChange={onChangeRoomName}
-                  onKeyPress={(e) => {
-                    e.key === "Enter" && onClickMakeRoom(e);
-                  }}
-                  ref={roomNameRef}
-                  style={sizes}
-                />
-                <Button3
-                  style={{margin : "0 0 20px 0", fontSize:"25px", height:"36px", display:"flex", alignItems:"center", justifyContent:"center"}}
-                  onMouseEnter = {selectSound}
-                  onMouseUp = {enterGame}
-                  onClick={onClickMakeRoom}
-                >
-                  방만들기
-                </Button3>
-              </div>
-            </div>
+            <MakeRoomElement
+              socket={socket}
+              videoRef={videoRef}
+            />
           }
         />
-      )}
+    )};
     </ThemeProvider>
   );
 };
