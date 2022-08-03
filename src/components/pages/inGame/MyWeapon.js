@@ -8,17 +8,19 @@ import effect from "../../../images/reverse.gif";
 
 
 const Container = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 70vh;
+    align-items: center;
+    color: white;
 `
 
 const BackgroundSizeStyle = styled.img`
-width: 700px;
-height: 600px;
-object-fit: contain;
-`;
+    width: 700px;
+    height: 600px;
+    object-fit: contain;
+`
 
 
 const MyWeaponFontStyle = styled.div`
