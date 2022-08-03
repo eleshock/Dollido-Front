@@ -32,6 +32,7 @@ const recordTime = 3000; // 녹화 시간(ms)
 const modelInterval = 500; // 웃음 인식 간격(ms)
 const initialHP = 100;
 const recordStandard = 3;   // best performer 녹화 기준(연속으로 웃은 횟수)
+const faceDetectionOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: 224 });
 
 const blinkEffect = keyframes`
     50% {
@@ -245,7 +246,7 @@ const MyVideo = ({ match, socket }) => {
         useInterval(async () => {
             let newHP = 0;
             if (myStream && myStream.id) {
-                const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+                const detections = await faceapi.detectAllFaces(userVideo.current, faceDetectionOptions).withFaceExpressions();
 
                 /** Zeus */
                 if(detections.length === 0 && gameStarted) {
