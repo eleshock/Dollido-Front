@@ -1,9 +1,7 @@
 import styled, { keyframes } from "styled-components";
 import React, { useRef } from "react";
-import Button from "../../common/Button.js";
 import zeusImage from "../../../images/Zeus.png"
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
 
 
 const zeusOn = keyframes`
@@ -27,7 +25,6 @@ const Zeus = styled.img`
 const ZeusAppear = ({ socket }) => {
     const firstZeus = useRef(true);
     const zeusAppear = useSelector((state) => state.item.zeusAppear);
-    const { roomID } = useParams();
     if (zeusAppear) {
         firstZeus.current = false;
     }

@@ -14,6 +14,9 @@ import styled from "styled-components";
 // images import
 import mainBackground from '../../images/main_Back.gif';
 
+import useSound from 'use-sound';
+import {select} from './Sound';
+
 const Word = styled.p `
     position: absolute;
     width: 100%;
@@ -39,12 +42,16 @@ const Main = () => {
             }
         })
     }  
+    const [selectSound] = useSound(
+        select,
+        { volume: 0.5 }
+    );
 
     return (
         <div style={{height: "100vh"}}>
             <GlobalStyles bgImage={mainBackground}></GlobalStyles>
-            <Button style={ { position: "absolute", bottom: "10%", left: "50%", transform: "translate(-50%, -50%)", width: "25rem", height: "7rem"} } onClick = {login} >
-                <Word style={ {fontSize: "2rem"} }> Game Start </Word> 
+            <Button style={ { position: "absolute", bottom: "10%", left: "50%", transform: "translate(-50%, -50%)", width: "25rem", height: "7rem"} } onClick = {() => { setModal(true); }} >
+                <Word style={ {fontSize: "2rem"} } onMouseEnter = {selectSound}> Game Start </Word> 
             </Button>
             {modal ?
                 change ?

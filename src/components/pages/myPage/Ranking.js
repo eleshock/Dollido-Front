@@ -10,7 +10,7 @@ const NewDataGrid = styled(DataGrid)`
 
 export default function ranking() {
   return (
-    <div style={{ height: '530px', width: '100%', margin: '20px 0 0 0'}}>
+    <div style={{ height: '430px', width: '100%', margin: '20px 0 0 0'}}>
       <NewDataGrid 
         disableColumnFilter={true}
         disableColumnMenu={true}
@@ -24,8 +24,8 @@ export default function ranking() {
           fontSize: '2rem',
           backgroundColor: '#1F4078'
         },
-        '.MuiDataGrid-virtualScroller': {
-          dispaly: 'none',
+        '.MuiDataGrid-footerContainer': {
+          display: 'none',
         },
         "& .MuiDataGrid-row:hover": {
           backgroundColor: "#5D6BA1",

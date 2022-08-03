@@ -154,7 +154,7 @@ const VideoLibrary = () => {
 			/* console.log("비디오 정보 :", myVideosInfo.current); */
 		}
 		getVideos();
-	}, [])
+	}, [token])
 
 	if (gotVideoInfo) {
 		myVideosInfo.current.forEach(elem => {

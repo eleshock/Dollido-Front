@@ -30,6 +30,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { setInGameInit } from "../../modules/inGame.js";
 import { setItemInit } from "../../modules/item.js";
 import { setMemberInit } from "../../modules/member";
+import { setCheckGet, setRanking, setTier, setWinRate, setWin, setLose } from "../../modules/member.js";
+
+//마이페이지 로고
+import Moai from "../../images/Moai3.png";
+import Kaonish from "../../images/Kaonish2.png";
+import Monarisa from "../../images/Monarisa2.png";
+import KoreanMask from "../../images/KoreanMask2.png";
+
+import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import "../common/logout.css";
+
 
 const FlexContainer = styled.div`
   display: flex;
@@ -258,13 +269,12 @@ const sizes = {
 };
 
 
-
 let startVideoPromise;
 
 const Lobby = () => {
   console.log("1")
   const navigate = useNavigate();
-  
+
   // game sound
   celebrateSF.pause();
   playingSF.pause();
@@ -277,16 +287,19 @@ const Lobby = () => {
     select,
     { volume: 0.5 }
   );
-  
+
   const [exitSound] = useSound(
     exit, {
       volume: 0.5
     }
   );
 
+  
+
   // 임시
   const nickname = useSelector((state) => state.member.member.user_nick);
-
+  const checkGet = useSelector((state) => state.member.check_get);
+  const tier = useSelector((state) => state.member.tier)
   /* 방 만들기 & 입장 */
   // const SERVER_ADDRESS = useRef(ServerName);
   const socket = io(ServerName);
@@ -303,7 +316,9 @@ const Lobby = () => {
   const [makeroommodal, setmakeRoomModal] = useState(false);
   const roomNameRef = useRef(null);
 
+  
 
+  
   useEffect(() => {
     if (stop) {
       stopWebcam();
@@ -314,7 +329,11 @@ const Lobby = () => {
   // 1. 방 리스트 받아오기
   useEffect(() => {
     // socket.current = io(SERVER_ADDRESS.current);
-    socket.emit("get room list");
+    if (!checkGet) {
+      console.log("들어옵니다")
+      socket.emit("get room list", (nickname));
+    }
+    else socket.emit("get room list", (null));
     dispatch(setInGameInit());
     dispatch(setItemInit());
     return () => {
@@ -324,7 +343,16 @@ const Lobby = () => {
   }, []);
 
   useEffect(() => {
-    socket.on("give room list", (rooms) => {
+    socket.on("give room list", (rooms, result) => {
+      if (result) {
+        console.log(result[0].tier)
+        dispatch(setTier(result[0].tier));
+        dispatch(setRanking(result[0].ranking));
+        dispatch(setWinRate(result[0].point));
+        dispatch(setWin(result[0].win));
+        dispatch(setLose(result[0].lose));
+        dispatch(setCheckGet(true));
+      }
       setRooms(rooms);
       setRoomCount(Object.keys(rooms).length);
     });
@@ -402,7 +430,7 @@ const Lobby = () => {
 
   // 비디오 가져오기
   const videoRef = useRef();
-  
+
   const startVideo = (deviceId) => {
     startVideoPromise = navigator.mediaDevices.getUserMedia({
         audio: false,
@@ -425,7 +453,7 @@ const Lobby = () => {
 
 
   const videoNModelInit = async () => {
-        
+
         const MODEL_URL = process.env.PUBLIC_URL + '/models';
         // console.log("AI Model Loading...")
         Promise.all([
@@ -434,7 +462,7 @@ const Lobby = () => {
         ]).then(setModelsLoaded(true));
   }
 
-  
+
 
 
   function handleHP(happiness, myHP) {
@@ -451,13 +479,14 @@ const Lobby = () => {
 
 
 
+
 const ShowStatus = () => {
   const [myHP, setMyHP] = useState(100);
   const [faceDetected, setFaceDetected]  = useState(false);
   const [smiling, setSmiling]  = useState(false);
   const [interval, setInterval] = useState(350);
   let content = "";
-  
+
   useInterval(async () => {
       const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
       if (detections[0]) {
@@ -482,7 +511,7 @@ const ShowStatus = () => {
           if(smiling)
           content = <h2 style={RoomModalHeader2} > 웃음 인식 확인! </h2>
       } else {
-          content = <h2 style={RoomModalHeaderRed}> {detecContent}</h2> 
+          content = <h2 style={RoomModalHeaderRed}> {detecContent}</h2>
       }
       return content
   }
@@ -506,6 +535,26 @@ const ShowStatus = () => {
     stopWebcam();
   };
 
+  let image;
+  let color;
+
+  if (tier === "모나리자") 
+    {image = Monarisa
+     color = "#c0c0c0"}
+  else if (tier === "모아이") {
+    image = Moai
+    color = "#00ffff"
+  }
+  else if (tier === "가오나시") {
+    image = Kaonish
+    color = "#ffe140"
+  }
+  else {
+
+    image = KoreanMask
+    color = "#c36729"
+  }
+
   return (
     <ThemeProvider
       theme={{
@@ -514,30 +563,35 @@ const ShowStatus = () => {
           orange: "#F0A82BEE"
         },
       }}
+        // <Button3
+        //  style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}
+        // >
+        //   마이페이지
+        // </Button3>
     >
       <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
           <FlexContainer>
-              <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
+              <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "50px 100px 0 0"}}>
                     {nickname &&
+                    <>
+                    <Link to = {`/mypage`} style = {{textDecoration:"none"}} onMouseEnter = {selectSound}>
                         <div style ={{ display:"flex", flexDirection:"row"}} >
-                          <span style={{ color: "white", fontSize: "1.7rem", margin: "0 10px 0 0" }}>
-                            {" "}
-                            {nickname}님 Dollido에 오신걸 환영합니다
+                          <span style={{ color: "white", fontSize: "1.3rem", backgroundColor: '#ffd700', height:"48px"}}>
+                          &nbsp;&nbsp;
                           </span>
-                          <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
-                            <Button3
-                              style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}  
-                            >
-                              마이페이지
-                            </Button3>
-                          </Link>
-                          <Button3
-                            style ={{ margin: "0 0 0 30px", display:"flex", height:"50px", alignItems: "center", fontSize:"30px", justifyContent:"center"}}
-                            onClick={logout}
-                          >
-                            로그아웃
-                          </Button3>
+
+                            <img src={image} style={{backgroundColor: color, height:"48px"}}/>
+
+                          <span style={{ color: color, fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
+                          {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                          </span>
+
                         </div>
+                      </Link>
+                      <button className="logout" border="0" outline="0" onClick={logout}>
+                      <FontAwesomeIcon className="logouticon" icon={faPowerOff} size="2x" color="white" style={{padding:"0 0 0 20px"}}/>
+                      </button>
+                    </>
                     }
               </header>
               <TabList>
@@ -550,6 +604,7 @@ const ShowStatus = () => {
                               <Button3
                                 onClick = {onClickStartRoom}
                                 style={{margin : "0 0 20px 0", fontSize:"30px", height:"50px", display:"flex", alignItems:"center", justifyContent:"center"}}
+                                onMouseEnter = {selectSound}
                               >
                                 방만들기
                               </Button3>
@@ -586,8 +641,8 @@ const ShowStatus = () => {
                         </PageControl>
                   </RoomListFrame>
                   <div >
-                      <BackToLobby to = {'/tutorial'} onMouseDown={exitSound} >
-                        <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>  
+                      <BackToLobby to = {'/tutorial'} onMouseEnter={selectSound} >
+                        <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>
                       </BackToLobby>
                   </div>
               </Content>
@@ -662,8 +717,9 @@ const ShowStatus = () => {
                   ref={roomNameRef}
                   style={sizes}
                 />
-                <Button3 
+                <Button3
                   style={{margin : "0 0 20px 0", fontSize:"25px", height:"36px", display:"flex", alignItems:"center", justifyContent:"center"}}
+                  onMouseEnter = {selectSound}
                   onMouseUp = {enterGame}
                   onClick={onClickMakeRoom}
                 >

@@ -101,7 +101,6 @@ function Images() {
   const [file, setFile] = useState("")
   const [images, setImages] = useState([])
   const [previewImg, setPreviewImg] = useState(null);
-  const baseImg = Base;
 
   const submit = async event => {
     event.preventDefault()

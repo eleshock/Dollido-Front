@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import { ThemeProvider } from "styled-components";
-import { Modal } from "../../common/Modal.tsx";
 import mainBackground from "../../../images/mainBackground.gif";
 import styled from "styled-components";
-import moai from "../../../images/moai.png";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { GlobalStyles } from "../../common/Global.tsx";
@@ -15,6 +12,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 
+import Profile from './Profile';
 import Ranking from './Ranking';
 import Images from './Images';
 import VideoLibrary from "./VideoLibrary";
@@ -22,6 +20,13 @@ import VideoLibrary from "./VideoLibrary";
 import useSound from 'use-sound';
 import { select, exit } from '../Sound';
 
+//profile
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
+import Moai from "../../../images/Moai3.png";
+import Kaonish from "../../../images/Kaonish2.png";
+import Monarisa from "../../../images/Monarisa2.png";
+import KoreanMask from "../../../images/KoreanMask2.png";
 
 
 const MyPage = () => {
@@ -35,25 +40,56 @@ const MyPage = () => {
   );
 
   const nickname = useSelector((state) => state.member.member.user_nick);
+  const tier = useSelector((state) => state.member.tier)
   const [value, setValue] = useState('1');
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const [modal, setModal] = useState(false);
+  let image;
+  let color;
 
+  if (tier === "모나리자") 
+    {image = Monarisa
+      color = "#c0c0c0"}
+  else if (tier === "모아이") {
+    image = Moai
+    color = "#00ffff"
+  }
+  else if (tier === "가오나시") {
+    image = Kaonish
+    color = "#ffe140"
+  }
+  else {
+
+    image = KoreanMask
+    color = "#c36729"
+  }
   return (
     <div style={{ height: "100vh" }}>
         <GlobalStyles bgImage={mainBackground}></GlobalStyles>
         <FlexContainer>
-          <header style={{ height: 80, display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "0 100px 0 0" }}>
+          <header style={{ height: 80, display: "flex", justifyContent: "flex-end", alignItems: "center", padding: "50px 100px 0 0" }}>
             {nickname && (
-              <div>
-                <h3 style={{ color: "white" }}>
-                  {nickname}님, Dollido에 오신걸 환영합니다!
-                </h3>
-              </div>
+                      <>
+                      <Link to = {`/mypage`} style = {{textDecoration:"none"}}>
+                          <div style ={{ display:"flex", flexDirection:"row"}} >
+                            <span style={{ color: "white", fontSize: "1.3rem", backgroundColor: '#ffd700', height:"48px"}}>
+                            &nbsp;&nbsp;
+                            </span>
+                            
+                              <img src={image} style={{backgroundColor: color, height:"48px" }} alt="tier"/>
+                            
+                            <span style={{ color: color, fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
+                            {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
+                            </span>
+                          </div>
+                        </Link>
+                        <button className="logout" border="0" outline="0">
+                        <FontAwesomeIcon className="logouticon" icon={faPowerOff} size="2x" color="white" style={{padding:"0 0 0 20px"}}/>
+                        </button>
+                      </>
 
             )}
           </header>
@@ -71,7 +107,7 @@ const MyPage = () => {
                       "& button.Mui-selected": { color: "#57C2F0" },
                     }}
                     onChange={handleChange}>
-                    <MyTab sx={{ "&:hover": { transform: "scale(1.3)" } }} label="내 정보" value="1"
+                    <MyTab sx={{ "&:hover": { transform: "scale(1.3)" } }} label="프로필" value="1"
                       onMouseEnter={() => {
                         selectSound();
                       }}
@@ -94,32 +130,7 @@ const MyPage = () => {
                   </TabList>
                 </Box>
                 <TabPanel value="1">
-                  <div style={{ display: "flex", justifyContent: "center", flexDirection: "row", alignItems: "center" }}>
-                    <TierImage>
-                      <img style={{ width: "100%", height: "100%", objectFit: "cover" }} src={moai} />
-                    </TierImage>
-                    <Profile>
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <div style={{ margin: "10px 10px 0 0" }}>
-                          <ProfileTitle>[ 유 저 정 보 ]</ProfileTitle>
-                          <ProfileName>나웃는거본사람</ProfileName>
-                        </div>
-                        <div>
-                          <ProfileRanking>랭킹 1위</ProfileRanking>
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", flexDirection: "row", margin: "50px 0 0 0" }}>
-                        <div style={{ marginRight: "30px" }}>
-                          <ProfileTitle>[ 전 적 ]</ProfileTitle>
-                          <ProfileContent>WIN 103 / LOSE 10</ProfileContent>
-                        </div>
-                        <div>
-                          <ProfileTitle>[ 티 어 ]</ProfileTitle>
-                          <ProfileContent>모아이</ProfileContent>
-                        </div>
-                      </div>
-                    </Profile>
-                  </div>
+                      <Profile></Profile>
                 </TabPanel>
                 <TabPanel value="2">
                   <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -173,22 +184,6 @@ const MyPage = () => {
       display: flex;
       justify-content: center;
       `
-
-      const TierImage = styled.div`
-      width: 400px;
-      height: 400px;
-      border-radius: 50%;
-      overflow: hidden;
-      margin: 50px 0 0 0;
-      `
-
-      const Profile = styled.div`
-      display: flex;
-      flex-direction: column;
-      margin: 50px 0 0 50px;
-      font-family: koverwatch;
-      `
-
       const GradationTitle = styled.h1`
       padding: 0 15px 0 100px;
       color: white;
@@ -199,30 +194,6 @@ const MyPage = () => {
       ${'' /* -webkit-text-stroke: 3px black; */}
       color: transparent;
       -webkit-background-clip: text;
-      `
-
-      const ProfileTitle = styled.div`
-      color: white;
-      font-size: 3rem;
-      text-align: left;
-      `
-
-      const ProfileName = styled.div`
-      color: white;
-      font-size: 4.5rem;
-      text-align: left;
-      `
-      const ProfileRanking = styled.div`
-      color: white;
-      font-size: 2rem;
-      text-align: left;
-      `
-
-
-      const ProfileContent = styled.div`
-      color: white;
-      font-size: 2.5rem;
-      text-align: center;
       `
 
       const BackToLobby = styled(Link)`

@@ -7,11 +7,10 @@ import styled, {keyframes} from "styled-components";
 import effect from "../../../images/pepe-laugh-laugh.gif";
 import judgementEffect from "../../../images/judgement.png"
 import Load from "./Loading";
-import readyimage from "../../../images/ready.gif"
-import Notreadyimage from "../../../images/Notready.png"
-import Chiefimage from "../../../images/Chief.png"
-import Playingimage from "../../../images/Playing.png"
-import readyvideo from "../../../images/ready.mp4"
+import Notreadyimage from "../../../images/Notready.png";
+import Chiefimage from "../../../images/Chief.png";
+import Playingimage from "../../../images/Playing.png";
+import readyvideo from "../../../images/ready.mp4";
 
 
 
@@ -146,9 +145,10 @@ const MyNickname = {
     color: 'White',
 }
 
-
+const faceDetectionOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: 128 });
 
 const MyVideo = ({ match, socket }) => {
+    console.log(faceapi);
     const dispatch = useDispatch();
     // const inGameState = useSelector((state) => (state.inGame));
     const token = useSelector((state) => state.member.member.tokenInfo.token);
@@ -210,7 +210,7 @@ const MyVideo = ({ match, socket }) => {
                     videoRecorded = true;
                     recordVideo(userVideo.current.srcObject, user_nick, token);
                 }
-                return 5;
+                return 13;
             } else {
                 return 1;
             }
@@ -221,7 +221,7 @@ const MyVideo = ({ match, socket }) => {
 
     const ShowStatus = ({myStreamID}) => {
         const reverse = useSelector((state) => state.item.reverse);
-        
+
         /* judgement*/
         const isAbusing = useSelector((state) => state.item.judgementList[myStreamID]);
         const zeusAppear = useRef(false);
@@ -237,8 +237,8 @@ const MyVideo = ({ match, socket }) => {
         useInterval(async () => {
             let newHP = 0;
             if (myStream && myStream.id) {
-                const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
-                
+                const detections = await faceapi.detectAllFaces(userVideo.current, faceDetectionOptions).withFaceExpressions();
+
                 // setIsAbusing(judgementList[myStream.id])
 
                 if(detections.length === 0 && gameStarted) {
@@ -356,7 +356,7 @@ const MyVideo = ({ match, socket }) => {
 
     return (
         <>
-            <Container>    
+            <Container>
                 <NickName style={MyNickname}>{user_nick}</NickName>
                 <VideoContent>
                     {loading && < Load></Load>}
