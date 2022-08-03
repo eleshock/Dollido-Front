@@ -380,22 +380,22 @@ const Lobby = () => {
   };
 
    // 2. 방 생성 절차
-   const [onVideo, setOnVideo] = useState(false);
-   const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [onVideo, setOnVideo] = useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
 
-   const onClickStartRoom = useCallback((e) =>{
-     e.preventDefault();
-     setmakeRoomModal(true);
-     startVideo();
-     videoNModelInit();
+  const onClickStartRoom = useCallback((e) =>{
+    e.preventDefault();
+    setmakeRoomModal(true);
+    startVideo();
+    videoNModelInit();
 
-   })
+  })
 
-   const handleVideoOnPlay = () => {
+  const handleVideoOnPlay = () => {
     setOnVideo(true);
 
 }
-   const onChangeRoomName = useCallback((e) => {
+  const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
   }, []);
