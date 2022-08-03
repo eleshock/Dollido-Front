@@ -158,7 +158,7 @@ const InGameBottom = ({ socket }) => {
             
             {(gameFinished && bestDone) &&
                 <div style={{ display: "flex", justifyContent: 'space-around', textAlign: "center", flex: "33"}}>
-                    {chief &&
+                    {(chief || chiefStream === myStream.id) &&
                         <GameButtonGreens size="large" onClick={handleRestart}>RESTART</GameButtonGreens>
                     }   
                         <GameButtonOranges size="large" onClick={handleQuit}>QUIT</GameButtonOranges>
