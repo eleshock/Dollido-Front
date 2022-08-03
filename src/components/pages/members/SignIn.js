@@ -12,7 +12,7 @@ import { useDispatch } from "react-redux";
 import { setMember, setUserGif } from "../../../modules/member"
 
 import useSound from 'use-sound';
-import {select, exit} from '../Sound';
+import { select } from '../Sound';
 
 const SingIn = ({ setChange }) => {
     let [id, setId] = useState("");
@@ -42,12 +42,6 @@ const SingIn = ({ setChange }) => {
     const [selectSound] = useSound(
         select,
         { volume: 0.5 }
-    );
-
-    const [exitSound] = useSound(
-        exit, {
-            volume: 0.5
-        }
     );
 
     return (

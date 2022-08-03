@@ -6,7 +6,6 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserGif } from "../../../modules/member";
 import Button3 from "../../common/Button3.js";
-
 import Base from "../../../images/base.jpg";
 
 import './Images.css'
@@ -102,7 +101,6 @@ function Images() {
   const [file, setFile] = useState("")
   const [images, setImages] = useState([])
   const [previewImg, setPreviewImg] = useState(null);
-  const baseImg = Base;
 
   const submit = async event => {
     event.preventDefault()

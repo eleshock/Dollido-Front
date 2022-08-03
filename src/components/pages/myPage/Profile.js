@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components";
+import styled from "styled-components";
 import Moai from "../../../images/Moai2.png";
 import Kaonish from "../../../images/Kaonish.png";
 import Monarisa from "../../../images/Monarisa.png";

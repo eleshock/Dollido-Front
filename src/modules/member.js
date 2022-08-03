@@ -10,13 +10,15 @@ const SET_MEMBER_INIT = "member/SET_MEMBER_INIT";
 
 export const setMember = (data) => ({ type: SET_MEMBER, data });
 export const setUserGif = (data) => ({ type: SET_USER_GIF, data });
+export const setMemberInit = () => ({ type: SET_MEMBER_INIT });
 export const setTier = (data) => ({ type: SET_TIER, data });
 export const setRanking = (data) => ({ type: SET_RANKING, data });
 export const setWinRate = (data) => ({ type: SET_WINRATE, data });
 export const setWin = (data) => ({ type: SET_WIN, data });
 export const setLose = (data) => ({ type: SET_LOSE, data });
 export const setCheckGet = (bool) => ({ type: SET_CHECKGET, bool });
-export const setMemberInit = () => ({ type: SET_MEMBER_INIT });
+
+
 
 const initialState = {
     member: {
