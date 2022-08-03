@@ -107,6 +107,7 @@ const BackToLobby = styled(Link)`
   padding: 3px;
   margin: 0 100px 0 0;
   text-decoration: none;
+  font-family:koverwatch;
   &:hover {
     transform: scale(1.2);
     color: white;
@@ -131,11 +132,12 @@ function Tutorial() {
 
 
   return (
-    
+     <>
      <div style={{height:"100%"}}>
     <SimpleSlider />
     </div>
-     
+    <BackToLobby to = {'/lobby'}  >&lt; 뒤로가기</BackToLobby>
+    </>
     
   );
 }
