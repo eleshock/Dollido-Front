@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Button3 from "../common/Button3.js";
 import styled from "styled-components";
 import * as faceapi from 'face-api.js';
@@ -123,7 +123,7 @@ const MakeRoomElement = (props) => {
         setRoomName("");
         roomNameRef.current.value = "";
         navigate(`/room/${roomID}`);
-    }, [roomName]);
+    }, [roomName, navigate, props.socket]);
 
     function handleHP(happiness, myHP) {
         if(myHP >0)
