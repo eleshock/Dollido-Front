@@ -397,11 +397,13 @@ const Lobby = () => {
     setmakeRoomModal(true);
     startVideo();
     videoNModelInit();
+
   })
 
   const handleVideoOnPlay = () => {
     setOnVideo(true);
-  }
+
+}
   const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
