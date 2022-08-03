@@ -40,6 +40,7 @@ import KoreanMask from "../../images/KoreanMask2.png";
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import "../common/logout.css";
 
+import { setMemberInit } from "../../modules/member";
 
 const FlexContainer = styled.div`
   display: flex;
@@ -388,22 +389,20 @@ const Lobby = () => {
   };
 
    // 2. 방 생성 절차
-   const [onVideo, setOnVideo] = useState(false);
-   const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [onVideo, setOnVideo] = useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
 
-   const onClickStartRoom = useCallback((e) =>{
-     e.preventDefault();
-     setmakeRoomModal(true);
-     startVideo();
-     videoNModelInit();
+  const onClickStartRoom = useCallback((e) =>{
+    e.preventDefault();
+    setmakeRoomModal(true);
+    startVideo();
+    videoNModelInit();
+  })
 
-   })
-
-   const handleVideoOnPlay = () => {
+  const handleVideoOnPlay = () => {
     setOnVideo(true);
-
-}
-   const onChangeRoomName = useCallback((e) => {
+  }
+  const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
   }, []);
@@ -466,9 +465,9 @@ const Lobby = () => {
 
 
 
- function handleHP(happiness, myHP) {
-   if(myHP >0)
-    if (happiness > 0.2) { // 피를 깎아야 하는 경우
+  function handleHP(happiness, myHP) {
+    if(myHP >0)
+      if (happiness > 0.2) { // 피를 깎아야 하는 경우
         if (happiness > 0.6) {
             return 2;
         } else {
@@ -516,8 +515,10 @@ const ShowStatus = () => {
       }
       return content
   }
-
-
+  
+  const logout = () => {
+    dispatch(setMemberInit());
+  }
   const stopWebcam = async () => {
     if (startVideoPromise) {
       await startVideoPromise.then(stream => {
@@ -584,7 +585,7 @@ const ShowStatus = () => {
                         </div>
                       </Link>
                       <button className="logout" border="0" outline="0">
-                      <FontAwesomeIcon className="logouticon" icon={faPowerOff} size="2x" color="white" style={{padding:"0 0 0 20px"}}/>
+                      <FontAwesomeIcon className="logouticon" icon={faPowerOff} size="2x" color="white" style={{padding:"0 0 0 20px"}} onClick={logout}/>
                       </button>
                     </>
                     }
@@ -639,8 +640,6 @@ const ShowStatus = () => {
                       <BackToLobby to = {'/tutorial'} onMouseEnter={selectSound} >
                         <FontAwesomeIcon style= {{background:"white", border: "none", outline: "none", color:"#F0A82BEE", borderRadius:"50%"}} icon={faQuestionCircle} size="2x"/>
                       </BackToLobby>
-
-
                   </div>
               </Content>
             </FlexContainer>
