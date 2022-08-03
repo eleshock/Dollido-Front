@@ -7,6 +7,78 @@ import KoreanMask from "../../../images/KoreanMask.png";
 import { useSelector } from "react-redux";
 
 
+export default function Profile() {
+    const tier = useSelector((state) => state.member.tier);
+    const ranking = useSelector((state) => state.member.ranking);
+    const winRate = useSelector((state) => state.member.win_rate);
+    const win = useSelector((state) => state.member.win);
+    const lose = useSelector((state) => state.member.lose);
+    const nickname = useSelector((state) => state.member.member.user_nick);
+
+    let image;
+    let profileFrame;
+
+    if (tier === "모나리자") {
+        image = Monarisa;
+        profileFrame = "2px solid #C0C0C0E9";
+    } else if (tier === "모아이") {
+        image = Moai;
+        profileFrame = "2px solid #00FFFF79";
+    }
+    else if (tier === "가오나시") {
+        image = Kaonish;
+        profileFrame = "2px solid #FFE140CC";
+    }
+    else {
+        image = KoreanMask;
+        profileFrame = "2px solid #C36729F9";
+    }
+
+
+    return (
+        <div style = {{display: "flex", justifyContent: "center"}}>
+            <Container style={{border: profileFrame}}>
+                <TierImage>
+                <img style={{ width: "100%", height: "100%", objectFit: "cover" }} src={image} />
+                </TierImage>
+                <div style = {{display: "flex", flexDirection: "column"}}>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
+                        <ProfileAlign>
+                            <ProfileTitle>닉네임</ProfileTitle>
+                            <ProfileBorder></ProfileBorder>
+                            <ProfileContent>{nickname}</ProfileContent>
+                        </ProfileAlign>
+                        <ProfileAlign>
+                            <ProfileTitle>랭킹</ProfileTitle>
+                            <ProfileBorder></ProfileBorder>
+                            <ProfileContent>{ranking}</ProfileContent>
+                        </ProfileAlign>
+                        <ProfileAlign>
+                            <ProfileTitle>전적</ProfileTitle>
+                            <ProfileBorder></ProfileBorder>
+                            <ProfileContent>{win}</ProfileContent>
+                            <ProfileContent style = {{fontSize:"1.4rem", padding: "3px 0 0 0"}}>승</ProfileContent>
+                            <ProfileContent>/</ProfileContent>
+                            <ProfileContent>{lose}</ProfileContent>
+                            <ProfileContent style = {{fontSize:"1.4rem", padding: "3px 0 0 0"}}>패</ProfileContent>
+                        </ProfileAlign>
+                        <ProfileAlign>
+                            <ProfileTitle>승률</ProfileTitle>
+                            <ProfileBorder></ProfileBorder>
+                            <ProfileContent>{winRate} %</ProfileContent>
+                        </ProfileAlign>
+                        <ProfileAlign>
+                            <ProfileTitle>티어</ProfileTitle>
+                            <ProfileBorder></ProfileBorder>
+                            <ProfileContent>{tier}</ProfileContent>
+                        </ProfileAlign>
+                    </div>
+                </div>
+            </Container>
+        </div>
+    );
+}
+
 const Container = styled.div`
     display: flex;
     flex-direction: row;
@@ -14,7 +86,7 @@ const Container = styled.div`
     height: 330px;
     margin: 50px 0 0 0;
     font-family: koverwatch;
-    border: 2px solid rgba( 255, 255, 255, 0.3 );
+    ${'' /* border: 2px solid rgba( 255, 255, 255, 0.3 ); */}
     border-radius: 7px;
     justify-content: center;
     align-items: center;
@@ -73,63 +145,3 @@ const ProfileBorder = styled.div`
     border-left: 2px solid white;
     height: 1.3rem;
 `
-
-export default function Profile() {
-    const tier = useSelector((state) => state.member.tier);
-    const ranking = useSelector((state) => state.member.ranking);
-    const winRate = useSelector((state) => state.member.win_rate);
-    const win = useSelector((state) => state.member.win);
-    const lose = useSelector((state) => state.member.lose);
-    const nickname = useSelector((state) => state.member.member.user_nick);
-
-    let image;
-
-    if (tier === "모나리자") image = Monarisa
-    else if (tier === "모아이") image = Moai
-    else if (tier === "가오나시") image = Kaonish
-    else image = KoreanMask
-
-
-    return (
-        <div style = {{display: "flex", justifyContent: "center"}}>
-            <Container>
-                <TierImage>
-                <img style={{ width: "100%", height: "100%", objectFit: "cover" }} src={image} />
-                </TierImage>
-                <div style = {{display: "flex", flexDirection: "column"}}>
-                    <div style={{ display: "flex", flexDirection: "column" }}>
-                        <ProfileAlign>
-                            <ProfileTitle>닉네임</ProfileTitle>
-                            <ProfileBorder></ProfileBorder>
-                            <ProfileContent>{nickname}</ProfileContent>
-                        </ProfileAlign>
-                        <ProfileAlign>
-                            <ProfileTitle>랭킹</ProfileTitle>
-                            <ProfileBorder></ProfileBorder>
-                            <ProfileContent>{ranking}</ProfileContent>
-                        </ProfileAlign>
-                        <ProfileAlign>
-                            <ProfileTitle>전적</ProfileTitle>
-                            <ProfileBorder></ProfileBorder>
-                            <ProfileContent>{win}</ProfileContent>
-                            <ProfileContent style = {{fontSize:"1.4rem", padding: "3px 0 0 0"}}>승</ProfileContent>
-                            <ProfileContent>/</ProfileContent>
-                            <ProfileContent>{lose}</ProfileContent>
-                            <ProfileContent style = {{fontSize:"1.4rem", padding: "3px 0 0 0"}}>패</ProfileContent>
-                        </ProfileAlign>
-                        <ProfileAlign>
-                            <ProfileTitle>승률</ProfileTitle>
-                            <ProfileBorder></ProfileBorder>
-                            <ProfileContent>{winRate} %</ProfileContent>
-                        </ProfileAlign>
-                        <ProfileAlign>
-                            <ProfileTitle>티어</ProfileTitle>
-                            <ProfileBorder></ProfileBorder>
-                            <ProfileContent>{tier}</ProfileContent>
-                        </ProfileAlign>
-                    </div>
-                </div>
-            </Container>
-        </div>
-    );
-}
