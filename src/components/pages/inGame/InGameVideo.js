@@ -55,7 +55,7 @@ const Test = ({socket, match}) => {
 
     return (
         <Container>
-            <ZeusAppear socket={socket}></ZeusAppear>
+            <ZeusAppear></ZeusAppear>
             <LeftContent>
                 <EachContent>
                     <MyVideo socket={socket} match={match}></MyVideo>
