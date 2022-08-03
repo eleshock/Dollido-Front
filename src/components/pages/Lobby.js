@@ -7,10 +7,11 @@ import Button3 from "../common/Button3.js";
 import mainBackGround from "../../images/mainBackground.gif";
 import styled from "styled-components";
 import { GlobalStyles } from "../common/Global.tsx";
+import MakeRoomElement from "./MakeRoomElement.js";
+
 
 import useSound from 'use-sound';
-
-import {select, enterRoom, exit, playingSF, celebrateSF} from './Sound'
+import {select, enterRoom, playingSF, celebrateSF} from './Sound'
 
 import { ServerName } from "../../serverName";
 
@@ -31,6 +32,7 @@ import { setInGameInit } from "../../modules/inGame.js";
 import { setItemInit } from "../../modules/item.js";
 import { setMemberInit } from "../../modules/member";
 import { setCheckGet, setRanking, setTier, setWinRate, setWin, setLose } from "../../modules/member.js";
+import { setOnVideo } from "../../modules/makeRoomVideo";
 
 //마이페이지 로고
 import Moai from "../../images/Moai3.png";
@@ -272,7 +274,6 @@ const sizes = {
 let startVideoPromise;
 
 const Lobby = () => {
-  console.log("1")
   const navigate = useNavigate();
 
   // game sound
@@ -287,13 +288,6 @@ const Lobby = () => {
     select,
     { volume: 0.5 }
   );
-
-  const [exitSound] = useSound(
-    exit, {
-      volume: 0.5
-    }
-  );
-
   
 
   // 임시
@@ -310,6 +304,7 @@ const Lobby = () => {
   const [stop, setStop] = useState(false);
   const postsPerPage = 7;
   const dispatch = useDispatch();
+  const onVideo = useSelector((state) => state.makeRoomVideo.onVideo);
 
   /* 방 만들기 */
   const [roomName, setRoomName] = useState("");
@@ -389,7 +384,6 @@ const Lobby = () => {
   };
 
    // 2. 방 생성 절차
-  const [onVideo, setOnVideo] = useState(false);
   const [modelsLoaded, setModelsLoaded] = useState(false);
 
   const onClickStartRoom = useCallback((e) =>{
@@ -400,7 +394,7 @@ const Lobby = () => {
   })
 
   const handleVideoOnPlay = () => {
-    setOnVideo(true);
+    dispatch(setOnVideo(true));
   }
   const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
@@ -446,9 +440,7 @@ const Lobby = () => {
     });
     setStop(false);
     setModelsLoaded(false);
-    setOnVideo(false);
-
-
+    dispatch(setOnVideo(false));
   };
 
 
@@ -537,10 +529,10 @@ const ShowStatus = () => {
   let image;
   let color;
 
-  if (tier === "모나리자") 
-    {image = Monarisa
-     color = "#c0c0c0"}
-  else if (tier === "모아이") {
+  if (tier === "모나리자") {
+    image = Monarisa
+    color = "#c0c0c0"
+  } else if (tier === "모아이") {
     image = Moai
     color = "#00ffff"
   }
@@ -549,7 +541,6 @@ const ShowStatus = () => {
     color = "#ffe140"
   }
   else {
-
     image = KoreanMask
     color = "#c36729"
   }
@@ -696,39 +687,13 @@ const ShowStatus = () => {
           height="600"
           video={startVideoPromise}
           element={
-            <div style={ModalContainer}>
-              <h1 style={RoomModalHeader1}>방만들기</h1>
-              {/* <h2 style={RoomModalHeader2}>웃어보세요 ^_^</h2> */}
-              {!onVideo ? <h2 style={RoomModalHeader2}>model loading...</h2>: <ShowStatus ></ShowStatus>}
-              <div style={RoomModalMiddle}>
-              <Video ref={videoRef} onPlay = { handleVideoOnPlay }></Video>
-              </div>
-              <div style={RoomModalBottom}>
-                <input
-                  type="text"
-                  placeholder="방이름을 입력하세요"
-                  name="roomName"
-                  value={roomName}
-                  onChange={onChangeRoomName}
-                  onKeyPress={(e) => {
-                    e.key === "Enter" && onClickMakeRoom(e);
-                  }}
-                  ref={roomNameRef}
-                  style={sizes}
-                />
-                <Button3
-                  style={{margin : "0 0 20px 0", fontSize:"25px", height:"36px", display:"flex", alignItems:"center", justifyContent:"center"}}
-                  onMouseEnter = {selectSound}
-                  onMouseUp = {enterGame}
-                  onClick={onClickMakeRoom}
-                >
-                  방만들기
-                </Button3>
-              </div>
-            </div>
+            <MakeRoomElement
+              socket={socket}
+              videoRef={videoRef}
+            />
           }
         />
-      )}
+    )};
     </ThemeProvider>
   );
 };
