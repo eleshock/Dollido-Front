@@ -29,10 +29,7 @@ import { useInterval } from "../common/usefulFuntions";
 import { useSelector, useDispatch } from "react-redux";
 import { setInGameInit } from "../../modules/inGame.js";
 import { setItemInit } from "../../modules/item.js";
-<<<<<<< HEAD
-=======
 import { setMemberInit } from "../../modules/member";
->>>>>>> 1b71294538e8496a07c65c66349644a6e410ac9f
 import { setCheckGet, setRanking, setTier, setWinRate, setWin, setLose } from "../../modules/member.js";
 
 //마이페이지 로고
@@ -44,10 +41,6 @@ import KoreanMask from "../../images/KoreanMask2.png";
 import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import "../common/logout.css";
 
-<<<<<<< HEAD
-import { setMemberInit } from "../../modules/member";
-=======
->>>>>>> 1b71294538e8496a07c65c66349644a6e410ac9f
 
 const FlexContainer = styled.div`
   display: flex;
