@@ -27,7 +27,6 @@ const Zeus = styled.img`
 const ZeusAppear = () => {
     const firstZeus = useRef(true);
     const zeusAppear = useSelector((state) => state.item.zeusAppear);
-    
     if (zeusAppear) {
         firstZeus.current = false;
     }

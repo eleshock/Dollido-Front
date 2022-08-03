@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ThemeProvider } from 'styled-components';
-
+import auth from "../common/auth";
+import { useSelector } from "react-redux";
 
 // common import
 import Button from "../common/Button.js";
@@ -14,6 +14,9 @@ import styled from "styled-components";
 // images import
 import mainBackground from '../../images/main_Back.gif';
 
+import useSound from 'use-sound';
+import {select} from './Sound';
+
 const Word = styled.p `
     position: absolute;
     width: 100%;
@@ -24,14 +27,31 @@ const Word = styled.p `
 `
 
 const Main = () => {
+    const token = useSelector((state) => state.member.member.tokenInfo.token);
+
     const [modal, setModal] = useState(false);
     const [change, setChange] = useState(true);
+
+    const login = () => {
+        auth(token).then((result) => {
+            console.log(result);
+            if (result) {
+                window.location.href = "/univ";
+            } else {
+                setModal(true);
+            }
+        })
+    }  
+    const [selectSound] = useSound(
+        select,
+        { volume: 0.5 }
+    );
 
     return (
         <div style={{height: "100vh"}}>
             <GlobalStyles bgImage={mainBackground}></GlobalStyles>
             <Button style={ { position: "absolute", bottom: "10%", left: "50%", transform: "translate(-50%, -50%)", width: "25rem", height: "7rem"} } onClick = {() => { setModal(true); }} >
-                <Word style={ {fontSize: "2rem"} }> Game Start </Word> 
+                <Word style={ {fontSize: "2rem"} } onMouseEnter = {selectSound}> Game Start </Word> 
             </Button>
             {modal ?
                 change ?

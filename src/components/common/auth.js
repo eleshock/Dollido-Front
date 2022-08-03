@@ -3,13 +3,20 @@ import { ServerName } from '../../serverName';
 
 
 export default async (token) => {
+    let bool = false;
     async function auth() {
-        let result = await axios.post(`${ServerName}/api/user/signin/auth`, {}, {
+        let bool;
+        await axios.post(`${ServerName}/api/user/signin/auth`, {}, {
             headers: {
                 token: token
             }
+        }).then((result) => {
+            bool = result.data.bool
+        }).catch(e => {
+            bool = e.response.data.bool;
         })
-        return result.data.bool;
+        console.log(bool);
+        return bool;
     }
     
     return auth();

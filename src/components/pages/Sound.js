@@ -10,6 +10,7 @@ import myWeapon from '../../sounds/myWeapon.m4a';
 import reverse from '../../sounds/reverse.m4a';
 import gameStart from '../../sounds/game_start.mp3';
 import mode from '../../sounds/mode.wav';
+import judgement from '../../sounds/judgement.mp3';
 
 const playingSF = new Audio(playing);
 const celebrateSF = new Audio(celebrate);
@@ -25,6 +26,7 @@ export {
   enterRoom,
   exit,
   mode,
+  judgement,
   playingSF,
   celebrateSF,
   waitingSF,

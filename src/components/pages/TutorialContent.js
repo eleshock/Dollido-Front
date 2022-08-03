@@ -21,15 +21,6 @@ import Moai from "../../images/Moai2.png";
 import Kaonish from "../../images/Kaonish.png";
 import Monarisa from "../../images/Monarisa.png";
 import KoreanMask from "../../images/KoreanMask.png";
-
-
-import { Link } from "react-router-dom";
-
-import useSound from 'use-sound';
-import { select, exit, celebrateSF, playingSF } from './Sound'
-import { fontStyle, height } from "@mui/system";
-
-
 import dollidoLogo from '../../images/dollidoLogo.png';
 import haha from '../../images/haha.gif';
 
@@ -75,18 +66,7 @@ const FlexContainer = {
     justifyContent: "center",
     display: "flex",
   };
-  const Bottom2 = {
-    flex: "1",
-    // textAlign: "center",
-    alignItems: "center",
-    justifyContent: "center",
-    display: "flex",
-  };
   
-  const Tier ={
-    backgroundColor: "white"
-  }
-
   const Content = styled.div`
     &:hover {
       transform: scale(1.2);
@@ -149,17 +129,6 @@ const FlexContainer = {
     padding: "20px 0 0 0",
 
   }
-  const modecontentfour ={
-    color : "black",
-    backgroundColor: "#FFFFFF",
-    display: "flex",
-    alignItems:"center",
-    justifyContent: "center",
-    margin: "0 0 0 0",
-    padding: "0 0 20px 0",
-  
-  }
-
   const modecontentfive ={
     color : "white",
     backgroundColor: "transparent",
@@ -169,22 +138,7 @@ const FlexContainer = {
 
   }
   
-  const BackToLobby = styled(Link)`
-    position: fixed;
-    bottom: 40px;
-    right: 20px;
-    width: auto;
-    height: auto;
-    color: white;
-    font-size: 2rem;
-    padding: 3px;
-    margin: 0 100px 0 0;
-    text-decoration: none;
-    &:hover {
-      transform: scale(1.2);
-      color: white;
-    }
-  `;
+
 
 export default class SimpleSlider extends Component {
 
@@ -277,7 +231,6 @@ export default class SimpleSlider extends Component {
               </Content>
             </div>
             <div style={Bottom}>
-              <BackToLobby to = {'/lobby'}  >&lt; 뒤로가기</BackToLobby>
             </div>
           </div>
             <div style={{height:"100%"}}>
@@ -296,13 +249,13 @@ export default class SimpleSlider extends Component {
                 <h1 style={modecontentfive}>상위 10% - 30%</h1>
             </Content>
             <Content>
-            <GradationTitle style={{textAlign: "center", color: "#f0f0f0"}}>모나리자</GradationTitle>
-                <Modeimage src={Monarisa} style={{backgroundColor: "#f0f0f0", width: "300px", height:"300px"}} />
+            <GradationTitle style={{textAlign: "center", color: "#c0c0c0"}}>모나리자</GradationTitle>
+                <Modeimage src={Monarisa} style={{backgroundColor: "#c0c0c0", width: "300px", height:"300px"}} />
                 <h1 style={modecontentfive}>상위 30% - 60%</h1>
             </Content>
             <Content>
-            <GradationTitle style={{textAlign: "center", color: "#6A3805"}}>하회탈</GradationTitle>
-                <Modeimage src={KoreanMask} style={{backgroundColor: "#6A3805", width: "300px", height:"300px"}} />
+            <GradationTitle style={{textAlign: "center", color: "#c36729"}}>하회탈</GradationTitle>
+                <Modeimage src={KoreanMask} style={{backgroundColor: "#c36729", width: "300px", height:"300px"}} />
                 <h1 style={modecontentfive}>상위 60% - 100%</h1>
             </Content>
             </div>

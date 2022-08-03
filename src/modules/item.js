@@ -1,5 +1,3 @@
-import { StateContext } from "react-scroll-to-bottom";
-
 const SET_MY_WEAPON = "item/SET_MY_WEAPON";
 const SET_MY_WEAPON_CHECK = "item/SET_MY_WEAPON_CHECK";
 const SET_MY_WEAPON_IMAGE = "item/SET_MY_WEAPON_IMAGE";

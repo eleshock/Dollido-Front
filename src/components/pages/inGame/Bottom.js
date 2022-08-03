@@ -139,19 +139,19 @@ const InGameBottom = ({ socket }) => {
                     {!gameFinished &&
                         (gotReverse ?
                         <div>
-                            <GameButtonReds onClick={handleReverse}>리버스 모드</GameButtonReds>
+                            <GameButtonReds onClick={handleReverse} style={{fontFamily:"koverwatch"}} >리버스 모드</GameButtonReds>
                         </div>
                         :
                         <div>
-                            <GameButtonReds style={{opacity:"0.3"}}>리버스 모드</GameButtonReds>
+                            <GameButtonReds style={{opacity:"0.3", fontFamily:"koverwatch"}}>리버스 모드</GameButtonReds>
                         </div>
                         )
                     }
                     {gameStarted && !gameFinished && !myWeaponUsingInThisGame &&
-                    <GameButtonBlues onClick={handleNamanmoo} >나만의 무기</GameButtonBlues>
+                    <GameButtonBlues onClick={handleNamanmoo} style={{fontFamily:"koverwatch"}}>나만의 무기</GameButtonBlues>
                     }   
                     {gameStarted && !gameFinished && myWeaponUsingInThisGame &&
-                    <GameButtonBlues onClick={handleNamanmoo} style={{opacity:"0.3"}} >나만의 무기</GameButtonBlues>
+                    <GameButtonBlues onClick={handleNamanmoo} style={{opacity:"0.3", fontFamily:"koverwatch"}} >나만의 무기</GameButtonBlues>
                     }
                 </div>
             }
