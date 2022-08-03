@@ -1,4 +1,4 @@
-import styled, {css} from "styled-components";
+import styled from "styled-components";
 import Moai from "../../../images/Moai2.png";
 import Kaonish from "../../../images/Kaonish.png";
 import Monarisa from "../../../images/Monarisa.png";
@@ -17,28 +17,32 @@ export default function Profile() {
 
     let image;
     let profileFrame;
-
+    let tierBackground;
     if (tier === "모나리자") {
         image = Monarisa;
         profileFrame = "2px solid #C0C0C0E9";
+        tierBackground = "#C0C0C0";
     } else if (tier === "모아이") {
         image = Moai;
         profileFrame = "2px solid #00FFFF79";
+        tierBackground = "#00FFFF";
     }
     else if (tier === "가오나시") {
         image = Kaonish;
         profileFrame = "2px solid #FFE140CC";
+        tierBackground = "#FFE140";
     }
     else {
         image = KoreanMask;
         profileFrame = "2px solid #C36729F9";
+        tierBackground = "#C36729";
     }
 
 
     return (
         <div style = {{display: "flex", justifyContent: "center"}}>
             <Container style={{border: profileFrame}}>
-                <TierImage>
+                <TierImage style = {{backgroundColor: tierBackground}}>
                 <img style={{ width: "100%", height: "100%", objectFit: "cover" }} src={image} />
                 </TierImage>
                 <div style = {{display: "flex", flexDirection: "column"}}>
@@ -86,7 +90,6 @@ const Container = styled.div`
     height: 330px;
     margin: 50px 0 0 0;
     font-family: koverwatch;
-    ${'' /* border: 2px solid rgba( 255, 255, 255, 0.3 ); */}
     border-radius: 7px;
     justify-content: center;
     align-items: center;
@@ -94,10 +97,6 @@ const Container = styled.div`
 
     box-shadow: 5px 5px rgba( 255, 255, 255, 0.2 );
     &:hover {
-        background-color: #00ffff79; // 다이아
-        // background-color: #ffe14079; // 골드
-        // background-color: #C0C0C0A9; // 실버
-        // background-color: #C3672999; // 브론즈
         transition: background-color 1.5s;
     }
 `
@@ -106,9 +105,8 @@ const TierImage = styled.div`
     width: 250px;
     height: 250px;
     overflow: hidden;
-    border: 2px solid rgba( 255, 255, 255, 0.7 );
+    border: 2px solid rgba( 255, 255, 255, 0.4 );
     border-radius: 7px;
-    background-color: #ffffff;
     margin: 30px 30px 30px 0;
 `
 
@@ -117,7 +115,6 @@ const ProfileTitle = styled.div`
     color: white;
     font-size: 1.8rem;
     text-align: left;
-    ${'' /* background-color: #14073c79; */}
     border-radius: 3px;
     padding: 2px 0 0 8px;
     margin: 3px;
