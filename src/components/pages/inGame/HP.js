@@ -17,121 +17,104 @@ const Content = styled.div`
     width: 80%;
 `
 
+const ImgStyle1 = styled.img`
+  position: absolute; 
+  width: auto;
+  height: auto; 
+  top: 10%; 
+  right: 8%;
+  transform: scaleX(-1); 
+`
+
+const ImgStyle2 = styled.img`
+  position: absolute; 
+  width: auto;
+  height: auto; 
+  top: 10%; 
+  left: 8%;
+`
+
+const ImgStyle3 = styled.img`
+  position: absolute; 
+  width: auto;
+  height: auto; 
+  top: 50%; 
+  right: 8%;
+  transform: scaleX(-1); 
+`
+
 const HP = ({ socket, index }) => {
     const partnerVideos = useSelector((state) => state.videos);
     const peersHP = useRef(100);
-    const [content, setContent] = useState(<Container>
-      <Content><ProgressBar striped variant="danger" now={peersHP.current} /></Content>
-          </Container>);
-    const gameFinished = useSelector((state) => state.inGame.gameFinished);
+    const [content, setContent] = useState(<ProgressBar striped variant="danger" now={peersHP.current} />);
 
-    // console.log(peersHP)
     useEffect(() => {
-      socket.on("smile", (peerHP, peerID, peerStreamID, isJudgement) => {
-        if (partnerVideos[index].id === peerStreamID) {
+      socket.on("smile", (peerHP, peerStreamID, isJudgement) => {
+        if (partnerVideos[index] && partnerVideos[index].id === peerStreamID) {
           peersHP.current = peerHP;
 
-        if (index === 0 ) {
-          setContent(
-          <Container>
-            <Content>
-            { 
-              isJudgement === false ?
-              <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"10%", right:"8%", transform:"scaleX(-1)" }}></img>
-              : null
-            }
-              <ProgressBar striped variant="danger" now={peersHP.current} />
-            </Content>
-          </Container>)
-          setTimeout(() => {
-            setContent(
-            <Container>
-              <Content>
-                <ProgressBar striped variant="danger" now={peersHP.current} />
-              </Content>
-            </Container>)
-          }, 1000);
-        } else if (index === 1) {
-          setContent(
-            <Container>
-              <Content>
-              {
-                isJudgement === false?
-                <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"50%", left:"8%" }}></img>
-                : null
-              }
-                <ProgressBar striped variant="danger" now={peersHP.current} />
-              </Content>
-            </Container>
-            )
-          setTimeout(() => {
-            setContent(
-              <Container>
-                <Content>
+          if(!isJudgement) {
+            if (index === 0 ) {
+              setContent(
+                <>
+                  <ImgStyle1 src={effect}/>
                   <ProgressBar striped variant="danger" now={peersHP.current} />
-                </Content>
-            </Container>)
-          }, 1000);
-        } else if(index === 2) {
-          setContent(
-            <Container>
-              <Content>
-              {
-                isJudgement === false?
-                <img src={effect} style={{position:"absolute", width:"auto", height:"auto", top:"50%", right:"8%", transform:"scaleX(-1)" }}></img>
-                : null
-              }
-                <ProgressBar striped variant="danger" now={peersHP.current} />
-              </Content>
-            </Container>)
-          setTimeout(() => {
-            setContent(
-            <Container>
-              <Content>
-              <ProgressBar striped variant="danger" now={peersHP.current} />
-              </Content>
-            </Container>)
-          }, 1000);
+                </>
+              )
+              setTimeout(() => {
+                setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
+              }, 1000);
+            } else if (index === 1) {
+              setContent(
+                <>
+                  <ImgStyle2 src={effect}/>
+                  <ProgressBar striped variant="danger" now={peersHP.current} />
+                </>
+              )
+              setTimeout(() => {
+                setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
+              }, 1000);
+            } else if(index === 2) {
+              setContent(
+                <>
+                  <ImgStyle3 src={effect}/>
+                  <ProgressBar striped variant="danger" now={peersHP.current} />
+                </>
+              )
+              setTimeout(() => {
+                setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
+              }, 1000);
+            }
+          }
         }
-      }
-
       })
-    }, [socket])
 
-    useEffect(() => {
-      socket.on("restart", () => {
-        peersHP.current = 100;
-        setContent(
-          <Container>
-              <Content>
-              <ProgressBar striped variant="danger" now={peersHP.current} />
-              </Content>
-            </Container>)
-    })
-    }, [socket])
-
-    useEffect(() => {
       socket.on("finish", (hpList) => {
-        // HP [streamID, HP]
         hpList.map((HP) => {
-          // console.log(HP[1]);
-          if (partnerVideos[index].id === HP[0]){
-            if (HP[1] < 0){
+          if (partnerVideos[index] && partnerVideos[index].id === HP[0]) {
+            if (HP[1] < 0) {
               peersHP.current = 0;
             } else {
               peersHP.current = HP[1];
             }
           }
         })
-        setContent(<Container>
-          <Content>
-          <ProgressBar striped variant="danger" now={peersHP.current} />
-          </Content>
-        </Container>)
       });
-    }, [socket])
+    }, [socket, partnerVideos])
 
-    return content;
+    useEffect(() => {
+      socket.on("restart", () => {
+        peersHP.current = 100;
+        setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
+      })
+    }, [socket]);
+
+    return partnerVideos[index] &&
+      <Container>
+        <Content>
+          {content}
+        </Content>
+      </Container>;
 }
 
 export default HP;

@@ -157,7 +157,7 @@ const MyVideo = ({ match, socket }) => {
     const modelsLoaded = useSelector((state) => (state.inGame.modelsLoaded));
     const myStream = useSelector((state) => (state.inGame.myStream));
     const chiefStream = useSelector((state) => (state.inGame.chiefStream));
-    const readyList = useSelector((state) => state.inGame.readyList);
+    const readyList = useSelector((state) => state.inGame.readyList[myStream ? myStream.id : null]);
     const mineHP = useSelector((state) => (state.inGame.myHP));
 
     const user_nick = useSelector((state) => state.member.member.user_nick);
@@ -218,7 +218,7 @@ const MyVideo = ({ match, socket }) => {
                         recordVideo(userVideo.current.srcObject, user_nick, token);
                     }
                 }
-                return 5;
+                return 25;
             } else {
                 return 2;
             }
@@ -346,7 +346,7 @@ const MyVideo = ({ match, socket }) => {
         const [bool, setBool] = useState(false);
         useEffect(() => {
             if(myStream && myStream.id) {
-                setBool(readyList[myStream.id]);
+                setBool(readyList);
             }
         }, [readyList]);
 
