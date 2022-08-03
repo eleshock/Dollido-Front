@@ -478,8 +478,7 @@ const Lobby = () => {
 }
 
 
-
-
+const faceDetectionOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: 224 });
 const ShowStatus = () => {
   const [myHP, setMyHP] = useState(100);
   const [faceDetected, setFaceDetected]  = useState(false);
@@ -488,7 +487,7 @@ const ShowStatus = () => {
   let content = "";
 
   useInterval(async () => {
-      const detections = await faceapi.detectAllFaces(videoRef.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+      const detections = await faceapi.detectAllFaces(videoRef.current, faceDetectionOptions).withFaceExpressions();
       if (detections[0]) {
               const decrease = handleHP(detections[0].expressions.happy, myHP);
               if (decrease > 0) {

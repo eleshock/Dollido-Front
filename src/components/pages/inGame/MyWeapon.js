@@ -21,6 +21,12 @@ object-fit: contain;
 `;
 
 
+const MyWeaponFontStyle = styled.div`
+    font-size: 60px;
+    font-style: italic;
+`
+
+
 const MyWeapon = ({ socket }) => {
     const dispatch = useDispatch();
     const [content, setContent] = useState(<></>)
@@ -39,14 +45,14 @@ const MyWeapon = ({ socket }) => {
         if (isMeFlag) {
             setContent(
                 <Container>
-                    <h2> {myID} 발동!!</h2>
+                    <MyWeaponFontStyle> {myID} 나만무 발동!!</MyWeaponFontStyle>
                     <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
                 </Container>
             )
         } else {
             setContent(
                 <Container>
-                    <h2> {isWho} 발동!!</h2>
+                    <MyWeaponFontStyle> {isWho} 나만무 발동!!</MyWeaponFontStyle>
                     <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
                 </Container>
             )
