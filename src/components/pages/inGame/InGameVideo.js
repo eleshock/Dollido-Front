@@ -51,23 +51,18 @@ const EachContent = styled.div`
 `
 
 const Test = ({socket, match}) => {
-    const partnerVideos = useSelector((state) => state.videos);
-
     return (
         <Container>
-            <ZeusAppear socket={socket}></ZeusAppear>
+            <ZeusAppear></ZeusAppear>
             <LeftContent>
                 <EachContent>
                     <MyVideo socket={socket} match={match}></MyVideo>
                 </EachContent>
                 <EachContent>
                     <Video index={1}></Video>
-                    {partnerVideos[1] ?
-                    <>
                     <Judgement index={1}></Judgement>
                     <HP socket={socket} index={1}></HP>
-                    <IsReady socket={socket} index={1}></IsReady>
-                    </> : <></>}
+                    <IsReady index={1}></IsReady>
                 </EachContent>
             </LeftContent>
             <MidleContent>
@@ -79,22 +74,15 @@ const Test = ({socket, match}) => {
             <RightContent>
                 <EachContent>
                     <Video index={0}></Video>
-                    {partnerVideos[0] ?
-                    <>
                     <Judgement index={0}></Judgement>
                     <HP socket={socket} index={0}></HP>
-                    <IsReady socket={socket} index={0}></IsReady>
-                    </> : <></>}
-
+                    <IsReady index={0}></IsReady>
                 </EachContent>
                 <EachContent>
                     <Video index={2}></Video>
-                    {partnerVideos[2] ?
-                    <>
                     <Judgement index={2}></Judgement>
                     <HP socket={socket} index={2}></HP>
-                    <IsReady socket={socket} index={2}></IsReady>
-                    </> : <></>}
+                    <IsReady index={2}></IsReady>
                 </EachContent>
             </RightContent>
         </Container>

@@ -7,11 +7,10 @@ import styled, {keyframes} from "styled-components";
 import effect from "../../../images/pepe-laugh-laugh.gif";
 import judgementEffect from "../../../images/judgement.png"
 import Load from "./Loading";
-import readyimage from "../../../images/ready.gif"
-import Notreadyimage from "../../../images/Notready.png"
-import Chiefimage from "../../../images/Chief.png"
-import Playingimage from "../../../images/Playing.png"
-import readyvideo from "../../../images/ready.mp4"
+import Notreadyimage from "../../../images/Notready.png";
+import Chiefimage from "../../../images/Chief.png";
+import Playingimage from "../../../images/Playing.png";
+import readyvideo from "../../../images/ready.mp4";
 
 
 
@@ -27,6 +26,12 @@ import { setMineHP, setMyStream } from "../../../modules/inGame";
 // face api import
 import * as faceapi from 'face-api.js';
 import { setMyWeapon, setMyWeaponCheck } from "../../../modules/item";
+
+const recordTime = 3000; // 녹화 시간(ms)
+const modelInterval = 500; // 웃음 인식 간격(ms)
+const initialHP = 100;
+const recordStandard = 3;   // best performer 녹화 기준(연속으로 웃은 횟수)
+const faceDetectionOptions = new faceapi.TinyFaceDetectorOptions({ inputSize: 224 });
 
 const blinkEffect = keyframes`
     50% {
@@ -94,10 +99,6 @@ const ShowReady = styled.div`
     margin: 0;
 `
 
-const recordTime = 3000; // 녹화 시간(ms)
-const modelInterval = 500; // 웃음 인식 간격(ms)
-const initialHP = 100;
-
 
 // 녹화가 완료된 후 서버로 비디오 데이터 post
 async function postVideo(recordedBlob, user_nick, token) {
@@ -132,11 +133,10 @@ function recordVideo(stream, user_nick, token) {
         });
         postVideo(recordedBlob, user_nick, token);
     };
-    // console.log("Recording Start...");
+    console.log("Recording Start...");
     recorder.start();
     setTimeout(() => {
         recorder.stop();
-        // console.log("Recording Finished!");
     }, recordTime);
 }
 
@@ -147,8 +147,8 @@ const MyNickname = {
 }
 
 
-
 const MyVideo = ({ match, socket }) => {
+    console.log(faceapi);
     const dispatch = useDispatch();
     // const inGameState = useSelector((state) => (state.inGame));
     const token = useSelector((state) => state.member.member.tokenInfo.token);
@@ -157,7 +157,7 @@ const MyVideo = ({ match, socket }) => {
     const modelsLoaded = useSelector((state) => (state.inGame.modelsLoaded));
     const myStream = useSelector((state) => (state.inGame.myStream));
     const chiefStream = useSelector((state) => (state.inGame.chiefStream));
-    const readyList = useSelector((state) => state.inGame.readyList);
+    const readyList = useSelector((state) => state.inGame.readyList[myStream ? myStream.id : null]);
     const mineHP = useSelector((state) => (state.inGame.myHP));
 
     const user_nick = useSelector((state) => state.member.member.user_nick);
@@ -196,25 +196,33 @@ const MyVideo = ({ match, socket }) => {
     }, [socket, match]);
 
 
-    function handleHP(happiness, reverse) {
+    function handleHP(happiness, reverse, smileCount) {
         if (reverse) {
             happiness = 1 - happiness;
-            if (!videoRecorded && happiness < 0.4) {
-                videoRecorded = true;
-                recordVideo(userVideo.current.srcObject, user_nick, token);
+            if (!videoRecorded) {
+                if (happiness < 0.4){
+                    smileCount.current += 1
+                    if (smileCount.current === recordStandard) {
+                        videoRecorded = true;
+                        recordVideo(userVideo.current.srcObject, user_nick, token);
+                    }
+                } else smileCount.current = 0;
             }
         }
         if (happiness > 0.2) { // 피를 깎아야 하는 경우
             if (happiness > 0.6) {
                 if (!videoRecorded && !reverse) { // 딱 한 번만 record
-                    videoRecorded = true;
-                    recordVideo(userVideo.current.srcObject, user_nick, token);
+                    smileCount.current += 1
+                    if (smileCount.current === recordStandard) {
+                        videoRecorded = true;
+                        recordVideo(userVideo.current.srcObject, user_nick, token);
+                    }
                 }
                 return 3;
             } else {
-                return 1;
+                return 2;
             }
-        }
+        } else if (!videoRecorded && !reverse) smileCount.current = 0;
         return 0;
     }
 
@@ -225,22 +233,21 @@ const MyVideo = ({ match, socket }) => {
         /* judgement*/
         const isAbusing = useSelector((state) => state.item.judgementList[myStreamID]);
         const zeusAppear = useRef(false);
-        // const [isAbusing, setIsAbusing] = useState(false);
         const abusingCount = useRef(0);
 
+        const smileCount = useRef(0); // 연속으로 웃은 횟수 측정(for best performer record)
         const [myHP, setMyHP] = useState(initialHP);
-         /* Reverse Mode */
-        const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         const [smiling, setSmiling] = useState(false);
+        const [interval, setModelInterval] = useState(gameFinished ? null : modelInterval);
         let content = "";
+
         /** 모델 돌리기 + 체력 깎기 */
         useInterval(async () => {
             let newHP = 0;
             if (myStream && myStream.id) {
-                const detections = await faceapi.detectAllFaces(userVideo.current, new faceapi.TinyFaceDetectorOptions()).withFaceExpressions();
+                const detections = await faceapi.detectAllFaces(userVideo.current, faceDetectionOptions).withFaceExpressions();
 
-                // setIsAbusing(judgementList[myStream.id])
-
+                /** Zeus */
                 if(detections.length === 0 && gameStarted) {
                     abusingCount.current += 1;
                     if(abusingCount.current === 10) {
@@ -270,8 +277,9 @@ const MyVideo = ({ match, socket }) => {
                     }
                 };
 
+                /** Smile Check */
                 if (detections[0] && gameStarted) {
-                    const decrease = handleHP(detections[0].expressions.happy, reverse);
+                    const decrease = handleHP(detections[0].expressions.happy, reverse, smileCount);
 
                     if (decrease > 0) {
                         newHP = myHP - decrease;
@@ -290,6 +298,7 @@ const MyVideo = ({ match, socket }) => {
                 }
             }
         }, interval);
+
 
         if (interval && smiling) {
             content =<>
@@ -337,7 +346,7 @@ const MyVideo = ({ match, socket }) => {
         const [bool, setBool] = useState(false);
         useEffect(() => {
             if(myStream && myStream.id) {
-                setBool(readyList[myStream.id]);
+                setBool(readyList);
             }
         }, [readyList]);
 

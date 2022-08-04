@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { ThemeProvider } from "styled-components";
-import { Modal } from "../../common/Modal.tsx";
 import mainBackground from "../../../images/mainBackground.gif";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
@@ -49,13 +47,12 @@ const MyPage = () => {
     setValue(newValue);
   };
 
-  const [modal, setModal] = useState(false);
   let image;
   let color;
 
   if (tier === "모나리자") 
     {image = Monarisa
-     color = "#c0c0c0"}
+      color = "#c0c0c0"}
   else if (tier === "모아이") {
     image = Moai
     color = "#00ffff"
@@ -82,7 +79,7 @@ const MyPage = () => {
                             &nbsp;&nbsp;
                             </span>
                             
-                              <img src={image} style={{backgroundColor: color, height:"48px" }}/>
+                              <img src={image} style={{backgroundColor: color, height:"48px" }} alt="tier"/>
                             
                             <span style={{ color: color, fontSize: "1.5rem", backgroundColor: '#182330E5', padding:"10px", height:"48px"}}>
                             {nickname}&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
@@ -157,64 +154,67 @@ const MyPage = () => {
       );
 };
 
-      const FlexContainer = styled.div`
-      display: flex;
-      flex-direction: column;
-      height: 100%;
-      font-family: koverwatch;
-      `
+const FlexContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  font-family: koverwatch;
+`
 
-      const Title = styled.div`
-      display: flex;
-      align-items: center;
-      `
+const Title = styled.div`
+  display: flex;
+  align-items: center;
+`
 
-      const Content = styled.div`
-      display: flex;
-      justify-content: center;
-      `
+const Content = styled.div`
+  display: flex;
+  justify-content: center;
+`
 
-      const MyTab = styled(Tab)`
-      color: white;
-      font-family: koverwatch;
-      font-size: 40px;
-      margin: 20px;
-      `
-      const MyBox = styled(Box)`
+const MyTab = styled(Tab)`
+  color: white;
+  font-family: koverwatch;
+  font-size: 40px;
+  margin: 20px;
+`
 
-      `
-      const MyTabContext = styled(TabContext)`
-      display: flex;
-      justify-content: center;
-      `
-      const GradationTitle = styled.h1`
-      padding: 0 15px 0 100px;
-      color: white;
-      font-size: 6rem;
-      font-style: italic;
-      user-select: none;
-      background: linear-gradient(to right top, #FFFFFF, #FFFFFF);
-      ${'' /* -webkit-text-stroke: 3px black; */}
-      color: transparent;
-      -webkit-background-clip: text;
-      `
+const MyBox = styled(Box)`
 
-      const BackToLobby = styled(Link)`
-      position: fixed;
-      bottom: 40px;
-      right: 20px;
-      width: auto;
-      height: auto;
-      color: white;
-      font-size: 2rem;
-      padding: 3px;
-      margin: 0 100px 0 0;
-      text-decoration: none;
-      &:hover {
-        transform: scale(1.2);
-      color: white;
+`
+
+const MyTabContext = styled(TabContext)`
+  display: flex;
+  justify-content: center;
+`
+
+const GradationTitle = styled.h1`
+  padding: 0 15px 0 100px;
+  color: white;
+  font-size: 6rem;
+  font-style: italic;
+  user-select: none;
+  background: linear-gradient(to right top, #FFFFFF, #FFFFFF);
+  ${'' /* -webkit-text-stroke: 3px black; */}
+  color: transparent;
+  -webkit-background-clip: text;
+`
+
+const BackToLobby = styled(Link)`
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  width: auto;
+  height: auto;
+  color: white;
+  font-size: 2rem;
+  padding: 3px;
+  margin: 0 100px 0 0;
+  text-decoration: none;
+  &:hover {
+    transform: scale(1.2);
+  color: white;
   }
-      `
+`
 
 
       export default MyPage

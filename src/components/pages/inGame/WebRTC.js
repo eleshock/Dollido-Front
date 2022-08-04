@@ -72,7 +72,7 @@ const WebRTC = ({ socket, match }) => {
             dispatch(deleteVideo(streamID));
             dispatch(deleteReadyList(streamID));
             dispatch(deletePeerNick(streamID));
-        })
+        });
 
         socket.on("join room", async (userID)  => {
             const offer = await peerConnection(userID);

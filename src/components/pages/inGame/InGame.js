@@ -11,7 +11,7 @@ import WebRTC from "./WebRTC";
 import { GlobalInGameBackGround } from "../../common/Global.tsx"
 
 //새로고침, 뒤로가기 방지
-import {PreventReload, PreventGoBack} from "../../common/usefulFuntions.js";
+import {PreventReload} from "../../common/usefulFuntions.js";
 
 
 const FlexContainer = styled.div`
@@ -23,7 +23,6 @@ const FlexContainer = styled.div`
 
 
 const InGame = ({ match, socket}) => {
-    PreventGoBack(); // 뒤로가기 방지
     PreventReload(); // 새로고침 방지 
     return (
         <div>

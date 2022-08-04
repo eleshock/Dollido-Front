@@ -101,7 +101,6 @@ function Images() {
   const [file, setFile] = useState("")
   const [images, setImages] = useState([])
   const [previewImg, setPreviewImg] = useState(null);
-  const baseImg = Base;
 
   const submit = async event => {
     event.preventDefault()
@@ -137,11 +136,6 @@ function Images() {
     }
   }
 
-  const LabelStyle = styled.label`
-    width: 100px;
-    height: 100px;
-    border: 6px solid black;
-  `
   const handleImgError = (e) => {
     e.target.src = Base;
   }
@@ -155,10 +149,6 @@ function Images() {
       </Content>
       <FlexContainer2>
         <form onSubmit={submit}>
-          <LabelStyle for="image">
-
-          </LabelStyle>
-          {file.name}
           <input style={{display: "none"}} id="image" onChange={fileSelected} type="file" accept="image/*" />
         </form>
         <LabelStyle htmlFor='image'>업로드</LabelStyle>

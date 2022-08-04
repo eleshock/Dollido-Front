@@ -110,9 +110,8 @@ const InGameBottom = ({ socket }) => {
 
     function handleReverse() {
         if (!reverse) {
-            socket.emit("reverse", { roomID: roomID });
+            socket.emit("reverse", { roomID: roomID, nickName: MyNickname });
             dispatch(setGotReverse(false));
-
         }
     }
 
@@ -159,7 +158,7 @@ const InGameBottom = ({ socket }) => {
             
             {(gameFinished && bestDone) &&
                 <div style={{ display: "flex", justifyContent: 'space-around', textAlign: "center", flex: "33"}}>
-                    {chief &&
+                    {(chief || chiefStream === myStream.id) &&
                         <GameButtonGreens size="large" onClick={handleRestart}>RESTART</GameButtonGreens>
                     }   
                         <GameButtonOranges size="large" onClick={handleQuit}>QUIT</GameButtonOranges>

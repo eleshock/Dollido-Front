@@ -8,17 +8,25 @@ import effect from "../../../images/reverse.gif";
 
 
 const Container = styled.div`
-display: flex;
-flex-direction: column;
-align-items: center;
-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 70vh;
+    align-items: center;
+    color: white;
 `
 
 const BackgroundSizeStyle = styled.img`
-width: 700px;
-height: 600px;
-object-fit: contain;
-`;
+    width: 700px;
+    height: 600px;
+    object-fit: contain;
+`
+
+
+const MyWeaponFontStyle = styled.div`
+    font-size: 60px;
+    font-style: italic;
+`
 
 
 const MyWeapon = ({ socket }) => {
@@ -39,14 +47,14 @@ const MyWeapon = ({ socket }) => {
         if (isMeFlag) {
             setContent(
                 <Container>
-                    <h2> {myID} 발동!!</h2>
+                    <MyWeaponFontStyle> {myID} 나만무 발동!!</MyWeaponFontStyle>
                     <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
                 </Container>
             )
         } else {
             setContent(
                 <Container>
-                    <h2> {isWho} 발동!!</h2>
+                    <MyWeaponFontStyle> {isWho} 나만무 발동!!</MyWeaponFontStyle>
                     <BackgroundSizeStyle src={effect} ></BackgroundSizeStyle>
                 </Container>
             )

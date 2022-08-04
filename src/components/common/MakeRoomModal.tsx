@@ -7,7 +7,6 @@ interface Props {
   element: JSX.Element;
   modal: boolean;
   setModal: Dispatch<SetStateAction<boolean>>;
-  setChange: Dispatch<SetStateAction<boolean>>;
   setStop: Dispatch<SetStateAction<boolean>>;
   video: Promise<unknown>;
 }
@@ -68,14 +67,11 @@ export const MakeRoomModal = ({
   modal,
   video,
   setModal,
-  setChange,
   setStop,
 }: Props) => {
-  const startVideoPromise = video;
 
   const modalOff = () => {
     setModal(false);
-    setChange(true);
     setStop(true);
   };
 

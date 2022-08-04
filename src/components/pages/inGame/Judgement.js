@@ -19,7 +19,7 @@ const JudgementImage = styled.img`
 
 const Judgement = ({ index }) => {
 	const partnerVideos = useSelector((state) => state.videos);
-	const isAbusing = useSelector((state) => state.item.judgementList[partnerVideos[index].id]);
+	const isAbusing = useSelector((state) => state.item.judgementList[partnerVideos[index] !== undefined ? partnerVideos[index].id : null]);
 	const [content, setContent] = useState(null);
 	useEffect(() => {
 			setContent(
