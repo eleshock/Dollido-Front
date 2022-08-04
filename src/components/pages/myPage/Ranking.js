@@ -6,7 +6,6 @@ const NewDataGrid = styled(DataGrid)`
   color: white;
   font-size: 1.5rem;
   border: none;
-  font-family: koverwatch;
 `
 
 export default function ranking() {

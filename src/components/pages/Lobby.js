@@ -41,6 +41,9 @@ import { faPowerOff } from "@fortawesome/free-solid-svg-icons";
 import "../common/logout.css";
 
 
+import { setMemberInit } from "../../modules/member";
+
+
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -293,7 +296,7 @@ const Lobby = () => {
     }
   );
 
-  
+
 
   // 임시
   const nickname = useSelector((state) => state.member.member.user_nick);
@@ -315,9 +318,9 @@ const Lobby = () => {
   const [makeroommodal, setmakeRoomModal] = useState(false);
   const roomNameRef = useRef(null);
 
-  
 
-  
+
+
   useEffect(() => {
     if (stop) {
       stopWebcam();
@@ -388,22 +391,20 @@ const Lobby = () => {
   };
 
    // 2. 방 생성 절차
-   const [onVideo, setOnVideo] = useState(false);
-   const [modelsLoaded, setModelsLoaded] = useState(false);
+  const [onVideo, setOnVideo] = useState(false);
+  const [modelsLoaded, setModelsLoaded] = useState(false);
 
-   const onClickStartRoom = useCallback((e) =>{
-     e.preventDefault();
-     setmakeRoomModal(true);
-     startVideo();
-     videoNModelInit();
+  const onClickStartRoom = useCallback((e) =>{
+    e.preventDefault();
+    setmakeRoomModal(true);
+    startVideo();
+    videoNModelInit();
+  })
 
-   })
-
-   const handleVideoOnPlay = () => {
+  const handleVideoOnPlay = () => {
     setOnVideo(true);
-
-}
-   const onChangeRoomName = useCallback((e) => {
+  }
+  const onChangeRoomName = useCallback((e) => {
     setRoomName(e.target.value);
     localStorage.roomName = e.target.value;
   }, []);
@@ -466,9 +467,9 @@ const Lobby = () => {
 
 
 
- function handleHP(happiness, myHP) {
-   if(myHP >0)
-    if (happiness > 0.2) { // 피를 깎아야 하는 경우
+  function handleHP(happiness, myHP) {
+    if(myHP >0)
+      if (happiness > 0.2) { // 피를 깎아야 하는 경우
         if (happiness > 0.6) {
             return 2;
         } else {
@@ -517,6 +518,9 @@ const ShowStatus = () => {
       return content
   }
 
+  const logout = () => {
+    dispatch(setMemberInit());
+  }
 
   const stopWebcam = async () => {
     if (startVideoPromise) {
@@ -536,7 +540,7 @@ const ShowStatus = () => {
   let image;
   let color;
 
-  if (tier === "모나리자") 
+  if (tier === "모나리자")
     {image = Monarisa
      color = "#c0c0c0"}
   else if (tier === "모아이") {
@@ -568,9 +572,8 @@ const ShowStatus = () => {
         // </Button3>
     >
       <GlobalStyles bgImage={mainBackGround}></GlobalStyles>
-          <FlexContainer
-          >
-              <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "50px 100px 0 0"}}>
+          <FlexContainer>
+              <header style={{ height: 80, display: "flex", justifyContent: "flex-end",alignItems: "center", padding: "0 100px 0 0"}}>
                     {nickname &&
                     <>
                     <Link to = {`/mypage`} style = {{textDecoration:"none"}} onMouseEnter = {selectSound}>

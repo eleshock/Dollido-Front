@@ -14,9 +14,9 @@ const persistConfig = {
 }	// 추가
 
 const rootReducer = combineReducers({
+  member: member,
   inGame: inGame,
   videos: videos,
-  member: member,
   random: random,
   item: item,
 });

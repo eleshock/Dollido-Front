@@ -18,6 +18,7 @@ export const setLose = (data) => ({ type: SET_LOSE, data });
 export const setCheckGet = (bool) => ({ type: SET_CHECKGET, bool });
 
 
+export const setMemberInit = () => ({ type: SET_MEMBER_INIT });
 
 const initialState = {
     member: {
