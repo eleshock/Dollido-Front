@@ -86,6 +86,36 @@ const HP = ({ socket, index }) => {
               }, 1000);
             }
           }
+          else {
+            if (index === 0 ) {
+              setContent(
+                <>
+                  <ProgressBar striped variant="danger" now={peersHP.current} />
+                </>
+              )
+              setTimeout(() => {
+                setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
+              }, 1000);
+            } else if (index === 1) {
+              setContent(
+                <>
+                  <ProgressBar striped variant="danger" now={peersHP.current} />
+                </>
+              )
+              setTimeout(() => {
+                setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
+              }, 1000);
+            } else if(index === 2) {
+              setContent(
+                <>
+                  <ProgressBar striped variant="danger" now={peersHP.current} />
+                </>
+              )
+              setTimeout(() => {
+                setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
+              }, 1000);
+            }
+          }
         }
       })
 
