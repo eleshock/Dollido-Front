@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import Slider from "react-slick";
-// import "slick-carousel/slick/slick.css"; 
+// import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
 import '../pages/Tutorial/slick.css';
 import '../pages/Tutorial/slick-theme.css';
@@ -10,7 +10,9 @@ import Slider from "../pages/Tutorial/react-slick/slider"
 import { ThemeProvider } from "styled-components";
 import { Background } from "../common/Background.tsx";
 // import "../common/RoomMode.css"
+import TutorialBackGround from "../../images/tutorial_background2.gif";
 import mainBackGround from "../../images/mainBackground.gif";
+
 import ModeOne from "../../images/ModeOne.gif";
 import ModeTwo from "../../images/ModeTwo.gif";
 import ModeThree from "../../images/ModeThree.gif";
@@ -21,9 +23,7 @@ import Moai from "../../images/Moai2.png";
 import Kaonish from "../../images/Kaonish.png";
 import Monarisa from "../../images/Monarisa.png";
 import KoreanMask from "../../images/KoreanMask.png";
-
 import logo from "../../images/logo3.gif";
-
 
 
 const FlexContainer = {
@@ -37,7 +37,7 @@ const FlexContainer = {
     color: "white",
     textAlign: "left",
   };
-  
+
   const Middle = {
     flex: "7",
     display: "flex",
@@ -59,7 +59,7 @@ const FlexContainer = {
     justifyContent: "space-around",
     alignItems: "center",
   };
-  
+
   const Bottom = {
     flex: "2",
     // textAlign: "center",
@@ -67,14 +67,14 @@ const FlexContainer = {
     justifyContent: "center",
     display: "flex",
   };
-  
+
   const Content = styled.div`
     &:hover {
       transform: scale(1.2);
       box-shadow: 0 25px 50px 0 #f4dbf4;
     }
   `;
-  
+
   const Modeimage = styled.img`
     &:hover {
     }
@@ -90,7 +90,7 @@ const FlexContainer = {
     color: transparent;
     -webkit-background-clip: text;
   `;
-  
+
   const modename = {
     // color: "black",
     // backgroundColor: "white",
@@ -98,8 +98,8 @@ const FlexContainer = {
     // margin: "0 0 0 0"
     textAlign: "center",
   };
-  
-  
+
+
   const modecontentone ={
     color : "black",
     backgroundColor: "white",
@@ -110,7 +110,7 @@ const FlexContainer = {
     padding: "20px 0 0 0",
 
   }
-  
+
   const modecontenttwo ={
     color : "black",
     backgroundColor: "#FFFFFF",
@@ -119,9 +119,9 @@ const FlexContainer = {
     justifyContent: "center",
     margin: "0 0 0 0",
     padding: "0 0 20px 0",
-  
+
   }
-  
+
   const modecontentthree ={
     color : "white",
     backgroundColor: "transparent",
@@ -138,7 +138,7 @@ const FlexContainer = {
     padding: "0 0 0 0",
 
   }
-  
+
 
 
 export default class SimpleSlider extends Component {
@@ -169,8 +169,8 @@ export default class SimpleSlider extends Component {
       element={
         <div style={{height:"100%"}}>
           <Slider {...settings} style={FlexContainer}>
-            
-          <div style={{height:"100%"}}>
+
+            <div style={{height:"100%"}}>
               <div style={Header}></div>
               <div style={MiddleTwo}>
                 <div style={{flex:5, display: "flex", flexDirection:"column", alignItems:"flex-end"}}>
@@ -180,21 +180,23 @@ export default class SimpleSlider extends Component {
                 <GradationTitle style={{textAlign:"center", fontStyle:"normal", fontSize:"6rem", lineHeight: "1.5"}}>게임 설명</GradationTitle>
                   <div style={{textAlign:"left"}}>
                   <p></p> <p></p><p></p><p></p>
-                  <h1 style={modecontentthree}> 🫰 1분 30초 동안 웃짤로부터 웃음을 최대한 참습니다. </h1>
+                  <h1 style={modecontentthree}> 👍 1분 30초 동안 웃짤로부터 웃음을 최대한 참습니다. </h1>
                   <p></p> <p></p>
-                  <h1 style={modecontentthree}> 🫰 웃으면 나의 HP가 깎이게 됩니다. </h1>
+                  <h1 style={modecontentthree}> 👍 웃으면 나의 HP가 깎이게 됩니다. </h1>
                   <p></p> <p></p>
-                  <h1 style={modecontentthree}> 🫰 게임 시작 전에 나만의 무기를 장착해 보세요!  </h1>
+                  <h1 style={modecontentthree}> 👍 게임 시작 전에 나만의 무기를 장착해 보세요!  </h1>
                   <p></p> <p></p>
-                  <h1 style={modecontentthree}> 🫰 인식이 안되면 HP가 감소합니다. </h1>
+                  <h1 style={modecontentthree}> 👍 인식이 안되면 HP가 감소합니다. </h1>
                   <p></p> <p></p>
-                  <h1 style={modecontentthree}> 🫰 리버스 모드에서는 웃지 않을 때 HP가 깎입니다. </h1>
+                  <h1 style={modecontentthree}> 👍 리버스 모드에서는 웃지 않을 때 HP가 깎입니다. </h1>
 
                   </div>
                 </div>
                 </div>
               <div style={Bottom}></div>
             </div>
+
+
             <div style={{height:"100%"}} >
                 <div style={Header}></div>
                 <div style={Middle}>
@@ -204,11 +206,11 @@ export default class SimpleSlider extends Component {
               >
                 <GradationTitle style={modename}>리버스 모드</GradationTitle>
                 <Modeimage src={ModeOne} />
-                <h2 style={modecontentone}>돌발적으로 등장하는 리버스 타임!</h2> 
+                <h2 style={modecontentone}>돌발적으로 등장하는 리버스 타임!</h2>
                 <h2 style={modecontenttwo}>웃지 않으면 오히려 체력이 깎인다고!?</h2>
               </Content>
               <Content
-            
+
                 // onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>나만의 무기</GradationTitle>
@@ -217,7 +219,7 @@ export default class SimpleSlider extends Component {
                 <h2 style={modecontenttwo}>이걸 보고도 버틸 수 있겠어?</h2>
               </Content>
               <Content
-      
+
                 // onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>제우스의 심판</GradationTitle>
