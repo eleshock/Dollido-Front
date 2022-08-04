@@ -180,15 +180,15 @@ export default class SimpleSlider extends Component {
                 <GradationTitle style={{textAlign:"center", fontStyle:"normal", fontSize:"6rem", lineHeight: "1.5"}}>게임 설명</GradationTitle>
                   <div style={{textAlign:"left"}}>
                   <p></p> <p></p><p></p><p></p>
-                  <h1 style={modecontentthree}> 🫰 1분 30초 동안 웃짤로부터 웃음을 최대한 참습니다. </h1>
+                  <h1 style={modecontentthree}> 👍 1분 30초 동안 웃짤로부터 웃음을 최대한 참습니다. </h1>
                   <p></p> <p></p>
-                  <h1 style={modecontentthree}> 🫰 웃으면 나의 HP가 깎이게 됩니다. </h1>
+                  <h1 style={modecontentthree}> 👍 웃으면 나의 HP가 깎이게 됩니다. </h1>
                   <p></p> <p></p>
-                  <h1 style={modecontentthree}> 🫰 게임 시작 전에 나만의 무기를 장착해 보세요!  </h1>
+                  <h1 style={modecontentthree}> 👍 게임 시작 전에 나만의 무기를 장착해 보세요!  </h1>
                   <p></p> <p></p>
-                  <h1 style={modecontentthree}> 🫰 인식이 안되면 HP가 감소합니다. </h1>
+                  <h1 style={modecontentthree}> 👍 인식이 안되면 HP가 감소합니다. </h1>
                   <p></p> <p></p>
-                  <h1 style={modecontentthree}> 🫰 리버스 모드에서는 웃지 않을 때 HP가 깎입니다. </h1>
+                  <h1 style={modecontentthree}> 👍 리버스 모드에서는 웃지 않을 때 HP가 깎입니다. </h1>
 
                   </div>
                 </div>

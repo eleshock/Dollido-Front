@@ -155,7 +155,6 @@ const MyVideo = ({ match, socket }) => {
     const gameStarted = useSelector((state) => (state.inGame.gameStarted));
     const modelsLoaded = useSelector((state) => (state.inGame.modelsLoaded));
     const myStream = useSelector((state) => (state.inGame.myStream));
-    const chiefStream = useSelector((state) => (state.inGame.chiefStream));
     const readyList = useSelector((state) => state.inGame.readyList[myStream ? myStream.id : null]);
     const mineHP = useSelector((state) => (state.inGame.myHP));
 
@@ -229,7 +228,7 @@ const MyVideo = ({ match, socket }) => {
     const ShowStatus = ({myStreamID}) => {
         const reverse = useSelector((state) => state.item.reverse);
         const partnerVideos = useSelector((state) => state.videos); 
-
+        
         /* judgement*/
         const isAbusing = useSelector((state) => state.item.judgementList[myStreamID]);
         const zeusAppear = useRef(false);
@@ -243,7 +242,7 @@ const MyVideo = ({ match, socket }) => {
         
         useEffect(() => {
             if (gameStarted && !gameFinished) {
-                socket.emit("smile", myHP, roomID, user_nick, myStream.id, false);
+                socket.emit("smile", myHP, roomID, myStream.id, false);
             }
         }, [partnerVideos]);
 
@@ -268,7 +267,7 @@ const MyVideo = ({ match, socket }) => {
                         abusingCount.current = 0;
                         newHP = myHP - 30;
                         setMyHP(newHP);
-                        socket.emit("smile", newHP, roomID, user_nick, myStream.id, true);
+                        socket.emit("zeus", newHP, roomID, myStream.id);
                         if (newHP <= 0) { // game over
                             socket.emit("finish", { roomID: roomID });
                             setModelInterval(null);
@@ -289,7 +288,7 @@ const MyVideo = ({ match, socket }) => {
 
                     if (decrease > 0) {
                         newHP = myHP - decrease;
-                        socket.emit("smile", newHP, roomID, user_nick, myStream.id, false);
+                        socket.emit("smile", newHP, roomID, myStream.id, true);
                         if (newHP <= 0) { // game over
                             socket.emit("finish", { roomID: roomID });
                             setModelInterval(null);
@@ -349,6 +348,7 @@ const MyVideo = ({ match, socket }) => {
 
 
     const ShowMyReady = () => {
+        const chiefStream = useSelector((state) => (state.inGame.chiefStream));
         const [bool, setBool] = useState(false);
         useEffect(() => {
             if(myStream && myStream.id) {

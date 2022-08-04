@@ -58,34 +58,32 @@ const HP = ({ socket, index }) => {
       }
     }
 
-    const hpIndex = () => {
-      return <ProgressBar striped variant="danger" now={peersHP.current} />
-    }
-
     useEffect(() => {
-      socket.on("smile", (peerHP, peerStreamID, isJudgement) => {
+      socket.on("smile", (peerHP, peerStreamID, status) => {
         if (partnerVideos[index] && partnerVideos[index].id === peerStreamID) {
-          peersHP.current = peerHP;
-          
-          if (peersHP.current !== peerHP) {
-            if(!isJudgement) {
+            peersHP.current = peerHP;
+            if (status) {
               setContent(
                 <>
                   {effectIndex(index)}
-                  {hpIndex()}
+                  <ProgressBar striped variant="danger" now={peersHP.current} />
                 </>
               )
               setTimeout(() => {
-                setContent(hpIndex());
+                setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
               }, 1000);
             } else {
-              setContent(hpIndex());
+              setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
             }
-          } else {
-            setContent(hpIndex());
-          }
         }
-      })
+      });
+
+      socket.on("zeus", (peerHP, peerStreamID) => {
+        if (partnerVideos[index] && partnerVideos[index].id === peerStreamID) {
+          peersHP.current = peerHP;
+          setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
+        }
+      });
       
       socket.on("finish", (hpList) => {
         hpList.map((HP) => {
@@ -95,7 +93,7 @@ const HP = ({ socket, index }) => {
             } else {
               peersHP.current = HP[1];
             }
-            setContent(hpIndex());
+            setContent(<ProgressBar striped variant="danger" now={peersHP.current} />);
           }
         })
       });
@@ -113,7 +111,6 @@ const HP = ({ socket, index }) => {
       <Container>
         <Content>
           {content}
-          {partnerVideos[index].id}
         </Content>
       </Container>;
 }
