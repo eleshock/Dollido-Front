@@ -21,8 +21,9 @@ import Moai from "../../images/Moai2.png";
 import Kaonish from "../../images/Kaonish.png";
 import Monarisa from "../../images/Monarisa.png";
 import KoreanMask from "../../images/KoreanMask.png";
-import dollidoLogo from '../../images/dollidoLogo.png';
-import haha from '../../images/haha.gif';
+
+import logo from "../../images/logo3.gif";
+
 
 
 const FlexContainer = {
@@ -169,40 +170,36 @@ export default class SimpleSlider extends Component {
         <div style={{height:"100%"}}>
           <Slider {...settings} style={FlexContainer}>
             
-            <div style={{height:"100%"}}>
+          <div style={{height:"100%"}}>
               <div style={Header}></div>
               <div style={MiddleTwo}>
                 <div style={{flex:5, display: "flex", flexDirection:"column", alignItems:"flex-end"}}>
-                <img src={dollidoLogo} style={{flex:2}} ></img>
-                <img src={haha} style={{flex:8}} ></img>
-
+                <img src={logo} style={{ textAlign: "center", maxWidth: "600px" }} ></img>
                 </div>
                 <div style={{flex:5, display: "flex", flexDirection:"column", alignItems:"center", justifyContent:"center"}}>
-                <GradationTitle style={{textAlign:"center", fontStyle:"normal", fontSize:"8rem", lineHeight: "1.5"}}>게임 설명</GradationTitle>
+                <GradationTitle style={{textAlign:"center", fontStyle:"normal", fontSize:"6rem", lineHeight: "1.5"}}>게임 설명</GradationTitle>
                   <div style={{textAlign:"left"}}>
-                  <h1 style={modecontentthree}>휘몰아치는 웃긴 짤들로부터 웃음을 참아라!</h1>
                   <p></p> <p></p><p></p><p></p>
-                  <h2 style={modecontentthree}> 1. AI는 플레이어의 웃음을 감지하고, 승패 판정을 위해 HP를 감소시킵니다 </h2>
+                  <h1 style={modecontentthree}> 🫰 1분 30초 동안 웃짤로부터 웃음을 최대한 참습니다. </h1>
                   <p></p> <p></p>
-                  <h2 style={modecontentthree}> 2. 내가 직접 고른 웃긴 짤방을 게임 플레이 중 원하는 시점에 사용 </h2>
+                  <h1 style={modecontentthree}> 🫰 웃으면 나의 HP가 깎이게 됩니다. </h1>
                   <p></p> <p></p>
-                  <h2 style={modecontentthree}> 3. 위태로운 플레이어에게 주어지는 돌발 리버스 모드 발동권한  </h2>
+                  <h1 style={modecontentthree}> 🫰 게임 시작 전에 나만의 무기를 장착해 보세요!  </h1>
                   <p></p> <p></p>
-                  <h2 style={modecontentthree}> 4. AI 인식 범위 밖의 플레이어에게 주어지는 패널티 </h2>
+                  <h1 style={modecontentthree}> 🫰 인식이 안되면 HP가 감소합니다. </h1>
                   <p></p> <p></p>
-                  <h2 style={modecontentthree}> 5. 가장 많이 웃은 플레이어의 하이라이트 장면 리플레이 </h2>
+                  <h1 style={modecontentthree}> 🫰 리버스 모드에서는 웃지 않을 때 HP가 깎입니다. </h1>
 
                   </div>
                 </div>
-                </div> 
+                </div>
               <div style={Bottom}></div>
             </div>
-            
             <div style={{height:"100%"}} >
                 <div style={Header}></div>
                 <div style={Middle}>
               <Content
-       
+
                 // onMouseEnter = {selectSound}
               >
                 <GradationTitle style={modename}>리버스 모드</GradationTitle>
