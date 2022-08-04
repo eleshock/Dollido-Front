@@ -44,6 +44,7 @@ const LabelStyle = styled.label`
   box-shadow: 0px 0px 3px #ffd200;
   -webkit-appearance:none;
   font-size: 30px;
+  font-family: koverwatch;
   min-height: 15px;
   text-align: center;
   width: 25%;
@@ -151,7 +152,7 @@ function Images() {
         <form onSubmit={submit}>
           <input style={{display: "none"}} id="image" onChange={fileSelected} type="file" accept="image/*" />
         </form>
-        <LabelStyle htmlFor='image'>업로드</LabelStyle>
+        <LabelStyle htmlFor='image' >업로드</LabelStyle>
         <Button3 type="submit" onClick={submit} style={{fontSize:"30px", minHeight: "15%", width: "25%", lineHeight:"30px"}} >저장</Button3>
       </FlexContainer2>
     </App>

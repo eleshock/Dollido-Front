@@ -4,7 +4,7 @@ import zeusImage from "../../../images/Zeus.png"
 import { useSelector } from "react-redux";
 
 const zeusMoveFrom = -850;
-const zeusMoveTo = -500;
+const zeusMoveTo = -350;
 
 const zeusOn = keyframes`
     0% { bottom: ${zeusMoveFrom}px; }  

@@ -218,7 +218,7 @@ const MyVideo = ({ match, socket }) => {
                 }
                 return 3;
             } else {
-                return 2;
+                return 1;
             }
         } else if (!videoRecorded && !reverse) smileCount.current = 0;
         return 0;
