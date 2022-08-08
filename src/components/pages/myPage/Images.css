@@ -1,0 +1,29 @@
+form {
+  flex: 1;
+  position: relative;
+  display: inline-block;
+}
+
+.imagePreview {
+  position: relative;
+  width: 200px;
+}
+
+.imagePreview img {
+  width: 100%;
+}
+
+.imagePreview button {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+form > * {
+  margin: 10px 0;
+}
+
+img {
+  max-width: 400px;
+  margin: auto;
+}

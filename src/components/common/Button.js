@@ -1,98 +1,75 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
-import { darken, lighten } from 'polished';
+import styled from 'styled-components';
 
-const colorStyles = css`
-    ${({ theme, color }) => {
-        const selected = theme.palette[color];
-        
-        return css`
-            background: ${selected}; 
-            
-            &:hover {
-                transform: scale(1.2);
-                background: ${lighten(0.1, selected)};
-            }
-        
-            &:active {
-                background: ${darken(0.1, selected)};
-            }
-            
-            ${props => props.outline && css`
-                color: ${selected};
-                background: none;
-                border: 1px solid ${selected};
-                
-                &:hover {
-                    background: ${selected};
-                    color: white;
-                }
-            `}
-        `;
-    }}
-`;
-
-const sizes = {
-    large: {
-        height: '5rem',
-        fontSize: '3rem',
-        width: '180px',
-    },
-    medium: {
-        height: '2.25rem',
-        fontSize: '1rem'
-    },
-    small: {
-        height: '1.75rem',
-        fontSize: '0.875rem'
-    }
-};
-
-const sizeStyles = css`
-    ${({ size }) => css`
-        height: ${sizes[size].height};
-        font-size: ${sizes[size].fontSize};
-        line-height: ${sizes[size].height};
-    `}
-`;
-
-const StyledButton = styled.button`
-    white-space: nowrap;
-    display: inline-flex;
-    outline: none;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-weight: bold;
+const StyledButton = styled.div`
+    text-align: center;
+    color: rgb(245, 160, 40);
+    display: block;
+    position: relative;
+    border: 2px solid rgb(245, 160, 40);
     cursor: pointer;
-    padding-left: 1rem;
-    padding-right: 1rem;
-
-    ${sizeStyles}
-    ${colorStyles}
+    transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
     
-    & + & {
-        margin-left: 1rem;
+    &:link, &:visited {
+        position: relative;
+        display: block;
+        margin: 30px auto 0;
+        padding: 14px 15px;
+        color: #fff;
+        font-size:14px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        text-transform: uppercase;
+        overflow: hidden;
+        letter-spacing: .08em;
+        border-radius: 0;
+        text-shadow: 0 0 1px rgba(0, 0, 0, 0.2), 0 1px 0 rgba(0, 0, 0, 0.2);
+        -webkit-transition: all 1s ease;
+        -moz-transition: all 1s ease;
+        -o-transition: all 1s ease;
+        transition: all 1s ease;
+    }
+
+    
+    &:hover {
+        color: #000 !important;
+        background-color: transparent;
+        text-shadow: ntwo;
+    }
+    
+    &:hover:before {
+        top: 0%;
+        bottom: auto;
+        height: 100%;
+    }
+    
+    &:before {
+        display: block;
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        height: 0px;
+        width: 100%;
+        z-index: -1;
+        content: '';
+        color: #000 !important;
+        background: #F7CA18;
+        transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) 0s;
     }
 `;
 
-function Button({ children, color, size, outline, fullWidth, ...rest }) {
-    return ( 
-        <StyledButton 
-            color = {color}
-            size = {size}
-            outline = {outline}
-            fullWidth = {fullWidth} 
-            {...rest} 
-        >
-            {children} 
-        </StyledButton>
+function Button({ children, ...rest }) {
+    return (
+        <StyledButton {...rest}> {children} </StyledButton>
     );
 };
 
-Button.defaultProps = {
-    color: 'blue',
-    size: 'medium'
-};
-
 export default Button;
+
+
+
+
+
+
+

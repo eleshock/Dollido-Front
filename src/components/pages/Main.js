@@ -1,81 +1,85 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import styled, { ThemeProvider } from 'styled-components';
+import auth from "../common/auth";
+import { useSelector } from "react-redux";
 
+// common import
 import Button from "../common/Button.js";
 import { Modal } from "../common/Modal.tsx";
-import { Background } from "../common/Background.tsx"
+import SignIn from "./members/SignIn.js";
+import SignUp from "./members/SignUp.js";
+import Header from "../common/members/Header";
+import { GlobalStyles } from "../common/Global.tsx";
+import styled from "styled-components";
 
-import mainBackground from '../../images/main_background.png';
-import mainTitle from '../../images/main_title.png';
-import mainLeft from '../../images/main_left.png';
+// images import
+import mainBackground from '../../images/main_Back.gif';
 
-const LeftSector = styled.div`
+import useSound from 'use-sound';
+import {select} from './Sound';
+
+const Word = styled.p `
     position: absolute;
-    top: 50% ;
-    margin-top: -230px;
-    left: 10%;
-`;
-
-const MainTitle = styled.img`
-    width: 90%;
-`;
-
-const MainLeft = styled.img`
-    opacity: 0.9;
-    width: 70%;
-    height: 99.4vh;
-    margin-left: 5px;
-`;
+    width: 100%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: "Black Han Sans";
+`
 
 const Main = () => {
+    const token = useSelector((state) => state.member.member.tokenInfo.token);
+
     const [modal, setModal] = useState(false);
+    const [change, setChange] = useState(true);
+
+    const login = () => {
+        auth(token).then((result) => {
+            console.log(result);
+            if (result) {
+                window.location.href = "/univ";
+            } else {
+                setModal(true);
+            }
+        })
+    }
+    const [selectSound] = useSound(
+        select,
+        { volume: 0.5 }
+    );
 
     return (
-        <ThemeProvider
-            theme={{
-                palette: {
-                    yellow: "#E5B941"
-                }
-            }} 
-        >
-            <Background
-                background={mainBackground}
-                element={
-                    <div style={ { display: "flex" } }>
-                        <div style={ { flexGrow: "1", flexShrink: "1" } }>
-                            <MainLeft src={mainLeft} />
-                            <LeftSector>
-                                <MainTitle src={mainTitle} />
-                            </LeftSector>
-                        </div>
-                        <div style={ { position: "relative", flexGrow: "1", flexShrink: "1" } }>
-                            <Button color="yellow" size="large" style={ { position: "absolute", top: "50%" } } onClick={() => { setModal(true); }}>
-                                게임시작
-                            </Button>
-                            <Link to="/roomList">
-                                <Button color="yellow" size="large" style={ { position: "absolute", top: "70%" } }>
-                                    다음 페이지
-                                </Button>
-                            </Link>
-                        </div>
-                    </div>
-                }
-            />
-            {modal && (
-                <Modal
-                    modal={modal}
-                    setModal={setModal}
-                    width="900"
-                    height="600"
-                    element={
-                        <div>
-                            TODO
-                        </div>
-                    }
-                />
-            )}
-        </ThemeProvider>
+        <div style={{height: "100vh"}}>
+            <GlobalStyles bgImage={mainBackground}></GlobalStyles>
+            <Button style={ { position: "absolute", bottom: "10%", left: "50%", transform: "translate(-50%, -50%)", width: "25rem", height: "7rem"} } onClick = {login} >
+                <Word style={ {fontSize: "2rem"} } onMouseEnter = {selectSound}> Game Start </Word>
+            </Button>
+            {modal ?
+                change ?
+                    <Modal
+                        modal={modal}
+                        setModal={setModal}
+                        setChange={setChange}
+                        width="500"
+                        height="520"
+                        element={
+                            <Header children={<SignIn setChange={setChange}/>} />
+                        }
+                    />
+                    :
+                    <Modal
+                        modal={modal}
+                        setModal={setModal}
+                        setChange={setChange}
+                        width="500"
+                        height="670"
+                        element={
+                            <Header children={<SignUp setChange={setChange}/>} />
+                        }
+                    />
+            :
+            <></>
+            }
+        </div>
     );
 };
 

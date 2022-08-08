@@ -1,17 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { createStore, applyMiddleware, compose } from "redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore  } from "redux-persist";
+import { Provider } from "react-redux";
+import thunk from "redux-thunk";
+import promiseMiddleware from "redux-promise"
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+import "./index.css";
+import App from "./App";
+import rootReducer from "./modules/index";
+import reportWebVitals from './reportWebVitals';
+import {StyledEngineProvider} from '@mui/styled-engine';
+
+const store = createStore(rootReducer, compose(
+        applyMiddleware(promiseMiddleware, thunk),
+    )
+)
+
+const persistors = persistStore(store);
+const rootNode = document.getElementById('root');
+
+ReactDOM.createRoot(rootNode).render(
+    <StyledEngineProvider injectFirst>
+        <Provider store={store}>
+            <PersistGate persistor={persistors}>
+                <App/>
+            </PersistGate>
+        </Provider>
+    </StyledEngineProvider>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
