@@ -31,4 +31,6 @@
 <br>
 
 ## 📃 포스터
-![poster](https://user-images.githubusercontent.com/96051437/183370704-d015cdfe-c18f-480c-a515-7b0a8105ca12.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/96051437/183370704-d015cdfe-c18f-480c-a515-7b0a8105ca12.png" alt="dollido_poster"/>
+</p> 
